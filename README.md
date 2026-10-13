@@ -2,7 +2,7 @@
 
 Remotion implementation **in progress; not a verified finished MP4**.
 
-- Composition: `CyberExplained_EP01_EN_S01`
+- Composition: `CyberExplained-EP01-EN-S01`
 - Format: 1080 × 1920, 30 fps, 300 frames (10 seconds)
 - Stack: React 18, Remotion 4, TypeScript
 - Animation: layered 2.5D Minh puppet, bank alert, camera push to the phone, SMS → banking site, URL zoom.
