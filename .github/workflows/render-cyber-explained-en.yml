@@ -1,0 +1,94 @@
+name: Cyber Explained — Remotion EN Scene 01
+on:
+  push:
+    branches:
+      - feat/cyber-explained-ep01-scene01-remotion
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  remotion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pinned dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: TypeScript typecheck
+        run: npm run check
+
+      - name: Install Remotion Chrome Headless Shell
+        run: npx remotion browser ensure
+
+      - name: Render 2-second Remotion pipeline test
+        run: |
+          mkdir -p out
+          npx remotion render src/index.ts CyberExplained_Pipeline_Smoke out/PIPELINE_SMOKE_ONLY.mp4 --codec h264 --concurrency 2
+
+      - name: Inspect smoke MP4
+        run: |
+          ffprobe -v error -show_entries stream=codec_type,width,height,r_frame_rate -show_entries format=duration -of json out/PIPELINE_SMOKE_ONLY.mp4 > out/smoke_ffprobe.json
+          cat out/smoke_ffprobe.json
+
+      - name: Upload smoke test (NOT the episode)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyberExplained_Remotion_Pipeline_Smoke_ONLY
+          path: |
+            out/PIPELINE_SMOKE_ONLY.mp4
+            out/smoke_ffprobe.json
+          retention-days: 14
+
+      - name: Detect source artwork/audio
+        id: assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            public/assets/hero.png
+            public/assets/minh_body_inpainted.png
+            public/assets/minh_head_rgba.png
+            public/assets/minh_hands_phone_rgba.png
+            public/audio/original_music_sfx.wav
+            public/audio/voice_en_scratch.wav
+          )
+          missing=0
+          for file in "${files[@]}"; do
+            if [[ ! -s "$file" ]]; then
+              echo "::warning title=Missing asset::$file is absent; Scene 01 production render skipped"
+              missing=1
+            fi
+          done
+          if [[ "$missing" = 0 ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Render genuine EP01 Scene 01 (only with its source assets)
+        if: steps.assets.outputs.ready == 'true'
+        run: npm run render:en
+
+      - name: Validate real Scene 01 MP4
+        if: steps.assets.outputs.ready == 'true'
+        run: |
+          ffprobe -v error -count_frames -show_entries stream=codec_type,width,height,r_frame_rate,nb_read_frames -show_entries format=duration -of json out/CyberExplained_EP01_EN_S01_Remotion.mp4 > out/scene_ffprobe.json
+          python3 scripts/check_output.py out/scene_ffprobe.json
+
+      - name: Upload genuine Scene 01 MP4
+        if: steps.assets.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyberExplained_EP01_EN_S01_Remotion_1080x1920_30fps
+          path: |
+            out/CyberExplained_EP01_EN_S01_Remotion.mp4
+            out/scene_ffprobe.json
+          retention-days: 30
