@@ -180,9 +180,9 @@ export const Scene01:React.FC=()=>{
   return <AbsoluteFill style={{background:C.navy,overflow:'hidden'}}>
     <Background frame={frame}/><Character frame={frame}/><Heading frame={frame}/>
     <Notification frame={frame}/><Phone frame={frame}/><Captions frame={frame}/>
-    <Audio src={staticFile('audio/original_music_sfx.wav')} volume={0.35}/>
+    <Audio src={staticFile('audio/original_music_sfx.m4a')} volume={0.35}/>
     <Sequence from={20} durationInFrames={160}>
-      <Audio src={staticFile('audio/voice_en_scratch.wav')} volume={1}/>
+      <Audio src={staticFile('audio/voice_en_scratch.m4a')} volume={1}/>
     </Sequence>
   </AbsoluteFill>;
 };
