@@ -62,8 +62,8 @@ jobs:
             public/assets/minh_body_inpainted.png
             public/assets/minh_head_rgba.png
             public/assets/minh_hands_phone_rgba.png
-            public/audio/original_music_sfx.wav
-            public/audio/voice_en_scratch.wav
+            public/audio/original_music_sfx.m4a
+            public/audio/voice_en_scratch.m4a
           )
           missing=0
           for file in "${files[@]}"; do
