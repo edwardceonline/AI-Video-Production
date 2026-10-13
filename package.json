@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "render:en": "remotion render src/index.ts CyberExplained_EP01_EN_S01 out/CyberExplained_EP01_EN_S01_Remotion.mp4 --codec h264 --crf 18 --concurrency 2",
-    "still:en": "remotion still src/index.ts CyberExplained_EP01_EN_S01 out/frame-180.png --frame 180",
+    "render:en": "remotion render src/index.ts CyberExplained-EP01-EN-S01 out/CyberExplained-EP01-EN-S01_Remotion.mp4 --codec h264 --crf 18 --concurrency 2",
+    "still:en": "remotion still src/index.ts CyberExplained-EP01-EN-S01 out/frame-180.png --frame 180",
     "compositions": "remotion compositions src/index.ts",
     "check": "tsc --noEmit"
   },
