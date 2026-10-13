@@ -6,7 +6,7 @@ import {PipelineSmoke} from './smoke';
 export const RemotionRoot: React.FC = () => (
   <>
     <Composition
-      id="CyberExplained_EP01_EN_S01"
+      id="CyberExplained-EP01-EN-S01"
       component={Scene01}
       fps={30}
       durationInFrames={300}
@@ -14,7 +14,7 @@ export const RemotionRoot: React.FC = () => (
       height={1920}
     />
     <Composition
-      id="CyberExplained_Pipeline_Smoke"
+      id="CyberExplained-Pipeline-Smoke"
       component={PipelineSmoke}
       fps={30}
       durationInFrames={60}
