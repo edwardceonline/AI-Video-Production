@@ -16,11 +16,11 @@ npm run check
 npm run render:en
 ```
 
-**Binary image/audio assets still must be added.** See [ASSETS_REQUIRED.md](./ASSETS_REQUIRED.md). They are present in the earlier `CyberExplained_EP01_EN_Scene01_Remotion_Source.zip`, but the GitHub connector currently transfers only text in this workflow.
+**The binary image/audio assets are now committed.** See [ASSETS_REQUIRED.md](./ASSETS_REQUIRED.md). They are present in the earlier `CyberExplained_EP01_EN_Scene01_Remotion_Source.zip`, but the GitHub connector currently transfers only text in this workflow.
 
 ## CI / Rendering
 
-See `.github/workflows/render-cyber-explained-en.yml`. It installs Remotion, checks asset presence, renders MP4, performs FFprobe QC, and uploads the video artifact. The asset check fails explicitly until images and audio exist in `public/`; a passing render has **not** yet been verified.
+See `.github/workflows/render-cyber-explained-en.yml`. It installs Remotion, checks asset presence, renders MP4, performs FFprobe QC, and uploads the video artifact. The workflow checks assets, renders, validates with FFprobe and uploads an MP4. A passing visual review is required before release.
 
 ## Limitations
 
