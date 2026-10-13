@@ -31,7 +31,7 @@ jobs:
       - name: Render 2-second Remotion pipeline test
         run: |
           mkdir -p out
-          npx remotion render src/index.ts CyberExplained_Pipeline_Smoke out/PIPELINE_SMOKE_ONLY.mp4 --codec h264 --concurrency 2
+          npx remotion render src/index.ts CyberExplained-Pipeline-Smoke out/PIPELINE_SMOKE_ONLY.mp4 --codec h264 --concurrency 2
 
       - name: Inspect smoke MP4
         run: |
@@ -80,15 +80,15 @@ jobs:
       - name: Validate real Scene 01 MP4
         if: steps.assets.outputs.ready == 'true'
         run: |
-          ffprobe -v error -count_frames -show_entries stream=codec_type,width,height,r_frame_rate,nb_read_frames -show_entries format=duration -of json out/CyberExplained_EP01_EN_S01_Remotion.mp4 > out/scene_ffprobe.json
+          ffprobe -v error -count_frames -show_entries stream=codec_type,width,height,r_frame_rate,nb_read_frames -show_entries format=duration -of json out/CyberExplained-EP01-EN-S01_Remotion.mp4 > out/scene_ffprobe.json
           python3 scripts/check_output.py out/scene_ffprobe.json
 
       - name: Upload genuine Scene 01 MP4
         if: steps.assets.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: CyberExplained_EP01_EN_S01_Remotion_1080x1920_30fps
+          name: CyberExplained-EP01-EN-S01_Remotion_1080x1920_30fps
           path: |
-            out/CyberExplained_EP01_EN_S01_Remotion.mp4
+            out/CyberExplained-EP01-EN-S01_Remotion.mp4
             out/scene_ffprobe.json
           retention-days: 30
