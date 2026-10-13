@@ -1,6 +1,6 @@
 # Cyber Explained — Scene 01 asset manifest
 
-The scene source is committed to this branch. **Binary assets have not yet been transferred.**
+The scene source is committed to this branch. **Binary assets are committed on this branch.**
 
 The Remotion composition expects these files in `public/`:
 
@@ -8,10 +8,10 @@ The Remotion composition expects these files in `public/`:
 - `public/assets/minh_body_inpainted.png` — Minh body layer
 - `public/assets/minh_head_rgba.png` — Minh head with alpha
 - `public/assets/minh_hands_phone_rgba.png` — phone/hands with alpha
-- `public/audio/original_music_sfx.wav` — original scratch music/SFX
-- `public/audio/voice_en_scratch.wav` — English scratch voice (not licensed for publication)
+- `public/audio/original_music_sfx.m4a` — original scratch music/SFX
+- `public/audio/voice_en_scratch.m4a` — English scratch voice (not licensed for publication)
 
-All files are included in the previously generated local source package named `CyberExplained_EP01_EN_Scene01_Remotion_Source.zip`.
+The PNG character/background files and compressed M4A scratch audio are now stored in this branch.
 
 **No claim of completed Remotion video should be made without an MP4 rendered from this source and visual review.** The imagery is a low-resolution 352x337 rig prototype requiring improved artwork before production release.
 
