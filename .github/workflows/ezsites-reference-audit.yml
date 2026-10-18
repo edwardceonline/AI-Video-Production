@@ -1,0 +1,87 @@
+name: Research EzSites V3 references (public only)
+on:
+  push:
+    branches: [research/ezsites-v3-references]
+    paths: ['.github/workflows/ezsites-reference-audit.yml']
+  workflow_dispatch:
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Inspect public URLs (response metadata)
+        shell: bash
+        run: |
+          set +e
+          mkdir -p reference-audit
+          for url in 'https://kurotsuki.party' 'https://kurotsuki.sites.ezsites.app'; do
+            echo "=== URL: $url ==="
+            curl -LsS --connect-timeout 15 --max-time 45 -A 'Mozilla/5.0 (compatible; EzSites Research/1.0)' -w 'FINAL=%{url_effective} STATUS=%{http_code} SIZE=%{size_download} TYPE=%{content_type}\n' -o reference-audit/$(echo $url | sed 's@https://@@;s@[^A-Za-z0-9]@_@g').html "$url"
+          done
+      - name: Capture public site desktop and mobile layouts
+        continue-on-error: true
+        shell: bash
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node <<'JS'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const sites=[['kurotsuki-party','https://kurotsuki.party'],['kurotsuki-ezsites','https://kurotsuki.sites.ezsites.app']];
+            const summary=[];
+            for(const [name,url] of sites){
+              const entry={name,url};
+              try {
+                const ctx=await browser.newContext({viewport:{width:1280,height:850},deviceScaleFactor:1});
+                const page=await ctx.newPage();
+                const errors=[];page.on('pageerror',e=>errors.push(String(e).slice(0,240)));
+                const resp=await page.goto(url,{timeout:45000,waitUntil:'domcontentloaded'});
+                await page.waitForTimeout(3000);
+                await page.screenshot({path:'reference-audit/'+name+'-desktop.png',fullPage:true});
+                entry.status=resp?.status();entry.finalUrl=page.url();entry.title=await page.title();
+                entry.body=(await page.locator('body').innerText({timeout:15000})).slice(0,3500);
+                entry.links=(await page.locator('a[href]').evaluateAll(els=>els.slice(0,30).map(x=>({text:x.innerText?.slice(0,80),href:x.href})))).slice(0,30);
+                entry.errors=errors.slice(0,8);
+                await ctx.close();
+                const mobile=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1.5,isMobile:true,hasTouch:true});
+                const mp=await mobile.newPage();await mp.goto(url,{timeout:45000,waitUntil:'domcontentloaded'});await mp.waitForTimeout(3000);await mp.screenshot({path:'reference-audit/'+name+'-mobile.png',fullPage:true});await mobile.close();
+              } catch(e){entry.error=String(e).slice(0,500)}
+              summary.push(entry);
+            }
+            require('fs').writeFileSync('reference-audit/sites.json',JSON.stringify(summary,null,2));
+            console.log('SITE RESEARCH',JSON.stringify(summary.map(x=>({name:x.name,title:x.title,status:x.status,url:x.finalUrl,body:x.body?.slice(0,550),error:x.error}))));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+      - name: Inspect public YouTube reference metadata (no video redistribution)
+        continue-on-error: true
+        shell: bash
+        run: |
+          python3 -m pip install --user yt-dlp
+          python3 - <<'PY'
+          import subprocess,json,os
+          out=[]
+          for video_id in ('9341cn0KokE','OugxDOargKI'):
+              url=f'https://www.youtube.com/watch?v={video_id}'
+              try:
+                  p=subprocess.run([os.path.expanduser('~/.local/bin/yt-dlp'),'--skip-download','--no-playlist','--dump-single-json','--socket-timeout','10',url],capture_output=True,text=True,timeout=65)
+                  if p.returncode: out.append({'id':video_id,'error':p.stderr[-1100:]});continue
+                  d=json.loads(p.stdout)
+                  out.append({k:d.get(k) for k in ['id','title','uploader','duration','description','thumbnail','webpage_url','release_date','upload_date']})
+              except Exception as e:out.append({'id':video_id,'error':str(e)})
+          os.makedirs('reference-audit',exist_ok=True)
+          with open('reference-audit/video-metadata.json','w') as f:json.dump(out,f,indent=2,ensure_ascii=False)
+          print('VIDEO METADATA',json.dumps(out,ensure_ascii=False)[:4500])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ezsites-reference-audit
+          path: reference-audit/*
+          if-no-files-found: warn
+          retention-days: 7
