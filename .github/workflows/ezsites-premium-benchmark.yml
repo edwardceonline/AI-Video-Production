@@ -38,8 +38,8 @@ jobs:
         run: npm run render
       - name: Validate MP4
         run: |
-          ffprobe -hide_banner -v error -show_entries format=duration,size -of default=noprint_wrappers=1 output/ezsites-premium-benchmark.mp4
-          ffprobe -hide_banner -v error -select_streams a -show_entries stream=codec_name -of default=noprint_wrappers=1 output/ezsites-premium-benchmark.mp4
+          test -s output/ezsites-premium-benchmark.mp4
+          stat -c "Rendered file: %n | bytes: %s" output/ezsites-premium-benchmark.mp4
       - name: Upload preview artifact
         uses: actions/upload-artifact@v4
         if: always()

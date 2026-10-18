@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Img, Easing, interpolate, staticFile, useCurrentFrame} from 'remotion';
 import {Audio} from '@remotion/media';
 
 const C={ink:'#151917',ivory:'#F3EDE2',paper:'#E8DFD0',accent:'#BC8860',blue:'#129BE8'};
@@ -7,7 +7,7 @@ const clamp={extrapolateLeft:'clamp' as const,extrapolateRight:'clamp' as const}
 const ease=Easing.bezier(.19,1,.22,1);
 const prog=(f:number,a:number,b:number)=>interpolate(f,[a,b],[0,1],{...clamp,easing:ease});
 const lerp=(f:number,a:number,b:number,from:number,to:number)=>interpolate(f,[a,b],[from,to],{...clamp,easing:ease});
-const Photo:React.FC<{src:string;scale?:number;pos?:string;style?:React.CSSProperties}>=({src,scale=1,pos='center',style})=><img src={staticFile(src)} style={{position:'absolute',width:'100%',height:'100%',objectFit:'cover',objectPosition:pos,transform:`scale(${scale})`,...style}}/>;
+const Photo:React.FC<{src:string;scale?:number;pos?:string;style?:React.CSSProperties}>=({src,scale=1,pos='center',style})=><Img src={staticFile(src)} style={{position:'absolute',width:'100%',height:'100%',objectFit:'cover',objectPosition:pos,transform:`scale(${scale})`,...style}}/>;
 
 const Grain:React.FC=()=> <div style={{position:'absolute',inset:0,opacity:.105,pointerEvents:'none',backgroundImage:'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 180 180\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.7\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' opacity=\'.3\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',backgroundSize:'190px 190px',mixBlendMode:'soft-light'}}/>;
 
@@ -64,7 +64,7 @@ const WebsiteShot:React.FC<{f:number}>=({f})=>{
 
 const EndShot:React.FC<{f:number}>=({f})=>{
  const enter=prog(f,180,202),title=prog(f,202,220);const drop=lerp(f,182,204,130,0);
- return <AbsoluteFill style={{opacity:enter,background:C.ivory,color:C.ink,overflow:'hidden'}}>
+ return <AbsoluteFill style={{opacity:enter,background:'#FFFFFF',color:C.ink,overflow:'hidden'}}>
    <div style={{position:'absolute',width:880,height:880,right:-460,top:-200,borderRadius:1000,background:'#D9EAF0',filter:'blur(60px)',opacity:.5}}/>
    <div style={{position:'absolute',top:116,left:75,right:75}}><FilmHeader dark/></div>
    <div style={{position:'absolute',left:76,right:76,top:478,transform:`translateY(${drop}px)`}}>
@@ -74,7 +74,7 @@ const EndShot:React.FC<{f:number}>=({f})=>{
       <div style={{fontFamily:'Arial',fontSize:27,lineHeight:1.55,marginTop:36,opacity:title,color:'#555B57'}}>Your work deserves a world beyond your door.</div>
    </div>
    <div style={{position:'absolute',left:75,right:75,bottom:162,display:'flex',justifyContent:'space-between',alignItems:'center',opacity:title}}>
-      <div style={{width:380,height:170,display:'flex',alignItems:'center',justifyContent:'flex-start'}}><img src={staticFile('ezsites-logo.png')} style={{width:'100%',height:160,objectFit:'contain'}}/></div>
+      <div style={{width:380,height:170,display:'flex',alignItems:'center',justifyContent:'flex-start'}}><Img src={staticFile('ezsites-logo.png')} style={{width:'100%',height:160,objectFit:'contain'}}/></div>
       <div style={{background:C.ink,color:'#FDF7EE',fontFamily:'Arial',fontSize:20,padding:'27px 25px',fontWeight:700,letterSpacing:2,whiteSpace:'nowrap'}}>GET STARTED ↗</div>
    </div>
    <div style={{position:'absolute',bottom:69,left:75,right:75,height:2,background:'#D5D1C5'}}/>
