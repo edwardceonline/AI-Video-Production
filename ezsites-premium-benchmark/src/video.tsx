@@ -31,7 +31,7 @@ const CafeShot:React.FC<{f:number}>=({f})=>{
 
 const FauxSite:React.FC<{f:number}>=({f})=>{
  const p=prog(f,71,102); const lift=lerp(f,70,104,270,0);
- return <div style={{width:948,height:1308,borderRadius:19,background:C.ivory,overflow:'hidden',boxShadow:'0 50px 110px rgba(0,0,0,.33),border:'1px solid rgba(255,255,255,.6)',position:'relative',transform:`translateY(${lift}px)`,opacity:p}}>
+ return <div style={{width:948,height:1308,borderRadius:19,background:C.ivory,overflow:'hidden',boxShadow:'0 50px 110px rgba(0,0,0,.33)',border:'1px solid rgba(255,255,255,.6)',position:'relative',transform:`translateY(${lift}px)`,opacity:p}}>
   <div style={{height:73,background:'#FBF8F2',display:'flex',alignItems:'center',padding:'0 28px',borderBottom:'1px solid #d1c7b8',gap:17}}><div style={{display:'flex',gap:8}}>{['#CC8068','#EBC383','#A3BEA5'].map((v,i)=><div key={i} style={{width:12,height:12,borderRadius:20,background:v}}/>)}</div><div style={{margin:'auto',width:450,padding:'12px 26px',borderRadius:10,background:'#F1EBDF',color:'#73695F',fontSize:19,fontFamily:'Arial',textAlign:'center',letterSpacing:.3}}>sundaycoffee.example</div><div style={{width:48,textAlign:'right',fontSize:24,color:'#75695D'}}>↗</div></div>
   <div style={{position:'relative',height:1235,background:'#E4DAC8'}}>
     <div style={{height:106,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0 50px',background:C.ivory,color:C.ink}}><span style={{fontFamily:'Georgia,serif',fontSize:41,letterSpacing:-2}}>sunday<span style={{fontStyle:'italic',fontWeight:400}}>.</span></span><span style={{fontFamily:'Arial',fontSize:17,letterSpacing:3,fontWeight:700}}>MENU&nbsp;&nbsp;&nbsp; ABOUT &nbsp;&nbsp;&nbsp; VISIT ↗</span></div>
