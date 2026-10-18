@@ -5,7 +5,7 @@
 ## Source & rights
 
 1. **Pexels / Amina Filkins** — cheerful florist, 9:16, 8 seconds: https://www.pexels.com/video/woman-arranging-flowers-in-vase-at-her-florist-shop-5405545/
-2. **Pexels / Anna Shvets** — florist arranging bouquet: https://www.pexels.com/video/florist-making-a-flower-arrangement-5893618/
+2. **Pexels / Amina Filkins** — florist working at flower shop (alternate angle): https://www.pexels.com/video/young-woman-working-at-flower-shop-5405546/
 3. Pexels license: https://www.pexels.com/license/
 
 Stock footage shows illustrative people and businesses who **do not endorse EzSites**. This material is a creative treatment test, not a customer testimonial.
