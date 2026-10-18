@@ -1,0 +1,9 @@
+{
+  "name":"ezsites-premium-benchmark",
+  "private":true,
+  "version":"0.1.0",
+  "type":"module",
+  "scripts":{"render":"remotion render src/index.ts Benchmark output/ezsites-premium-benchmark.mp4 --codec h264 --crf 19 --concurrency 2","stills":"node scripts/stills.mjs","studio":"remotion studio src/index.ts"},
+  "dependencies":{"remotion":"4.0.534","@remotion/cli":"4.0.534","@remotion/media":"4.0.534","@remotion/transitions":"4.0.534","react":"19.1.1","react-dom":"19.1.1"},
+  "devDependencies":{"typescript":"^5.9.3","@types/react":"^19.1.0","@types/react-dom":"^19.1.0"}
+}
