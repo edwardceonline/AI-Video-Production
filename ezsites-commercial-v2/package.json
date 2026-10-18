@@ -1,0 +1,21 @@
+{
+  "name": "ezsites-commercial-v2",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts --no-open",
+    "stills": "node scripts/stills.mjs",
+    "render": "remotion render src/index.ts EzSitesV2 output/ezsites-v2-28s.mp4 --codec h264 --crf 18 --concurrency 2"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "@remotion/media": "4.0.534",
+    "remotion": "4.0.534",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "@fontsource/dm-sans": "5.2.6",
+    "@fontsource/cormorant-garamond": "5.2.6"
+  },
+  "devDependencies": {"typescript":"^5.9.3", "@types/react":"^19.1.0", "@types/react-dom":"^19.1.0"}
+}

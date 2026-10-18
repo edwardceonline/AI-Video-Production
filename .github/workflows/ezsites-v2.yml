@@ -1,0 +1,56 @@
+name: EzSites V2 cinematic commercial
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-commercial-v2]
+    paths:
+      - 'ezsites-commercial-v2/**'
+      - '.github/workflows/ezsites-v2.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Prepare licensed original photography and film
+        working-directory: ezsites-commercial-v2
+        run: |
+          set -euo pipefail
+          mkdir -p public output/stills
+          curl -fL --retry 3 --connect-timeout 10 --max-time 90 'https://videos.pexels.com/video-files/5405545/5405545-hd_1080_1920_25fps.mp4' -o public/florist.mp4
+          curl -fL --retry 3 --max-time 60 'https://images.pexels.com/photos/931177/pexels-photo-931177.jpeg?auto=compress&cs=tinysrgb&w=1800' -o public/florals-main.jpg
+          curl -fL --retry 3 --max-time 60 'https://images.pexels.com/photos/1070850/pexels-photo-1070850.jpeg?auto=compress&cs=tinysrgb&w=1800' -o public/florals-detail.jpg
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          file public/*
+      - name: Generate draft English voice and original score
+        working-directory: ezsites-commercial-v2
+        run: |
+          python3 scripts/generate_score.py
+          python3 -m pip install --quiet edge-tts gTTS
+          python3 scripts/generate_voice.py
+      - name: Install Remotion dependencies
+        working-directory: ezsites-commercial-v2
+        run: npm install --no-audit --no-fund
+      - name: Render aesthetic review frames
+        working-directory: ezsites-commercial-v2
+        run: npm run stills
+      - name: Render H.264 full HD MP4 with VO and audio
+        working-directory: ezsites-commercial-v2
+        run: npm run render
+      - name: Verify rendered MP4 present
+        working-directory: ezsites-commercial-v2
+        run: |
+          test -s output/ezsites-v2-28s.mp4
+          stat -c '%n %s bytes' output/ezsites-v2-28s.mp4
+      - name: Upload MP4 and review frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-v2-full-preview
+          path: |
+            ezsites-commercial-v2/output/ezsites-v2-28s.mp4
+            ezsites-commercial-v2/output/stills/*.png
+          if-no-files-found: warn
+          retention-days: 14
