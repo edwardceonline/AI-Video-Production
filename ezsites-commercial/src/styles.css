@@ -18,4 +18,4 @@
 .ad-scene .header-block,.ad-scene .top-brand,.ad-scene .bottom-phrase{opacity:var(--reveal,1)}
 /* Remotion loads the actual PNG brand asset from public/. The text remains a fallback. */
 .brand-word{position:relative;min-width:440px;height:142px;display:flex;align-items:center;justify-content:center}
-.brand-word::before{content:'';position:absolute;inset:0;z-index:1;background:url('/EzSites_full_logo_with_text.png') center center/contain no-repeat}
+.brand-word::before{content:'';position:absolute;inset:0;z-index:1;background:url('../public/EzSites_full_logo_with_text.png') center center/contain no-repeat}
