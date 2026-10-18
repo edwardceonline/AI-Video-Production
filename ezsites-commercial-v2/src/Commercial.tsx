@@ -30,7 +30,7 @@ const MaskText:React.FC<{children:React.ReactNode;f:number;at:number;duration?:n
 const Opening:React.FC<{f:number}>=({f})=>{
  const {fps}=useVideoConfig();
  const light=I(f,0,140,.86,1);
- return <AbsoluteFill style={{overflow:'hidden',opacity:I(f,154,185,1,0),background:'#485446'}}>
+ return <AbsoluteFill style={{overflow:'hidden',opacity:I(f,154,185,1,0),background:'#485446',zIndex:2}}>
    <Sequence from={0} durationInFrames={92} premountFor={fps}>
      <Video src={staticFile('florist.mp4')} premountFor={fps} muted objectFit="cover" style={{position:'absolute',width:'100%',height:'100%',objectFit:'cover',filter:`brightness(${light}) saturate(.78) contrast(1.08)`,transform:`scale(${I(f,0,92,1.04,1.09)}) translateX(${I(f,0,92,0,-14)}px)`}}/>
    </Sequence>
@@ -57,7 +57,7 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
  const n=Math.round(I(f,388,434,0,domain.length));
  const heroY=I(f,180,345,0,-66,smooth);
  const goEmail=I(f,632,677,0,1,smooth);
- return <AbsoluteFill style={{background:C.cream,overflow:'hidden',opacity:I(f,145,180,0,1)}}>
+ return <AbsoluteFill style={{background:C.cream,overflow:'hidden',opacity:I(f,145,180,0,1),zIndex:1}}>
    {/* Page and browser share the same world. Nothing is a hovering feature card. */}
    <div style={{position:'absolute',top:chromeH,left:0,right:0,bottom:0,overflow:'hidden',background:C.paper}}>
      <div style={{height:160,display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 71px',background:C.paper,borderBottom:'1px solid #E8E5DC',position:'relative',zIndex:3}}>
@@ -88,7 +88,7 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
          {/* CONTACT — same web page, naturally revealed through scrolling. */}
          <div style={{height:1640,background:'#EFE9E0',padding:'75px 76px',position:'relative'}}>
            <div style={{height:470,overflow:'hidden',position:'relative',marginBottom:62}}>
-             <Photo src="florals-detail.jpg" style={{objectPosition:'center 47%',filter:'saturate(.78) contrast(.94)'}}/>
+             <Photo src="florals-main.jpg" style={{objectPosition:'center 24%',filter:'saturate(.69) contrast(.97)',transform:'scale(1.22)'}}/>
            </div>
            <div style={{fontFamily:Serif,fontSize:122,lineHeight:.86,color:C.forest,letterSpacing:-3}}>Let's make<br/><em>something lovely.</em></div>
            <div style={{fontFamily:Sans,fontSize:33,color:'#506155',lineHeight:1.38,marginTop:25}}>We'd love to hear from you.</div>
@@ -152,7 +152,7 @@ const value:React.CSSProperties={fontFamily:Sans,fontSize:31,color:C.forest,padd
 
 const BrandEnd:React.FC<{f:number}>=({f})=>{
  const t=I(f,716,760,0,1,smooth);
- return <AbsoluteFill style={{background:'#FFFFFF',opacity:t}}>
+ return <AbsoluteFill style={{background:'#FFFFFF',opacity:t,zIndex:20}}>
    <div style={{position:'absolute',top:0,left:0,right:0,height:830,overflow:'hidden'}}>
      <Photo src="florals-main.jpg" style={{objectPosition:'center 53%',filter:'saturate(.85) contrast(.98)',transform:`scale(${I(f,710,838,1.19,1.06,smooth)})`}}/>
      <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(255,255,255,0) 35%,rgba(255,255,255,.72) 100%)'}}/>
