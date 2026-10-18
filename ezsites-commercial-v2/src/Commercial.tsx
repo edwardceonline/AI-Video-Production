@@ -56,7 +56,8 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
  const domain='petalandpaper.ch';
  const n=Math.round(I(f,388,434,0,domain.length));
  const heroY=I(f,180,345,0,-66,smooth);
- const goEmail=I(f,632,677,0,1,smooth);\n const enquiry='Hi! Could I order flowers for Saturday?';
+ const goEmail=I(f,632,677,0,1,smooth);
+ const enquiry='Hi! Could I order flowers for Saturday?';
  return <AbsoluteFill style={{background:C.cream,overflow:'hidden',opacity:I(f,145,180,0,1),zIndex:1}}>
    {/* Page and browser share the same world. Nothing is a hovering feature card. */}
    <div style={{position:'absolute',top:chromeH,left:0,right:0,bottom:0,overflow:'hidden',background:C.paper}}>
