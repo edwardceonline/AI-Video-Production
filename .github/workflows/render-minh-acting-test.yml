@@ -1,0 +1,71 @@
+name: Cyber Explained — Minh Acting 3s Remotion Experiment
+on:
+  push:
+    branches:
+      - feat/cyber-ep01-minh-acting-3s
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-minh-acting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Remotion dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Typecheck
+        run: npm run check
+
+      - name: Install browser for Remotion
+        run: npx remotion browser ensure
+
+      - name: Validate required art/audio assets
+        run: |
+          for path in public/assets/coffee_head_alpha.webp public/assets/coffee_rig_background.webp public/assets/reacts_head_alpha.webp public/assets/reacts_rig_background.webp public/assets/hero.png public/audio/acting_sfx.m4a; do
+            test -s "$path" || { echo "::error::Missing asset $path"; exit 1; }
+          done
+
+      - name: Render Remotion scene and key stills
+        run: |
+          mkdir -p out
+          npx remotion render src/index.ts CyberExplained-Minh-Acting-3s out/EP01_Minh_Acting_3s_English.mp4 --codec h264 --crf 17 --concurrency 2
+          npx remotion still src/index.ts CyberExplained-Minh-Acting-3s out/key_00.png --frame 4
+          npx remotion still src/index.ts CyberExplained-Minh-Acting-3s out/key_01.png --frame 44
+          npx remotion still src/index.ts CyberExplained-Minh-Acting-3s out/key_02.png --frame 81
+
+      - name: Verify MP4
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffprobe -v error -count_frames -show_entries stream=codec_type,width,height,r_frame_rate,nb_read_frames -show_entries format=duration -of json out/EP01_Minh_Acting_3s_English.mp4 > out/qc.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('out/qc.json'))
+          v=next(s for s in d['streams'] if s['codec_type']=='video')
+          assert (v['width'],v['height'])==(1080,1920),v
+          assert v['r_frame_rate']=='30/1',v
+          assert int(v['nb_read_frames'])==90,v
+          assert 2.9 <= float(d['format']['duration']) <= 3.1,d['format']
+          print('Remotion 3-second motion test QC PASS')
+          PY
+
+      - name: Upload real MP4 and keyframes
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyberExplained-EP01-Minh-Acting-3s-Remotion
+          path: |
+            out/EP01_Minh_Acting_3s_English.mp4
+            out/key_00.png
+            out/key_01.png
+            out/key_02.png
+            out/qc.json
+          retention-days: 30
