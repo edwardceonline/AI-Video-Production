@@ -19,3 +19,8 @@
 /* Remotion loads the actual PNG brand asset from public/. The text remains a fallback. */
 .brand-word{position:relative;min-width:440px;height:142px;display:flex;align-items:center;justify-content:center}
 .brand-word::before{content:'';position:absolute;inset:0;z-index:1;background:url('../public/EzSites_full_logo_with_text.png') center center/contain no-repeat}
+
+/* Approved end-card treatment: original EzSites artwork lives on a clean light panel. */
+.brand-word{min-width:550px;width:550px;height:180px;background:#fff;border:1px solid rgba(222,236,249,.92);border-radius:29px;box-shadow:0 28px 85px rgba(4,15,44,.30);color:transparent;font-size:0;letter-spacing:0;overflow:hidden}
+.brand-word span{color:transparent;font-size:0}
+.brand-word::before{inset:10px 23px;background-size:contain}
