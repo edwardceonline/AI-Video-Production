@@ -1,0 +1,36 @@
+name: EzSites business ad preview
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-business-commercial-preview]
+    paths:
+      - 'ezsites-commercial/**'
+      - '.github/workflows/ezsites-business-preview.yml'
+jobs:
+  visual-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: ezsites-commercial
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Remotion dependencies
+        run: npm install --no-audit --no-fund
+      - name: Render storyboard stills
+        run: npm run stills
+      - name: Render 30s draft preview (silent, half-size)
+        run: npx remotion render src/index.ts EzSitesBusinessCommercial output/ezsites-business-commercial-preview.mp4 --codec h264 --crf 23 --scale 0.5 --concurrency 2
+      - name: Upload actual rendered previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-business-visual-preview
+          path: |
+            ezsites-commercial/output/stills/*.png
+            ezsites-commercial/output/*.mp4
+          if-no-files-found: warn
+          retention-days: 14
