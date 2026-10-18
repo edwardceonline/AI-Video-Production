@@ -51,7 +51,7 @@ const Website:React.FC=()=>{
  return <AbsoluteFill style={{background:C.cream,color:C.ink}}>
    <Bg src="florals-detail.jpg" scale={1.1} style={{filter:'saturate(.67) blur(9px)',opacity:.27}}/>
    <div style={{position:'absolute',left:62,top:85,right:62,display:'flex',alignItems:'center',justifyContent:'space-between',color:C.ink,opacity:I(f,15,36,0,1)}}>
-     <div style={{fontSize:27,fontFamily:typeSans,letterSpacing:3.4,fontWeight:600}}>YOUR PLACE ONLINE.</div>
+     
      <div style={{width:50,height:1,background:C.ink}}/>
    </div>
    <div style={{position:'absolute',left:54,top:210,width:972,height:1450,background:C.paper,overflow:'hidden',borderRadius:18,
@@ -114,7 +114,7 @@ const BrowserScene:React.FC=()=>{
    </div>
    <div style={{position:'absolute',left:64,right:64,top:150+bar,padding:'29px 37px',background:C.navy,color:'white',borderRadius:18,
        transform:`translateY(${bar}px)`,opacity:focus,boxShadow:'0 25px 70px rgba(4,16,28,.24)'}}>
-       <div style={{fontFamily:typeSans,fontSize:22,letterSpacing:3.2,color:'#91C6EC',marginBottom:13}}>MAKE IT YOURS</div>
+       
        <div style={{fontFamily:typeSans,fontSize:54,fontWeight:700,letterSpacing:-1.6}}>Your name. Your domain.</div>
    </div>
    <div style={{position:'absolute',left:68,right:68,bottom:105,fontFamily:typeSerif,fontSize:61,color:C.navy,opacity:I(f,76,98,0,1)}}>More than a link. An identity.</div>
@@ -168,7 +168,7 @@ const ContactScene:React.FC=()=>{
  const sendEffect=I(f,77,96,1,.98);
  return <AbsoluteFill style={{background:'#EDE7DC',color:C.ink}}>
    <div style={{position:'absolute',left:0,top:0,width:1080,height:780,overflow:'hidden'}}>
-     <Bg src="florals-detail.jpg" scale={1.04} style={{objectPosition:'center',filter:'saturate(.71)'}}/>
+     <Video src={staticFile('florist.mp4')} muted trimBefore={61} premountFor={30} objectFit="cover" style={{position:'absolute',width:'100%',height:'100%',objectFit:'cover',filter:'saturate(.82) contrast(1.07)',transform:'scale(1.07)'}}/>
      <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(9,22,16,.01),rgba(9,22,16,.40))'}}/>
    </div>
    <div style={{position:'absolute',top:175,left:75,right:75,color:'white'}}>
