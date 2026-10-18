@@ -56,7 +56,7 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
  const domain='petalandpaper.ch';
  const n=Math.round(I(f,388,434,0,domain.length));
  const heroY=I(f,180,345,0,-66,smooth);
- const goEmail=I(f,632,677,0,1,smooth);
+ const goEmail=I(f,632,677,0,1,smooth);\n const enquiry='Hi! Could I order flowers for Saturday?';
  return <AbsoluteFill style={{background:C.cream,overflow:'hidden',opacity:I(f,145,180,0,1),zIndex:1}}>
    {/* Page and browser share the same world. Nothing is a hovering feature card. */}
    <div style={{position:'absolute',top:chromeH,left:0,right:0,bottom:0,overflow:'hidden',background:C.paper}}>
@@ -65,7 +65,7 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
        <div style={{fontFamily:Sans,fontSize:21,color:C.ink,fontWeight:600,letterSpacing:.3}}>OUR STORY　 MENU</div>
      </div>
      <div style={{position:'absolute',left:0,right:0,top:160,bottom:0,overflow:'hidden'}}>
-       <div style={{transform:`translateY(${-scroll}px)`,position:'relative',height:3450,willChange:'transform'}}>
+       <div style={{transform:`translateY(${-scroll}px)`,position:'relative',height:4250,willChange:'transform'}}>
          {/* HERO — product photo is independent from real JSX text */}
          <div style={{height:1070,position:'relative',overflow:'hidden'}}>
            <Photo src="florals-main.jpg" style={{objectPosition:'center 47%',filter:'saturate(.85) contrast(.98)',transform:`scale(1.08) translateY(${heroY}px)`}}/>
@@ -86,7 +86,7 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
            <div style={{display:'flex',alignItems:'center',fontFamily:Sans,fontSize:28,fontWeight:700,letterSpacing:1.0,color:C.forest,marginTop:47,gap:24}}>GET IN TOUCH <div style={{height:2,width:170,background:C.forest}}/><span style={{fontSize:38}}>↗</span></div>
          </div>
          {/* CONTACT — same web page, naturally revealed through scrolling. */}
-         <div style={{height:1640,background:'#EFE9E0',padding:'75px 76px',position:'relative'}}>
+         <div style={{height:2400,background:'#EFE9E0',padding:'75px 76px',position:'relative'}}>
            <div style={{height:470,overflow:'hidden',position:'relative',marginBottom:62}}>
              <Photo src="florals-main.jpg" style={{objectPosition:'center 24%',filter:'saturate(.69) contrast(.97)',transform:'scale(1.22)'}}/>
            </div>
@@ -98,7 +98,7 @@ const FlowerWebsite:React.FC<{f:number}>=({f})=>{
                <div style={{flex:1}}><div style={label}>EMAIL</div><div style={value}>alex@email.com</div></div>
              </div>
              <div style={{...label,marginBottom:12}}>YOUR MESSAGE</div>
-             <div style={{fontFamily:Sans,fontSize:32,color:C.forest,padding:'14px 0 28px',borderBottom:'1px solid #C1C4BA',lineHeight:1.35}}>Hi! Could I order flowers for Saturday?</div>
+             <div style={{fontFamily:Sans,fontSize:32,color:C.forest,padding:'14px 0 28px',borderBottom:'1px solid #C1C4BA',lineHeight:1.35}}>{enquiry.slice(0,Math.round(I(f,542,599,0,enquiry.length)))}</div>
              <div style={{background:C.forest,height:107,marginTop:65,display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0 42px',color:'white',fontFamily:Sans,fontWeight:600,fontSize:34,position:'relative'}}>
                SEND ENQUIRY <span style={{fontSize:50}}>↗</span>
                <div style={{position:'absolute',inset:0,background:'#425D48',opacity:I(f,602,616,0,.3)}}/>
