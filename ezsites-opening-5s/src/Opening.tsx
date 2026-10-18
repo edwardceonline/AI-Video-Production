@@ -77,7 +77,7 @@ export const Opening:React.FC=()=>{
      <Picture src="florist-wide.mp4" zoomFrom={1.025} zoomTo={1.07} xFrom={10} xTo={-19} yFrom={0} yTo={-13} duration={cut} offset={0}/>
    </Sequence>
    <Sequence name="Shot B / bouquet craft detail" from={cut} durationInFrames={150-cut} premountFor={fps}>
-     <Picture src="florist-detail.mp4" zoomFrom={1.02} zoomTo={1.10} xFrom={-8} xTo={-29} yFrom={0} yTo={-9} duration={150-cut} offset={5}/>
+     <Picture src="florist-detail.mp4" zoomFrom={1.30} zoomTo={1.40} xFrom={-30} xTo={-54} yFrom={-70} yTo={-98} duration={150-cut} offset={95}/>
    </Sequence>
    <Matte/>
    <EditorialTitle/>

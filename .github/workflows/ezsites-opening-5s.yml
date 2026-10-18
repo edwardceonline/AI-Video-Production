@@ -34,7 +34,8 @@ jobs:
             echo "Downloaded $outfile ($(wc -c < "$outfile") bytes)"
           }
           get_video 5405545 public/florist-wide.mp4
-          get_video 5405546 public/florist-detail.mp4
+          cp public/florist-wide.mp4 public/florist-detail.mp4
+          echo 'Second shot = later moving moment from the same licensed Pexels video'
       - name: Synthesize original licensed music cue
         working-directory: ezsites-opening-5s
         run: python3 scripts/generate_score.py

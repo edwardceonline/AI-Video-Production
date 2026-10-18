@@ -5,7 +5,7 @@
 ## Source & rights
 
 1. **Pexels / Amina Filkins** — cheerful florist, 9:16, 8 seconds: https://www.pexels.com/video/woman-arranging-flowers-in-vase-at-her-florist-shop-5405545/
-2. **Pexels / Amina Filkins** — florist working at flower shop (alternate angle): https://www.pexels.com/video/young-woman-working-at-flower-shop-5405546/
+2. At 3 seconds, a **digital close-up reframe from a later moment in the same moving clip** simulates a second editorial camera. No unlicensed footage or static AI image.
 3. Pexels license: https://www.pexels.com/license/
 
 Stock footage shows illustrative people and businesses who **do not endorse EzSites**. This material is a creative treatment test, not a customer testimonial.
@@ -13,7 +13,7 @@ Stock footage shows illustrative people and businesses who **do not endorse EzSi
 ## Production
 
 - 1080 × 1920, 30 fps, 150 frames, H.264/AAC.
-- Two **live-action** media nodes (`@remotion/media/Video`) with timeline trim, camera drift, separated grade/scrim layers, animated masked headline, composited editorial furniture.
+- Two **live-action** media nodes from the same licensed clip (`@remotion/media/Video`) with timeline trim, camera drift, separated grade/scrim layers, animated masked headline, composited editorial furniture.
 - Cut at 3 seconds, after headline reveal; beat-matched original score produced for this project.
 - Original score is algorithmically composed for this preview, no third-party music.
 - No stock still image and no invented app feature. Not the approved final audio/VO.
