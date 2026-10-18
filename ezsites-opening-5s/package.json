@@ -1,0 +1,19 @@
+{
+  "name": "ezsites-opening-5s",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "stills": "node scripts/stills.mjs",
+    "render": "remotion render src/index.ts EzSitesOpening5s output/ezsites-opening-5s.mp4 --codec h264 --crf 19 --concurrency 2"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "@remotion/media": "4.0.534",
+    "remotion": "4.0.534",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {"typescript": "^5.9.3", "@types/react": "^19.1.0", "@types/react-dom": "^19.1.0"}
+}

@@ -1,0 +1,64 @@
+name: EzSites five-second live-action opening
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-florist-opening-5s]
+    paths:
+      - 'ezsites-opening-5s/**'
+      - '.github/workflows/ezsites-opening-5s.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch actual licensed live-action Pexels footage
+        working-directory: ezsites-opening-5s
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public
+          get_video() {
+            local id="$1"; local outfile="$2"
+            for key in "hd_1080_1920_25fps" "hd_720_1280_25fps" "sd_540_960_25fps" "hd_1080_1920_30fps" "hd_720_1280_30fps"; do
+              url="https://videos.pexels.com/video-files/${id}/${id}-${key}.mp4"
+              echo "Trying $url"
+              if curl -fL --retry 2 --connect-timeout 15 --max-time 120 -sS "$url" -o "$outfile.tmp" && [ $(wc -c < "$outfile.tmp") -gt 300000 ]; then
+                mv "$outfile.tmp" "$outfile"; break
+              fi
+            done
+            test -s "$outfile" || { echo "No licensed stock video downloaded for $id"; exit 1; }
+            echo "Downloaded $outfile ($(wc -c < "$outfile") bytes)"
+          }
+          get_video 5405545 public/florist-wide.mp4
+          get_video 5893618 public/florist-detail.mp4
+      - name: Synthesize original licensed music cue
+        working-directory: ezsites-opening-5s
+        run: python3 scripts/generate_score.py
+      - name: Install dependencies
+        working-directory: ezsites-opening-5s
+        run: npm install --no-audit --no-fund
+      - name: Render verification stills
+        working-directory: ezsites-opening-5s
+        run: npm run stills
+      - name: Render full HD five second MP4
+        working-directory: ezsites-opening-5s
+        run: npm run render
+      - name: Verify output
+        working-directory: ezsites-opening-5s
+        run: |
+          test -s output/ezsites-opening-5s.mp4
+          stat -c '%n: %s bytes' output/ezsites-opening-5s.mp4
+      - name: Upload rendered video and keyframes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-opening-5s-render
+          path: |
+            ezsites-opening-5s/output/ezsites-opening-5s.mp4
+            ezsites-opening-5s/output/stills/*.png
+          if-no-files-found: warn
+          retention-days: 14
