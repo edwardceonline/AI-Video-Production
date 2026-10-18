@@ -89,9 +89,6 @@ export const MinhActingTest:React.FC=()=>{
     <div style={{opacity:1-switchToReaction}}><ArtShot frame={frame} reaction={false}/></div>
     {switchToReaction>0 && <div style={{opacity:switchToReaction}}><ArtShot frame={frame} reaction /></div>}
     <Phone frame={frame}/>
-    <div style={{position:'absolute',left:80,right:80,bottom:110,padding:'30px 0',color:'white',fontWeight:800,fontSize:54,lineHeight:1.12,textAlign:'center',textShadow:'0 3px 24px rgba(0,0,0,.55)'}}>
-      {frame<64?'A message you didn’t expect.':'Your bank account is “locked.”'}
-    </div>
     <div style={{position:'absolute',right:74,top:270,fontSize:23,letterSpacing:4,color:'#D2E7FA',fontWeight:800}}>VISUAL ACTING TEST · 03 SEC</div>
     <Audio src={staticFile('audio/acting_sfx.m4a')} volume={.62}/>
   </AbsoluteFill>;
