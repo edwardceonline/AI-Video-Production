@@ -1,0 +1,22 @@
+{
+  "name": "ezsites-business-commercial",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts EzSitesBusinessCommercial output/ezsites-business-commercial.mp4 --codec h264 --crf 19",
+    "stills": "node scripts/render-stills.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.534",
+    "remotion": "^4.0.534",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0"
+  }
+}
