@@ -1,0 +1,52 @@
+name: EzSites premium benchmark
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-premium-benchmark]
+    paths:
+      - 'ezsites-premium-benchmark/**'
+      - '.github/workflows/ezsites-premium-benchmark.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: ezsites-premium-benchmark
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare licensed visuals and brand
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p public output/stills
+          curl --fail --location --retry 3 --silent --show-error 'https://images.pexels.com/photos/33790118/pexels-photo-33790118.jpeg?auto=compress&cs=tinysrgb&w=1600' -o public/cafe-main.jpg
+          curl --fail --location --retry 3 --silent --show-error 'https://images.pexels.com/photos/15476691/pexels-photo-15476691.jpeg?auto=compress&cs=tinysrgb&w=1600' -o public/cafe-detail.jpg
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          python3 scripts/score.py
+          test $(stat -c%s public/cafe-main.jpg) -gt 30000
+          test $(stat -c%s public/cafe-detail.jpg) -gt 30000
+          file public/*.jpg public/ezsites-logo.png
+      - name: Install production dependencies
+        run: npm install --no-audit --no-fund
+      - name: Render eight verification frames
+        run: npm run stills
+      - name: Render premium 8s benchmark MP4 1080x1920
+        run: npm run render
+      - name: Validate MP4
+        run: |
+          ffprobe -hide_banner -v error -show_entries format=duration,size -of default=noprint_wrappers=1 output/ezsites-premium-benchmark.mp4
+          ffprobe -hide_banner -v error -select_streams a -show_entries stream=codec_name -of default=noprint_wrappers=1 output/ezsites-premium-benchmark.mp4
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ezsites-premium-8s-benchmark
+          path: |
+            ezsites-premium-benchmark/output/ezsites-premium-benchmark.mp4
+            ezsites-premium-benchmark/output/stills/*.png
+          if-no-files-found: warn
+          retention-days: 14
