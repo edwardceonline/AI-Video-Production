@@ -1,15 +1,9 @@
-name: EzSites Lemo Director 20s
+name: EzSites Lemo Director 20s [runner alternative]
 
 on:
   push:
     branches:
       - experiment/lemo-opuscar-native
-    paths:
-      - ".github/workflows/lemo-opuscar-poc.yml"
-      - "films/ezsites-lemo-native/**"
-  pull_request:
-    branches:
-      - main
     paths:
       - ".github/workflows/lemo-opuscar-poc.yml"
       - "films/ezsites-lemo-native/**"
@@ -25,7 +19,7 @@ permissions:
 jobs:
   render:
     name: Render 20s Lemo director film
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 55
     env:
       LEMO_SHA: b5e8ef93930b6d828f352055a689320f138237b1
@@ -88,7 +82,7 @@ jobs:
   hybrid:
     name: Remotion compositing bridge
     needs: render
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 25
     steps:
       - name: Checkout source
