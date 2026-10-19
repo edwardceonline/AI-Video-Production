@@ -19,7 +19,7 @@ export const Root: React.FC = () => (
   <Composition
     id="EzSitesHybrid"
     component={EzSitesHybrid}
-    durationInFrames={360}
+    durationInFrames={480}
     fps={24}
     width={1080}
     height={1920}

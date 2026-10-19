@@ -1,4 +1,4 @@
-name: EzSites Native Lemo-Opuscar POC
+name: EzSites Lemo Director 20s
 
 on:
   push:
@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   render:
-    name: Render 15s native Lemo film
+    name: Render 20s Lemo director film
     runs-on: ubuntu-24.04
     timeout-minutes: 55
     env:
@@ -71,11 +71,16 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: ezsites-lemo-native-15s
+          name: ezsites-lemo-native-20s
           path: |
             films/ezsites-lemo-native/out/ezsites-lemo-native.mp4
             films/ezsites-lemo-native/out/ezsites-lemo-native.srt
             films/ezsites-lemo-native/out/poster.jpg
+            films/ezsites-lemo-native/out/contact-sheet.jpg
+            films/ezsites-lemo-native/out/TREATMENT.md
+            films/ezsites-lemo-native/out/CREDITS
+            films/ezsites-lemo-native/out/director-manifest.json
+            films/ezsites-lemo-native/out/score.json
             films/ezsites-lemo-native/out/stills/*.jpg
           if-no-files-found: error
           retention-days: 14
@@ -95,7 +100,7 @@ jobs:
       - name: Download native Lemo film artifact
         uses: actions/download-artifact@v4
         with:
-          name: ezsites-lemo-native-15s
+          name: ezsites-lemo-native-20s
           path: films/ezsites-lemo-native/remotion/public
       - name: Render hybrid composition
         run: |
@@ -117,13 +122,13 @@ jobs:
           v=next(x for x in info['streams'] if x['codec_type']=='video')
           assert (v['width'],v['height'],v['r_frame_rate'])==(1080,1920,'24/1')
           assert any(x['codec_type']=='audio' for x in info['streams']),"Remotion lost voice and music"
-          assert 14.95<float(info['format']['duration'])<15.08
+          assert 19.95<float(info['format']['duration'])<20.08
           print("Remotion native-clip integration PASS",p)
           PY
       - name: Upload Remotion hybrid MP4
         uses: actions/upload-artifact@v4
         with:
-          name: ezsites-remotion-hybrid-15s
+          name: ezsites-remotion-hybrid-20s
           path: films/ezsites-lemo-native/remotion/out/ezsites-hybrid.mp4
           if-no-files-found: error
           retention-days: 14

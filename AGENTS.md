@@ -1,26 +1,30 @@
-# AI Video Production: agent instructions
+# AI Video Production — AI Director Protocol (ChatGPT + Lemo-Opuscar)
 
-All deliverables must be real rendered MP4 files. A completed code commit is not a completed film.
+**Canonical source of truth:** the pinned upstream Lemo-Opuscar files are binding; this file does not invent a substitute directing framework.
 
-## Two renderer interfaces
-- Lemo-Opuscar: follow its AGENTS.md, DIRECTOR.md, TECHNIQUE.md, a chosen STYLE.md, the scene's TREATMENT.md, and use the **native** frame/audio tools from a pinned upstream version.
-- Remotion: use React for UI footage overlays, composition and reusable motion sections. The first integration is a hybrid composition containing a native Lemo clip; no Remotion-only artistic claim.
+## Read at the START of every NEW film, in order
+1. `$LEMO_LIB/AGENTS.md`: source workflow; topic, brief, style; treatment before opening demos.
+2. `$LEMO_LIB/DIRECTOR.md`: entire directing grammar, benchmark, three structures, sound-first, story/shot/cue map, three source-derived frames, camera reasons, rhythm, silences, legibility and QA.
+3. `$LEMO_LIB/TECHNIQUE.md`: render, sound, TTS/ASR, final mix, review.
+4. **Exactly one** `$LEMO_LIB/styles/<slug>/STYLE.md`; style invariants cannot be overridden by convenience.
+5. This project's `TREATMENT.md`, approved facts, user-controlled source assets and `CREDITS`.
 
-## Directing contract
-1. Write a treatment with at least three distinct narrative structures and pick one before looking at any Lemo demo.
-2. Specify actual user-visible product abilities, verified branding, shot list and cue map. Don't invent UI, pricing or features.
-3. Produce style frames and storyboard with the same rendering code used for the video. Check legibility at 9:16.
-4. Only use original or properly licensed audio, fonts and imagery; add sources to CREDITS.
-5. Voice generation must include transcription-based pronunciation checks. No silent fallback to low-quality synthetic TTS.
-6. Review 1–2 second contact sheets, 0.2 second transition strips and the complete video with audio.
-7. Deliver an artifact containing a real MP4, SRT, poster, source and CREDITS. The reviewed artifact must match the final commit.
-8. Keep new changes on an isolated branch; never merge unfinished experimental code without user review.
+The Github Actions checkout is **not** automatically imported into the current ChatGPT context. Any coding agent/chat director must fetch or read the actual pinned upstream documents afresh before starting a new film. CI `preflight.py` verifies they exist; it cannot substitute for creative judgement.
 
-## Existing production
-- Native Lemo EzSites film: `films/ezsites-lemo-native/`
-- Native Lemo build: `films/ezsites-lemo-native/build.sh`
-- Remotion composing bridge: `films/ezsites-lemo-native/remotion/`
-- GitHub Actions: `.github/workflows/lemo-opuscar-poc.yml`
+## Lemo Director's production stages
+1. Brief and ownership: verified product claims, actual logos/UI; get approval for materially ambiguous claims or assets.
+2. Choose two independent benchmarks; write three story structures and pick one; write a treatment *before* examining a demo.
+3. Beat-grid/score before animation; define sound ambience, per-action foley, at least two silences and two sonic J/L-cuts.
+4. Draw three production-source style frames, including the signature shot, then complete animation with four meaningful camera moves.
+5. Run native Lemo TTS with Whisper check, source-derived stills and 0.2s transition strips, `readcheck.mjs`, native frame render and mastering.
+6. Check final MP4/bitstream/black frames, compare real art with treatment; inspect the actual exported file. Mark full-speed video **with sound** as a human-review gate if not performed.
+7. Correct specific errors and rerun the exact updated SHA. Export MP4 + poster + SRT + treatment + credits + source.
 
-## Agent limitations
-The current GitHub Actions pipeline **renders predefined code**. It does not autonomously prompt Claude/Codex, make creative decisions or access connected private EzSites code. Installing the coding agent and providing authorized model credentials are separate explicit steps; do not claim otherwise.
+## Division of responsibilities
+**ChatGPT here:** AI Director only while this conversation runs: interprets original Lemo rules, directs the film, executes authorized Github operations, inspects render evidence, iterates. It is **not** a background independent Claude/Opus agent.
+**Github Actions:** deterministic rendering / QA worker, not the director.
+**Lemo-Opuscar:** primary animation, voice, ASR and mastering runtime from a pinned commit.
+**Remotion:** optional compositing, verified as its own job; not a replacement for the upstream directing method.
+**Owner:** retains approval for brand, factual claims, commercial music/license, final creative release.
+
+Current film: `films/ezsites-lemo-native/TREATMENT.md`; GitHub Actions: `.github/workflows/lemo-opuscar-poc.yml`; film build: `films/ezsites-lemo-native/build.sh`.

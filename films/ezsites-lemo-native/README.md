@@ -1,42 +1,25 @@
-# EzSites — Lemo-Opuscar × Remotion Video Pipeline
+# EzSites — One Sign, Three Places (20s)
+A new 20-second **English** vertical advertising film, built according to the **pinned original Lemo-Opuscar AI Directing method**, with Swiss Motion Graphics as its only primary style.
 
-This is a **15-second, 1080×1920, 24fps English EzSites advertisement proof of concept**. It is based on a custom visual script following Lemo-Opuscar's Swiss Motion Graphics / Isometric Infographic directing grammar.
+## Story & assets
+One local café's blue sign transforms into a website, a custom-domain identity, a professional email and the verified official EzSites logo. The website and domain are **clearly illustrative concepts**, not an actual EzSites app UI or a claimed registered domain. No invented analytics, BYOD or subscriptions included in the visuals.
 
-## What is actually integrated
+## Canonical method
+The coding/creative agent must read original upstream `AGENTS.md`, `DIRECTOR.md`, `TECHNIQUE.md` and `styles/swiss-motion/STYLE.md` at the SHA pinned in [workflow](../../.github/workflows/lemo-opuscar-poc.yml). Their method takes precedence over our own `AGENTS.md`. The treatment documents three structures, references, camera reasons, second-by-second beats, 120 BPM grid, three-layer sound table and review gates.
 
-- **Native Lemo tools:** upstream-pinned `events.mjs`, `still.mjs`, `video.mjs`, and `mux.sh` extract timing, render 360 frames, and master the audio.
-- **Natural voice:** upstream Lemo **Kokoro** offline English TTS, each line checked with `faster-whisper` ASR (all four lines verified in CI). Four cues are synchronized with the music's gain automation, and the build stops if narration exceeds its allowed scene.
-- **Authentic brand identity:** the official EzSites logo is copied from the mobile product repository and validated against its original Git blob hash in `scripts/preflight.py`. No invented product logo.
-- **Original soundtrack:** procedural music and action-aligned foley, final loudness targeted at −14 LUFS.
-- **Visual QC:** poster, five frames, MP4/codec/fps/duration/audio assertions and FFmpeg blackdetect.
-- **Remotion bridge:** `remotion/` is an actual React/Remotion composition that takes the native Lemo MP4 as a video source, preserves its audio and re-renders a second verified H.264 MP4 in a separate CI job.
-- **Directing contract:** a film-specific `TREATMENT.md` and repo `AGENTS.md` record the approved story, shot list, cue map and self-checks.
-
-## Story
-
-1. 0–3.2 s — local business deserves to be seen.
-2. 3.2–7.1 s — online presence represented by a conceptual website (NOT EzSites app UI).
-3. 7.1–11.6 s — website, domain and business email together.
-4. 11.6–15 s — official EzSites logo and “Get Your Business Online” ending.
-
-**This film does not show actual in-app screens.** It would be misleading to market the conceptual browser card as a screenshot of the product. To add verified screenshots, obtain current EzSites screenshots or screen recordings from a released build and compose them in the Remotion layer.
-
-## Rebuild native film locally
-
-Install Node 20+, Python 3.11+ and FFmpeg; clone [upstream Lemo](https://github.com/lemomo-ai/lemo-opuscar) at the commit pinned in the Actions workflow, then:
-
-```sh
-LEMO_LIB=/absolute/path/to/lemo-opuscar
-(cd "$LEMO_LIB" && sh plugin/skills/lemo-opuscar/scripts/setup.sh deps voice)
-LEMO_LIB="$LEMO_LIB" bash films/ezsites-lemo-native/build.sh
+## Run (macOS/Linux)
+Checkout upstream Lemo at the pinned SHA, install Node20+, Python3.11+, FFmpeg and run:
+```bash
+cd /path/to/lemo-opuscar
+sh plugin/skills/lemo-opuscar/scripts/setup.sh deps voice
+cd /path/to/AI-Video-Production
+LEMO_LIB=/path/to/lemo-opuscar bash films/ezsites-lemo-native/build.sh
 ```
+GitHub Actions renders and exports `films/ezsites-lemo-native/out/ezsites-lemo-native.mp4` (1080×1920, 24fps, 20s), subtitle SRT, verified official logo end poster, contact sheet, 0.2s transition stills, score cue map, treatment, CREDITS and director manifest. The native voice is Kokoro; Whisper verifies every line. The secondary Remotion job re-composes the *same actual* native MP4, checks the presence of audio and uploads its own artifact.
 
-Build outputs under `films/ezsites-lemo-native/out/`. The CI artifact contains MP4, poster, SRT and stills. See [the Remotion bridge](remotion/README.md) for the optional second-stage render.
-
-## Pipeline limits
-
-**Verified by CI:** native Lemo rendering, Kokoro synthesis, ASR transcript, scene timing, original soundtrack, branding integrity and final MP4. **Separately tested by CI:** React/Remotion round-trip composition once the second job passes.
-
-**Not yet executed end to end:** an autonomous Claude Code director using the Lemo plugin, current application-screen capture (the source app is private), and human review of final exported advertising for commercial deployment. The `AGENTS.md` is a contract for an authorized coding agent, not proof that Claude Opus was invoked.
-
-Check `CREDITS` and the [Remotion licensing note](remotion/README.md) before commercial release. Remotion company-licensing eligibility depends on team size.
+## Rights / unfinished business
+- Brand image comes from the linked user-managed EzSites app repo, checked by exact Git blob hash.
+- Film artwork, music, and foley are original code; see CREDITS for upstream tool/voice/model licenses.
+- Published mobile UI isn't shown; only example business graphics are drawn.
+- `AGENTS.md` is a protocol for ChatGPT, not evidence an autonomous Claude agent ran.
+- Creative review involves listening and looking at the final video; passing CI does **not** alone certify commercial creative quality or third-party licensing.
