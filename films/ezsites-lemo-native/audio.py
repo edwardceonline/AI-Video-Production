@@ -1,126 +1,171 @@
 #!/usr/bin/env python3
-"""Original music, procedural foley, offline English voice test; consumes Lemo events.json."""
+"""20s original score: grid-locked 120 BPM motorik, original foley and Kokoro VO."""
+from pathlib import Path
 import json
 import math
-from pathlib import Path
 import numpy as np
 import soundfile as sf
-from scipy.signal import resample_poly
+from scipy.signal import resample_poly, lfilter
 
-HERE = Path(__file__).resolve().parent
-OUT = HERE / "out"
+HERE=Path(__file__).resolve().parent
+OUT=HERE/"out"
 OUT.mkdir(exist_ok=True)
-SR, DUR = 48000, 15.0
-N = int(SR * DUR)
-rng = np.random.default_rng(20261019)
-music = np.zeros((N, 2), dtype=np.float32)
-foley = np.zeros_like(music)
-narration = np.zeros_like(music)
+SR=48000
+DUR=20
+N=SR*DUR
+rng=np.random.default_rng(20261019)
+music=np.zeros((N,2),dtype=np.float32)
+foley=np.zeros((N,2),dtype=np.float32)
+ambience=np.zeros((N,2),dtype=np.float32)
+narration=np.zeros((N,2),dtype=np.float32)
 
-def add(dst, sound, t, gain=1.0, pan=0):
-    start = max(0, round(t * SR))
-    end = min(N, start + len(sound))
-    if end <= start:
-        return
-    s = sound[:end-start] * gain
-    dst[start:end, 0] += s * math.sqrt((1-pan)/2)
-    dst[start:end, 1] += s * math.sqrt((1+pan)/2)
+def add(dst,s,when,gain=1.,pan=0):
+    s=np.asarray(s,dtype=np.float32)
+    begin=round(when*SR)
+    if begin<0: s=s[-begin:];begin=0
+    end=min(N,begin+len(s))
+    if end<=begin:return
+    a=s[:end-begin]*gain
+    dst[begin:end,0]+=a*math.sqrt((1-pan)*.5)
+    dst[begin:end,1]+=a*math.sqrt((1+pan)*.5)
 
-def note(freq, dur, attack=.004, decay=6.5, extra=.2):
-    times = np.arange(round(dur*SR), dtype=np.float32) / SR
-    env = (1-np.exp(-times/attack))*np.exp(-decay*times)
-    return (np.sin(2*np.pi*freq*times)+extra*np.sin(2*np.pi*2*freq*times))*env
+def pluck(freq,dur=.35,decay=9,brightness=.19,attack=.006):
+    t=np.arange(round(dur*SR),dtype=np.float32)/SR
+    env=(1-np.exp(-t/attack))*np.exp(-t*decay)
+    return env*(np.sin(2*np.pi*freq*t)+brightness*np.sin(4*np.pi*freq*t)+brightness*.25*np.sin(6*np.pi*freq*t))
 
 def kick():
-    t = np.arange(round(.24*SR),dtype=np.float32)/SR
-    frequency = 50+125*np.exp(-t*26)
-    return np.sin(2*np.pi*np.cumsum(frequency)/SR)*np.exp(-t*21)
+    t=np.arange(round(.28*SR),dtype=np.float32)/SR
+    phase=2*np.pi*np.cumsum(57+160*np.exp(-t*27))/SR
+    return np.sin(phase)*np.exp(-t*20)
 
-def click():
-    t=np.arange(round(.10*SR),dtype=np.float32)/SR
-    return (np.sin(2*np.pi*1700*t)+.32*rng.standard_normal(len(t)))*np.exp(-t*66)
+def closedhat():
+    n=round(.12*SR);t=np.arange(n)/SR
+    white=rng.standard_normal(n)
+    hp=np.r_[0,np.diff(white)]
+    return hp*np.exp(-t*70)*.26
+
+def papernoise(duration=.18,decay=15):
+    n=round(duration*SR);t=np.arange(n)/SR
+    white=rng.standard_normal(n)
+    return lfilter([1,-.88],[1,-.40],white).astype(np.float32)*np.exp(-t*decay)*.25
+
+def pen():
+    t=np.arange(round(.19*SR))/SR
+    return (np.sin(2*np.pi*(410+1900*t)*t)+.19*rng.standard_normal(len(t)))*np.exp(-t*29)*.24
 
 def whoosh():
-    t=np.arange(round(.36*SR),dtype=np.float32)/SR
-    return rng.standard_normal(len(t)) * (np.sin(np.pi*t/.36)**2) * .25
+    t=np.arange(round(.42*SR),dtype=np.float32)/SR
+    n=rng.standard_normal(len(t))
+    amp=np.sin(np.pi*t/.42)**2
+    return lfilter([1,-.98],[1,-.49],n).astype(np.float32)*amp*.12
 
-# Written for this production: 120 BPM, gradual layering, break before EzSites reveal.
-chords=[(220,261.63,329.63),(174.61,220,293.66),(196,246.94,329.63),(164.81,207.65,261.63)]
-for n in range(30):
-    at = n * .5
-    if 11.48 < at < 12.1:
-        continue
-    chord=chords[min(3,int(at/3.75))]
-    add(music,note(chord[n%3]*(2 if n%7==0 else 1),.34),at,.085 if at<3.4 else .155,(-1 if n%2 else 1)*.2)
-    if (3.4<at<11.45) or at>=12.0:
-        add(music,kick(),at,.16)
-        if n%2:
-            hat=rng.standard_normal(round(.07*SR))*np.exp(-np.arange(round(.07*SR))/SR*48)
-            add(music,hat,at+.25,.018,.45)
-    if 3.5<at<11.45:
-        add(music,note(chord[0]/2,.35,decay=7),at,.10)
-for f in (220,261.63,329.63):
-    add(music,note(f,2.3,attack=.08,decay=.65,extra=.04),12.32,.07)
+def impact():
+    t=np.arange(round(.52*SR),dtype=np.float32)/SR
+    return np.sin(2*np.pi*(66*t+17*(1-np.exp(-t*18))))*np.exp(-t*14)
 
-# Read action timings directly from the original Lemo page using events.mjs.
-events=json.loads((HERE/"events.json").read_text())["ev"]
-for event in events:
-    kind, at = event.get("type"),float(event["t"])
-    if kind=="whoosh":add(foley,whoosh(),at,.28)
-    elif kind=="impact":add(foley,note(155,.28,decay=12),at,.22)
-    else:add(foley,click(),at,.12)
+# Meaningful near-silences: one at the first turn, one before email, one before brand.
+SILENCES=[(3.42,3.78),(11.40,11.80),(15.43,15.79)]
+def audible(t):
+    return not any(a<=t<=b for a,b in SILENCES)
 
-# Natural Kokoro speech is generated by the upstream Lemo TTS tool in build.sh.
+# Ten 2-second bars at 120 BPM, one layer added on each new visual chapter.
+chords=[(164.81,196.0,246.94),(146.83,185.0,220.0),
+        (174.61,220.0,261.63),(130.81,164.81,196.0),
+        (164.81,207.65,261.63)]
+for n in range(80):                      # eighth-note grid, 0.25s
+    t=n*.25
+    if not audible(t):continue
+    section=min(4,int(t/4))
+    triad=chords[section]
+    if n%2==0:                          # beat
+        add(music,pluck(triad[(n//2)%3]*2,.27,decay=10),t,.09+section*.012,(-1 if n%4 else 1)*.17)
+        if section>0:
+            add(music,kick(),t,.12 if section<4 else .17)
+    if section>0 and n%2:
+        add(music,closedhat(),t,.026+(section-1)*.003,.4)
+    if section>=2 and n%4==1:
+        add(music,pluck(triad[0]/2,.43,decay=6.2,brightness=.1),t,.11)
+    if section>=3 and n%8==3:
+        add(music,papernoise(.16,25),t,.040,-.4)
+# Brand chord / tail; does not compete with CTA.
+for hz in (164.81,207.65,261.63,329.63):
+    add(music,pluck(hz,3.7,decay=1.28,attack=.085),16.04,.055)
+# A continuous low-room tone, just audible between events.
+noisy=rng.standard_normal(N).astype(np.float32)
+bed=lfilter([.004],[1,-.996],noisy).astype(np.float32)
+bed*=.013
+for i,(a,b) in enumerate([(0,4),(4,8),(8,12),(12,16)]):
+    s=round(a*SR);e=round(b*SR)
+    ambience[s:e,0]+=bed[s:e]
+    ambience[s:e,1]+=bed[s:e]*.9
+# Score drops out in these deliberate silent pockets.
+for a,b in SILENCES:
+    i,j=round(a*SR),round(b*SR)
+    music[i:j]=0
+    ambience[i:j]=0
+
+ev=json.loads((HERE/"events.json").read_text())["ev"]
+assert len(ev)>=15, "Animation doesn't expose enough foley actions"
+for e in ev:
+    t=float(e["t"])
+    typ=e["type"]
+    if typ=="whoosh":add(foley,whoosh(),t,.27)
+    elif typ=="impact":add(foley,impact(),t,.19)
+    elif typ=="paper":add(foley,papernoise(),t,.27)
+    elif typ=="pen":add(foley,pen(),t,.18)
+    elif typ=="type":add(foley,pluck(910,.085,decay=55),t,.084)
+    else:add(foley,pluck(650,.13,decay=35,brightness=.36),t,.13)
+
 lines=json.loads((HERE/"lines.json").read_text())
-starts=[0.20, 3.72, 7.54, 12.03]
-max_end=[3.12, 6.96, 11.48, 14.88]
-cues=[]
+starts=[.30,4.30,8.30,12.30,16.27]
+deadlines=[3.70,7.70,11.70,15.73,19.83]
+assert len(lines)==len(starts)==5
 duck=np.ones(N,dtype=np.float32)
-for i,(line,at,deadline) in enumerate(zip(lines,starts,max_end)):
-    wav=OUT/"voice"/(line["id"]+".wav")
-    if not wav.exists():
-        raise RuntimeError("Missing Kokoro voice file: "+str(wav))
-    speech,sr=sf.read(wav)
-    if speech.ndim==2:speech=speech.mean(axis=1)
-    if sr!=SR:speech=resample_poly(speech,SR,sr)
-    speech=np.asarray(speech,dtype=np.float32)
-    if not len(speech):raise RuntimeError("Silent or empty narration: "+line["id"])
-    duration=len(speech)/SR
-    end=at+duration
-    if end>deadline:
-        raise RuntimeError(f"Kokoro line {line['id']} extends to {end:.2f}s past cut {deadline:.2f}s. Edit line or speed and rerun; never truncate speech.")
-    rms=np.sqrt(np.mean(speech*speech)+1e-12)
-    speech*=min(.15/max(rms,1e-5),4)
-    nfade=min(len(speech)//2,round(.03*SR))
-    if nfade:
-        speech[:nfade]*=np.linspace(0,1,nfade)
-        speech[-nfade:]*=np.linspace(1,0,nfade)
-    add(narration,speech,at,.78)
-    cues.append({"t0":at,"t1":min(DUR-.04,max(at+1.8,end+.60)),"text":line["text"]})
-    a=max(0,round((at-.14)*SR))
-    b=min(N,round((end+.24)*SR))
-    duck[a:b]=.32
+cues=[]
+for item,t,deadline in zip(lines,starts,deadlines):
+    path=OUT/"voice"/(item["id"]+".wav")
+    voice,fs=sf.read(path)
+    if voice.ndim>1:voice=voice.mean(1)
+    if fs!=SR:voice=resample_poly(voice,SR,fs)
+    voice=voice.astype(np.float32)
+    duration=len(voice)/SR
+    stop=t+duration
+    if stop>deadline:raise RuntimeError(f"Narration {item['id']} ends {stop:.3f}s after safe {deadline:.3f}s — shorten or speed it up, never truncate.")
+    rms=np.sqrt(np.mean(voice*voice)+1e-10)
+    if rms<1e-3:raise RuntimeError(f"Voice almost silent: {item['id']}")
+    voice *= min(.155/rms,4)
+    fade=min(len(voice)//2,int(.025*SR))
+    if fade>0:
+        voice[:fade]*=np.linspace(0,1,fade)
+        voice[-fade:]*=np.linspace(1,0,fade)
+    add(narration,voice,t,.78)
+    a=max(0,round((t-.13)*SR))
+    b=min(N,round((stop+.28)*SR))
+    duck[a:b]=.30
+    cues.append({"t0":t,"t1":min(DUR-.05,max(t+1.8,stop+.65)),"text":item["text"]})
+# smooth 150ms gain transitions while preserving exact dialogue onsets
+fade=round(.15*SR)
+cs=np.concatenate(([0],np.cumsum(duck,dtype=np.float64)))
+pos=np.arange(N,dtype=np.int32)
+left=np.maximum(0,pos-fade//2)
+right=np.minimum(N,pos+fade//2)
+env=((cs[right]-cs[left])/np.maximum(right-left,1)).astype(np.float32)
+mixed=music*.74*env[:,None]+ambience*.45+foley*.70+narration
+mixed=np.tanh(mixed*1.32)/1.32
+peak=np.abs(mixed).max()
+assert 0.001<peak<.95, f"Wrong peak before mastering: {peak}"
+sf.write(OUT/"mix.wav",mixed,SR,subtype="PCM_24")
 
-# Smooth control signal to remove abrupt gain edges without delaying speech.
-fade=round(.12*SR)
-kernel=np.ones(fade,dtype=np.float32)/fade
-# Efficient moving average implemented via cumulative sums.
-cs=np.concatenate(([0],np.cumsum(duck.astype(np.float64))))
-smoothed=np.empty(N,dtype=np.float32)
-half=fade//2
-pos=np.arange(N)
-left=np.maximum(0,pos-half)
-right=np.minimum(N,pos+half)
-smoothed[:]=((cs[right]-cs[left]) / np.maximum(1,right-left)).astype(np.float32)
-mix=music*.70*smoothed[:,None]+foley*.78+narration
-mix=np.tanh(mix*1.45)/1.45
-sf.write(OUT/"mix.wav",mix,SR,subtype="PCM_24")
-(OUT/"cues.json").write_text(json.dumps(cues,indent=2))
-def timestamp(s):
-    m,sec=divmod(float(s),60)
-    return f"00:{int(m):02d}:{int(sec):02d},{int((sec%1)*1000):03d}"
+def srt_time(s):
+    m,v=divmod(s,60)
+    return f"00:{int(m):02d}:{int(v):02d},{round((v%1)*1000):03d}"
 (OUT/"ezsites-lemo-native.srt").write_text("\n\n".join(
-    f"{i}\n{timestamp(v['t0'])} --> {timestamp(min(DUR-.05,v['t1']))}\n{v['text']}"
-    for i,v in enumerate(cues,1))+"\n")
-print("audio:",OUT/"mix.wav","peak",float(np.max(np.abs(mix))))
-for cue in cues:print("voice:",cue)
+    f"{i}\n{srt_time(c['t0'])} --> {srt_time(c['t1'])}\n{c['text']}"
+    for i,c in enumerate(cues,1))+"\n",encoding="utf-8")
+(OUT/"cues.json").write_text(json.dumps(cues,indent=2))
+(OUT/"score.json").write_text(json.dumps({"duration":DUR,"bpm":120,"bars":10,
+  "cuts":[4,8,12,16],"silences":SILENCES,"events":ev,
+  "voice":cues},indent=2))
+print("ORIGINAL SCORE 20s:",OUT/"mix.wav","pre-master-peak",round(float(peak),3),"foley-events",len(ev))
+for c in cues:print("voice:",c)
