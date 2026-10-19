@@ -1,7 +1,7 @@
 [
   {
     "id": "01",
-    "text": "You opened your doors for business.",
+    "text": "Your doors are open for business.",
     "voice": "af_sarah",
     "speed": 1.08
   },
@@ -13,7 +13,7 @@
   },
   {
     "id": "03",
-    "text": "Tell EzSites about your business.",
+    "text": "Tell us about your business.",
     "voice": "af_sarah",
     "speed": 1.1
   },
@@ -37,7 +37,7 @@
   },
   {
     "id": "07",
-    "text": "EzSites. Get your business online.",
+    "text": "Easy Sites. Get your business online.",
     "voice": "af_sarah",
     "speed": 1.09
   }
