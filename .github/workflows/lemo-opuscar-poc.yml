@@ -31,6 +31,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Python 3.12 for Lemo and Kokoro
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify Python runtime
+        run: |
+          python3 --version
+          python3 -c 'import sys; assert sys.version_info >= (3, 11), sys.version'
       - name: System media tools
         run: |
           sudo apt-get update
