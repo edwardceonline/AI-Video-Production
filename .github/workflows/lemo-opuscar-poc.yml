@@ -22,7 +22,7 @@ jobs:
   render:
     name: Render 15s native Lemo film
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 55
     env:
       LEMO_SHA: b5e8ef93930b6d828f352055a689320f138237b1
       LEMO_LIB: /tmp/lemo-opuscar
@@ -45,7 +45,7 @@ jobs:
           git -C "$LEMO_LIB" -c advice.detachedHead=false checkout --detach FETCH_HEAD
           test "$(git -C "$LEMO_LIB" rev-parse HEAD)" = "$LEMO_SHA"
           cd "$LEMO_LIB"
-          sh plugin/skills/lemo-opuscar/scripts/setup.sh deps
+          sh plugin/skills/lemo-opuscar/scripts/setup.sh deps voice
       - name: Pin FFmpeg 7 for consistent loudnorm decoding
         run: |
           python3 -m venv /tmp/lemo-ffmpeg-venv
