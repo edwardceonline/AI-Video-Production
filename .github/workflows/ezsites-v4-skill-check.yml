@@ -24,6 +24,8 @@ jobs:
             test -s ".agents/skills/$name/SKILL.md"
             printf '%s: OK\n' "$name"
           done
+      - name: Install FFmpeg for reference and media QA
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Check reference analyzer on generated non-copyright demo clip
         run: |
           mkdir -p /tmp/reference-test
