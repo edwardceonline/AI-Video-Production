@@ -7,11 +7,11 @@ R.setSize(720,1280,false);R.setPixelRatio(1);
 R.outputColorSpace=T.SRGBColorSpace;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
 R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;document.body.appendChild(R.domElement);
 const S=new T.Scene();S.background=new T.Color('#bdcbd0');S.fog=new T.Fog('#bdcbd0',30,100);
-const C=new T.PerspectiveCamera(30,720/1280,.1,150);C.up.set(0,0,1);
+const C=new T.PerspectiveCamera(36,720/1280,.1,150);C.up.set(0,0,1);
 const mat=(col,roughness=.78,metalness=0)=>new T.MeshStandardMaterial({color:col,roughness,metalness});
 const M={brick:mat('#b87658'),brick2:mat('#a76552'),brick3:mat('#cc9270'),
 cream:mat('#e9d8bd'),ink:mat('#233440'),roof:mat('#30434e'),
-wood:mat('#78533b'),glass:new T.MeshPhysicalMaterial({color:'#638e9d',metalness:.12,roughness:.16,transmission:.14,transparent:true,opacity:.84,clearcoat:.8}),
+wood:mat('#78533b'),glass:new T.MeshPhysicalMaterial({color:'#638e9d',metalness:.12,roughness:.12,transmission:.10,transparent:true,opacity:.48,clearcoat:.95}),
 blue:mat('#1872ec'),stone:mat('#bfb6a4'),road:mat('#4c5a60'),lamp:mat('#ffd7a0'),
 green:mat('#39714c'),green2:mat('#658a53'),green3:mat('#8eac65'),
 black:mat('#1c2c31'),white:mat('#fff5e3'),pot:mat('#9f6545'),coffee:mat('#c89b67')};
@@ -111,6 +111,8 @@ for(let level=0;level<9;level++){const z=.32+level*.51;
   box(px,-1.79,z,.45,.022,.032,[M.brick2,M.brick3,M.cream][(i+level)%7===0?2:(i+level)%3===0?1:0],false);}}
 for(const xx of [-2.55,0,2.55]){
  box(xx,-1.90,3.68,1.45,.17,1.35,M.cream);
+ const warmUpper=new T.MeshStandardMaterial({color:'#b8b39e',emissive:'#d9a269',emissiveIntensity:.36,roughness:1});
+ box(xx,-1.95,3.68,1.17,.04,1.05,warmUpper);
  box(xx,-2.01,3.68,1.23,.06,1.11,M.glass);
  box(xx,-2.07,3.68,.055,.07,1.11,M.ink);
  box(xx,-2.06,3.68,1.24,.07,.045,M.ink);
@@ -119,6 +121,10 @@ for(const xx of [-2.55,0,2.55]){
 box(0,-2.04,1.18,7.52,.29,2.36,M.wood);
 for(const xx of [-2.4,2.4]){
  box(xx,-2.22,1.06,1.75,.12,1.69,M.cream);
+ // Backlit café interior seen through the glass, instead of dead flat grey panes.
+ const amber=new T.MeshStandardMaterial({color:'#dfaf71',emissive:'#ffa83f',emissiveIntensity:.75,roughness:.98});
+ box(xx,-2.175,1.08,1.42,.06,1.48,amber);
+ for(let p=0;p<5;p++){const w=.16+p*.24;box(xx-.62+p*.31,-2.23,.42,.16,.07,.39,p%2?M.wood:M.coffee);}
  box(xx,-2.34,1.06,1.51,.055,1.49,M.glass);
  box(xx,-2.4,1.08,.06,.08,1.60,M.ink);
  box(xx,-2.40,.34,1.77,.16,.10,M.wood);
@@ -149,21 +155,21 @@ function person(x,y){const g=new T.Group();S.add(g);g.position.set(x,y,0);
  const head=new T.Mesh(new T.SphereGeometry(.18,10,8),M.cream);head.position.z=1.37;g.add(head);
  return g;
 }
-const people=[person(-3.7,-5.32),person(4.55,-5.28)];
+const people=[]; // this opening close-up features the shop and real props, not primitive figures
 S.add(new T.HemisphereLight('#f8e9d0','#768a91',1.6));
 const sun=new T.DirectionalLight('#fff0ce',2.5);sun.position.set(-10,-13,23);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-20;sun.shadow.camera.right=20;sun.shadow.camera.top=20;sun.shadow.camera.bottom=-20;sun.shadow.bias=-.0007;S.add(sun);
 // Native Lemo Tilt-Shift DOF chain: MSAA depth buffer → physical CoC+sharp band
 // → gather → subtle bloom → warm grade. Shader sample count optimized for CI.
 const {composer:P,dof,grade}=makePost(R,S,C,720,1280,{ssaa:1,msaa:0,ao:false});
-dof.band.y=.56;dof.band.w=.15;dof.band.amp=19;dof.band.mix=.70;
+dof.band.y=.56;dof.band.w=.12;dof.band.amp=28;dof.band.mix=.80;
 dof.focus=22;dof.aper=16;dof.maxCoc=13;
 grade.uniforms.sat.value=1.12;grade.uniforms.contrast.value=.13;
 grade.uniforms.amt.value=.15;grade.uniforms.warm.value=.15;
 window.DUR=30;const ease=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
 window.render=t=>{let p=ease(t/4);
- C.position.set(5.4+2.4*p,-21-4.2*p,10.2+7.0*p);
- C.lookAt(0,-2.9,1.90);C.updateProjectionMatrix();
+ C.position.set(5.9+2.0*p,-23.2-4.4*p,10.0+7.0*p);
+ C.lookAt(0,-3.45,1.82);C.updateProjectionMatrix();
  for(let i=0;i<people.length;i++)people[i].position.x+=0; // stable deterministic frame
  dof.band.y=.56-.025*p;dof.focus=24+5*p;P.render();
 };
