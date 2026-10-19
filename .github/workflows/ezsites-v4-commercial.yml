@@ -43,7 +43,8 @@ jobs:
             stat -c '%n size=%s' "$target"
           }
           fetch_stock public/chef-a.mp4 8908410 8908334
-          fetch_stock public/customer.mp4 6279142 5075206 5075221
+          fetch_stock public/customer.mp4 3044274 3044123 3044093
+          fetch_stock public/contact.mp4 3044123 3044093 3044274
           fetch_stock public/laptop.mp4 5989753 6406028 5527102
       - name: Capture the public Kurotsuki website and original EzSites logo
         working-directory: ezsites-v4
