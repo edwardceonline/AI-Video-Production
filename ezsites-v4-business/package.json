@@ -1,0 +1,23 @@
+{
+  "name": "ezsites-beyond-doors-v4",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "stills": "node scripts/stills.mjs",
+    "render": "remotion render src/index.ts BeyondDoors output/EzSites-Beyond-Doors-V4.mp4 --codec h264 --crf 18 --audio-codec aac --jpeg-quality 95 --concurrency 2 --log error"
+  },
+  "dependencies": {
+    "remotion": "4.0.534",
+    "@remotion/cli": "4.0.534",
+    "@remotion/media": "4.0.534",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "@fontsource/dm-sans": "5.2.6",
+    "@fontsource/cormorant-garamond": "5.2.6"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2",
+    "@types/react": "19.0.14"
+  }
+}

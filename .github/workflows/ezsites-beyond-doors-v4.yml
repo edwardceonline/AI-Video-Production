@@ -1,0 +1,79 @@
+name: EzSites Beyond Your Doors V4
+on:
+  push:
+    branches: [feat/ezsites-beyond-doors-v4]
+    paths:
+      - 'ezsites-v4-business/**'
+      - '.github/workflows/ezsites-beyond-doors-v4.yml'
+  workflow_dispatch:
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set up FFmpeg, Python and dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python3 -m pip install --quiet --break-system-packages numpy Pillow edge-tts
+          cd ezsites-v4-business
+          npm install --no-audit --no-fund
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Prepare authentic published website and official branding
+        working-directory: ezsites-v4-business
+        run: |
+          mkdir -p public output/stills
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          node scripts/capture-site.mjs
+          python3 scripts/prepare-images.py
+      - name: Acquire commercial-friendly cinematic footage
+        working-directory: ezsites-v4-business
+        run: |
+          set -euo pipefail
+          fetch_clip() {
+            local file="$1"; shift
+            for id in "$@"; do
+              for codec in hd_1080_1920_25fps hd_720_1280_25fps hd_1080_1920_30fps hd_720_1280_30fps sd_540_960_25fps hd_1920_1080_25fps hd_1280_720_25fps; do
+                url="https://videos.pexels.com/video-files/${id}/${id}-${codec}.mp4"
+                echo "TRY $file: $url"
+                if curl -fLsS --connect-timeout 15 --max-time 100 --retry 1 "$url" -o "$file.tmp" && test $(stat -c '%s' "$file.tmp") -gt 200000; then
+                  mv "$file.tmp" "$file"
+                  ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 "$file"
+                  return 0
+                fi
+              done
+            done
+            echo "No licensed footage for $file" >&2;return 1
+          }
+          fetch_clip public/chef-a.mp4 8908410
+          fetch_clip public/chef-b.mp4 8908334
+          fetch_clip public/customer.mp4 13736547 5075221 7339414 7986205
+      - name: Compose original soundtrack and English voiceover
+        working-directory: ezsites-v4-business
+        run: |
+          python3 scripts/generate_score.py
+          python3 scripts/generate_voice.py
+      - name: Render creative review keyframes
+        working-directory: ezsites-v4-business
+        run: npm run stills
+      - name: Render complete MP4 with audio
+        working-directory: ezsites-v4-business
+        run: npm run render
+      - name: Inspect final video and assemble storyboard
+        working-directory: ezsites-v4-business
+        run: python3 scripts/qa_render.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: EzSites-Beyond-Doors-V4-Review
+          path: |
+            ezsites-v4-business/output/EzSites-Beyond-Doors-V4.mp4
+            ezsites-v4-business/output/review-board.jpg
+            ezsites-v4-business/output/stills/*.png
+          retention-days: 14
+          if-no-files-found: warn
