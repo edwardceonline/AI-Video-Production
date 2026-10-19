@@ -27,7 +27,7 @@ const mat=(c,rough=.75,metal=0,extra={})=>new THREE.MeshStandardMaterial({color:
 const mats={
   stucco:mat('#ca9375',.9),trim:mat('#f3e5d3',.8),dark:mat('#282628',.62),iron:mat('#222b30',.35,.56),bronze:mat('#987451',.28,.54),
   wood:mat('#a36e41',.72),green:mat('#264b3c',.75),white:mat('#faf7e9',.64),glass:new THREE.MeshPhysicalMaterial({color:'#9ad0d6',roughness:.14,metalness:.1,transparent:true,opacity:.47,clearcoat:1,side:THREE.DoubleSide}),
-  blackGlass:new THREE.MeshPhysicalMaterial({color:'#2e6470',roughness:.12,metalness:.12,transparent:true,opacity:.26,depthWrite:false,side:THREE.DoubleSide}),asphalt:mat('#424950',.99),curb:mat('#cabdb0',1),stone:mat('#b7aca1',1),dirt:mat('#62442d',1),warm:mat('#e9bb6b',.32,0,{emissive:'#d99551',emissiveIntensity:.5}),
+  blackGlass:new THREE.MeshPhysicalMaterial({color:'#2e6470',roughness:.1,metalness:.10,transparent:true,opacity:.18,depthWrite:false,side:THREE.DoubleSide}),asphalt:mat('#424950',.99),curb:mat('#cabdb0',1),stone:mat('#b7aca1',1),dirt:mat('#62442d',1),warm:mat('#e9bb6b',.32,0,{emissive:'#d99551',emissiveIntensity:.5}),
   latte:mat('#ae6731',.94),milk:mat('#f4e5ca',.76),blue:mat('#1477ea',.22,.1,{emissive:'#0654b8',emissiveIntensity:.7}),
   foliage:[mat('#27503c'),mat('#3d754d'),mat('#487d4e'),mat('#618d4d'),mat('#779958'),mat('#2b6247')]
 };
@@ -73,6 +73,43 @@ box(store,0,.23,3.13,15.3,.38,.25,mats.dark);
 box(store,0,3.0,3.39,14.55,5.3,.06,mats.blackGlass);
 // warm cafe interior, partly visible through windows
 box(store,0,.15,0.75,14.2,.25,6,mats.wood);
+// An actual glowing café interior: warm back wall, serving bar, espresso machine,
+// glass jars, hanging pendant lamps, pastry case and coherent service doorway.
+const inside=mat('#e2b894',.91,0,{emissive:'#e2a069',emissiveIntensity:.42});
+box(store,0,3.03,-6.20,14.2,5.85,.12,inside);
+box(store,0,2.46,1.6,9.2,1.28,1.1,mat('#76533c',.72));
+box(store,0,3.14,1.65,9.6,.18,1.24,mat('#d7bb91',.42));
+// espresso machine silhouettes and metallic details read through the glazing
+box(store,-2.4,3.61,1.83,2.0,.9,.72,mat('#b2b5ab',.17,.68));
+box(store,-2.4,4.13,1.86,1.7,.18,.6,mats.iron);
+for(let k=0;k<2;k++){cylinder(store,-2.86+k*.86,3.18,2.0,.17,.17,.22,mats.white);
+  cylinder(store,-2.86+k*.86,3.30,2.0,.13,.13,.02,mats.latte);}
+// pastry dome, display and glass jar
+box(store,2.8,3.55,1.85,3.45,.12,.78,mats.wood);
+for(let i=0;i<7;i++){ball(store,1.5+i*.43,3.74,2.06,.18,mat(i%3===0?'#dab36e':'#a87844',.9));}
+const cloche=new THREE.Mesh(new THREE.SphereGeometry(.94,22,16,0,Math.PI*2,0,Math.PI*.52),
+  new THREE.MeshPhysicalMaterial({color:'#dceceb',transparent:true,opacity:.18,roughness:.08,side:THREE.DoubleSide}));
+cloche.scale.set(1.7,.52,.82);cloche.position.set(2.78,3.68,1.82);store.add(cloche);
+// wall menu shaped like real menu, in-world and close enough to read in final closeup
+const backMenu=board(store,-4.55,4.4,-6.09,3.2,1.8,.08,[
+  {text:'ESPRESSO',size:76,y:66},{text:'LATTE   •   FILTER',size:40,y:142},{text:'BAKED FRESH',size:33,y:215}],{bg:'#263d35'});
+for(let k=0;k<5;k++){
+  let x=-4.5+k*2.2;
+  cylinder(store,x,5.43,.2,.10,.11,.35,mats.bronze);
+  let shade=new THREE.Mesh(new THREE.ConeGeometry(.31,.35,20,1,true),mat('#d8c199',.22,.32));
+  shade.rotation.x=Math.PI;shade.position.set(x,5.15,.2);store.add(shade);
+  const bulb=new THREE.Mesh(new THREE.SphereGeometry(.10,12,10),new THREE.MeshBasicMaterial({color:'#ffe3b0'}));
+  bulb.position.set(x,4.97,.2);store.add(bulb);
+  const fill=new THREE.PointLight('#ffc281',.65,4.5,1.8);fill.position.set(x,4.95,.5);store.add(fill);
+}
+// carved-out entrance: steps, two opening glass doors and prominent vertical pull
+box(store,-.1,.4,3.81,2.55,.25,.85,mats.stone);
+box(store,-.1,3.18,3.78,2.56,5.6,.18,mats.iron);
+box(store,-.1,3.18,3.88,2.33,5.4,.02,new THREE.MeshPhysicalMaterial({color:'#a5c4bd',roughness:.12,transparent:true,opacity:.08,depthWrite:false}));
+box(store,-.11,3.13,3.93,.11,5.3,.12,mats.iron);
+box(store,.1,3.18,4.00,.065,.45,.08,mats.bronze);
+board(store,1.06,4.32,4.03,.6,.32,.01,[{text:'OPEN',size:72,y:84}],{bg:'#2b5e47'});
+
 box(store,0,4.2,1.0,12,4,.3,mat('#ad7850'));
 for(let i=0;i<4;i++){box(store,-5.4+i*3.7,2.2,1.5,2.5,.15,1.45,mats.wood);box(store,-5.4+i*3.7,3.15,1.5,1.5,1.3,.23,mat('#8b5a37'));
  for(let j=0;j<4;j++)ball(store,-6.2+i*3.7+j*.55,2.9+rand()*.1,2.4,.11,mats.warm);}
@@ -93,6 +130,17 @@ for(const x of [-5.15,0,5.15]){
  box(store,x,10.02,3.62,3.9,.24,.38,mats.trim);
  for(let p=0;p<2;p++){box(store,x+(p?1.7:-1.7),8.45,3.62,.14,3.2,.2,mats.trim)}
 }
+
+// White ceramic balcony ledges, plant boxes, botanical leaves over windows.
+for(let wx of [-5.15,0,5.15]){
+  box(store,wx,6.92,3.82,2.8,.34,.65,mat('#5d4731'));
+  for(let k=0;k<12;k++){
+    let x=wx-1.27+k*.23;
+    ball(store,x,7.17+rand()*.36,3.94,.09+rand()*.09,mats.foliage[Math.floor(rand()*6)]);
+    if(k%4===0)ball(store,x,7.34,4.06,.068,mat('#d28d6b'));
+  }
+}
+
 // roof gutters, vents, roof props and distressed cornices
 for(let j=0;j<3;j++)box(store,-7.7+j*7.7,11.4,-1.4,.7,.4,.75,mat('#958e83'));
 box(store,5,11.69,-5.2,2.2,.48,1.6,mats.stone);
@@ -193,8 +241,8 @@ function render(t){t=Math.max(0,Math.min(5,t));
  let st=Math.floor(t*8)/8;root.rotation.y=0;
  const move=smooth(t/2.75),wide=smooth((t-2.85)/1.95);
  // high oblique 50°; camera follows sign then reveals blue path across the neighborhood
- const target=new THREE.Vector3(mix(mix(-3.7,-2.1,move),3.7,wide),mix(mix(3.6,4.0,move),2.5,wide),mix(mix(3.6,2.6,move),5.1,wide));
- const offset=new THREE.Vector3(mix(mix(16.2,14.6,move),22.0,wide),mix(mix(27.5,28.5,move),38,wide),mix(mix(25.0,24.5,move),33,wide));
+ const target=new THREE.Vector3(mix(mix(-3.7,-2.1,move),3.7,wide),mix(mix(4.1,3.5,move),2.5,wide),mix(mix(3.6,2.6,move),5.1,wide));
+ const offset=new THREE.Vector3(mix(mix(10.5,12.8,move),20.0,wide),mix(mix(30,29.8,move),37,wide),mix(mix(27,26.5,move),36,wide));
  camera.position.copy(target).add(offset);camera.lookAt(target);
  const focusObj=new THREE.Vector3(mix(-2,5,wide),mix(6.75,1.4,wide),mix(4.15,6,wide));
  const projected=focusObj.clone().project(camera);
