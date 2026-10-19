@@ -28,6 +28,7 @@ jobs:
       - name: Capture real website
         working-directory: ezsites-beyond-v4
         run: |
+          mkdir -p public
           cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
           node scripts/capture.mjs
       - name: Source authentic free-to-use footage
