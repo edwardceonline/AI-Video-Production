@@ -1,0 +1,59 @@
+name: EzSites 30s Tilt Shift Look Proof
+on:
+  push:
+    branches: [feature/ezsites-tiltshift-30s]
+    paths:
+      - 'films/ezsites-tiltshift-30s/**'
+      - '.github/workflows/ezsites-tiltshift-lookproof.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  miniature-proof:
+    name: Three.js 5s source-rendered miniature and review frames
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Clone pinned original Lemo engine
+        run: |
+          git clone -q https://github.com/lemomo-ai/lemo-opuscar.git lemo
+          git -C lemo checkout b5e8ef93930b6d828f352055a689320f138237b1
+          test -f lemo/styles/tilt-shift/demo/post.js
+      - name: Install Three.js and Chromium
+        working-directory: films/ezsites-tiltshift-30s
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Render 5-second silent art/lens proof
+        working-directory: films/ezsites-tiltshift-30s
+        env:
+          LEMO_LIB: ${{ github.workspace }}/lemo
+        run: |
+          npm run render
+          ffprobe -v error -show_entries stream=codec_type,width,height,r_frame_rate -show_entries format=duration -of json out/tiltshift_5s_proof.mp4
+          python3 - <<'PY'
+          import json,subprocess
+          d=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','stream=codec_type,width,height,r_frame_rate:format=duration','-of','json','out/tiltshift_5s_proof.mp4']))
+          v=next(x for x in d['streams'] if x['codec_type']=='video')
+          assert (v['width'],v['height'],v['r_frame_rate'])==(540,960,'24/1')
+          assert abs(float(d['format']['duration'])-5)<.1
+          print('PASS 5s 540x960 24fps, silent production-source look proof')
+          PY
+      - name: Upload proof and source
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: ezsites-tiltshift-source-proof-5s
+          retention-days: 14
+          path: |
+            films/ezsites-tiltshift-30s/out/*.png
+            films/ezsites-tiltshift-30s/out/tiltshift_5s_proof.mp4
+            films/ezsites-tiltshift-30s/TREATMENT.md

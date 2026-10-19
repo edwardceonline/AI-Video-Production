@@ -51,3 +51,9 @@
 - Review and proposed correction: `films/ezsites-isometric-30s/ART_REVIEW.md`. Internally tried adding café details and removing labels but still visually too primitive, so **do not proceed with the flat-isometric source** without re-approval.
 - **Proposed, not yet approved:** keep approved 30s storytelling but change the PRIMARY upstream Lemo style from flat `iso-infographic` to cinematic `tilt-shift` to make a detailed miniature café, city ambience and believable website/product compositions. User approval is required because style invariants differ.
 - An AI-generated cinematic storyboard is **visual direction only**; actual scene code must separately reproduce quality. Any generated logo/UI text must be redone/verified against actual user-owned EzSites assets.
+
+### Tilt-Shift Miniature approved (2026-10-19)
+- User APPROVED replacing flat `iso-infographic` with Lemo native **`tilt-shift`** after rejecting primitive low-poly art and irrelevant chapter/metadata labels. The 30s Beyond Your Front Door English ad narrative remains approved.
+- Work moved to `feature/ezsites-tiltshift-30s` from `feature/ezsites-isometric-30s`; earlier rejected code remains untouched. Film folder `films/ezsites-tiltshift-30s`, original Lemo post via pinned upstream checkout.
+- Current deliverable scope: **true Three.js 3D café source, depth-band tilt-shift lens, cinematic lighting, real storefront detail, and 5s 24fps motion proof plus styleframes**. GitHub Actions run must succeed before any render-success claim. No full 30s MP4 or polished digital UI claim yet; final logo must be verified against genuine app asset.
+- Current next gate: inspect actual proof frames/MP4 for commercial fidelity. Correct deficiencies and rerender; then present to user for art approval before full 30s implementation.
