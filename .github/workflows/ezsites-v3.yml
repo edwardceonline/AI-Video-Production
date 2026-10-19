@@ -1,0 +1,78 @@
+name: EzSites V3 | Kurotsuki Film
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-commercial-v3]
+    paths:
+      - 'ezsites-v3-studio/**'
+      - '.github/workflows/ezsites-v3.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prepare original brand asset and licensed sushi footage
+        working-directory: ezsites-v3-studio
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public output/stills
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          fetch_p() {
+            local id="$1"; local target="$2"
+            for codec in 'hd_1080_1920_25fps' 'hd_720_1280_25fps' 'sd_540_960_25fps' 'hd_1080_1920_30fps' 'hd_720_1280_30fps' 'hd_1920_1080_25fps'; do
+              url="https://videos.pexels.com/video-files/$id/${id}-${codec}.mp4"
+              echo "Testing $url"
+              if curl -fL -sS --retry 2 --connect-timeout 15 --max-time 120 "$url" -o "$target.tmp" && test $(stat -c '%s' "$target.tmp") -gt 200000; then
+                mv "$target.tmp" "$target"; break
+              fi
+            done
+            test -s "$target" || { echo "Footage unavailable: $id"; exit 1; }
+            ffprobe -v error -show_entries format=duration -of default=nw=1 "$target"
+            stat -c '%n %s bytes' "$target"
+          }
+          fetch_p 8908410 public/chef-a.mp4
+          fetch_p 8908334 public/chef-b.mp4
+      - name: Capture authentic Kurotsuki desktop + mobile website
+        working-directory: ezsites-v3-studio
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-audit --no-fund
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node scripts/capture-site.mjs
+          python3 -m pip install --quiet Pillow
+          python3 scripts/crop-captures.py
+          ls -lh public/*.png
+      - name: Generate original score and English preview narration
+        working-directory: ezsites-v3-studio
+        run: |
+          python3 -m pip install --quiet numpy edge-tts
+          python3 scripts/generate_score.py
+          python3 scripts/generate_voice.py
+      - name: Render QC keyframes
+        working-directory: ezsites-v3-studio
+        run: npm run stills
+      - name: Render full HD 26 second commercial
+        working-directory: ezsites-v3-studio
+        run: npm run render
+      - name: Validate actual deliverables
+        working-directory: ezsites-v3-studio
+        run: |
+          test -s output/ezsites-v3.mp4
+          ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 output/ezsites-v3.mp4
+          stat -c 'MP4 SIZE: %s bytes' output/ezsites-v3.mp4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ezsites-v3-commercial-review
+          path: |
+            ezsites-v3-studio/output/ezsites-v3.mp4
+            ezsites-v3-studio/output/stills/*.png
+          if-no-files-found: warn
+          retention-days: 14
