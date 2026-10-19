@@ -8,6 +8,9 @@ test -f "$LEMO_LIB/core/render/video.mjs"
 mkdir -p "$FILM/out/stills"
 cd "$LEMO_LIB"
 node core/render/events.mjs "$FILM" --out "$FILM/events.json"
+# Voice is produced by Lemo-Opuscar's actual Kokoro TTS and checked by Whisper.
+"$LEMO_LIB/.venv/bin/python" core/tts/tts.py "$FILM/lines.json" "$FILM/out/voice"
+"$LEMO_LIB/.venv/bin/python" core/tts/asr_check.py "$FILM/lines.json" "$FILM/out/voice" --lang en
 "$LEMO_LIB/.venv/bin/python" "$FILM/audio.py"
 node core/render/still.mjs "$FILM" 1.8 4.8 8.6 12.7 14.3 --size 1080x1920 --out "$FILM/out/stills"
 node core/render/video.mjs "$FILM" --size 1080x1920 --fps 24 --workers 2 --out "$FILM/out/raw.mp4"
