@@ -44,3 +44,10 @@
 - 3 real source-rendered styleframes (2.4s storefront; 14.1s Preview/Publish; 25.2s connected overview) and 5-second 4–9s silent proof at 24fps prepared, reviewed and corrected two layout issues. User visual approval of these **art proofs still pending**; not a full ad.
 - Storyboard/voice/audio/claim boundaries: `films/ezsites-isometric-30s/TREATMENT.md`. Exact drawing source: `films/ezsites-isometric-30s/index.html`; reproduction: `scripts/render_preproduction.py`.
 - **Unfinished:** the film's end card has a *temporary stand-in* NOT a valid EzSites logo. MUST replace using genuine source asset before production render. Full 30s animation, Kokoro/Whisper, 120BPM score, FFmpeg mastering, CI render and QC are **not yet completed**. Do not represent 5s proof as completed final.
+
+
+### Art direction correction (2026-10-19; open decision)
+- **User REJECTED the first 30s art proof** despite successful styleframes/5s render: irrelevant labels (`CHAPTER...`, `A BUSINESS STORY...`), disconnected titles and primitive low-poly models. This is a blocking creative failure, not a render bug.
+- Review and proposed correction: `films/ezsites-isometric-30s/ART_REVIEW.md`. Internally tried adding café details and removing labels but still visually too primitive, so **do not proceed with the flat-isometric source** without re-approval.
+- **Proposed, not yet approved:** keep approved 30s storytelling but change the PRIMARY upstream Lemo style from flat `iso-infographic` to cinematic `tilt-shift` to make a detailed miniature café, city ambience and believable website/product compositions. User approval is required because style invariants differ.
+- An AI-generated cinematic storyboard is **visual direction only**; actual scene code must separately reproduce quality. Any generated logo/UI text must be redone/verified against actual user-owned EzSites assets.
