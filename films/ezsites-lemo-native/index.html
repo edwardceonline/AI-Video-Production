@@ -6,6 +6,8 @@
 'use strict';
 // Custom EzSites film; runs through Lemo-Opuscar's unmodified core/render/video.mjs.
 const canvas=document.getElementById('stage'), c=canvas.getContext('2d',{alpha:false});
+const brandLogo = new Image(); brandLogo.src = './assets/ezsites-logo-full.png';
+const brandIcon = new Image(); brandIcon.src = './assets/ezsites-logo-icon.png';
 const W=720,H=1280, BG='#F4F3ED', INK='#151515', BLUE='#3152ED', SOFT='#E0E0D9', WHITE='#FFFFFF';
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const ease=x=>{x=clamp(x);return x*x*(3-2*x)};
@@ -87,7 +89,14 @@ if(t>10.34)txt('ONE PLACE TO GROW.',111,1135,32,WHITE);
 footer('03','CONNECTED');
 }
 function sceneD(t){rect(0,0,W,H,BLUE);c.save();c.globalAlpha=.12;for(let x=55;x<W;x+=92)rule(x,0,x,H,WHITE);for(let y=52;y<H;y+=72)rule(0,y,W,y,WHITE);c.restore();
-wipeText('EzSites',57,300,152,WHITE,t,11.8,12.5);
+const mark = prog(t,11.84,12.50);
+const logoTop = 133 + (1-mark)*160;
+round(56,logoTop,608,226,15,WHITE);
+if (brandLogo.complete && brandLogo.naturalWidth) {
+ const scale=Math.min(548/brandLogo.naturalWidth,194/brandLogo.naturalHeight);
+ const w=brandLogo.naturalWidth*scale,h=brandLogo.naturalHeight*scale;
+ c.drawImage(brandLogo,360-w/2,logoTop+113-h/2,w,h);
+}
 rule(59,352,59+590*prog(t,12.30,12.85),352,WHITE,5);
 wipeText('GET YOUR',57,520,78,WHITE,t,12.55,12.99);
 wipeText('BUSINESS',57,632,100,WHITE,t,12.90,13.35);
@@ -110,5 +119,8 @@ else if(t<11.57)sceneC(t);
 else if(t<12.02)transition(t,11.57,12.02,sceneC,sceneD,true);
 else sceneD(t);
 };
-window.READY=true;window.render(0);
+window.READY=false;
+Promise.all([brandLogo.decode(), brandIcon.decode()])
+ .then(()=>{window.READY=true;window.render(0);})
+ .catch(e=>{console.error('Official EzSites logo asset failed to load',e);throw e;});
 </script></body></html>
