@@ -21,7 +21,7 @@ const Grain:React.FC=()=><AbsoluteFill style={{pointerEvents:'none',opacity:.09,
 
 // Film opens with hands crafting a real product. The logo and captions are NEVER labels or numbered sections.
 const Craft:React.FC=()=>{
- const f=useCurrentFrame();return <AbsoluteFill style={{overflow:'hidden',background:'#090b0a',opacity:hold(f,120,1,12)}}>
+ const f=useCurrentFrame();return <AbsoluteFill style={{overflow:'hidden',background:'#090b0a',opacity:hold(f,120,1,7)}}>
   <Stock file="chef-a.mp4" start={18} local={f} darken={.74} scale={1.03}/>
   <AbsoluteFill style={{opacity:I(f,56,67,0,1)*I(f,103,122,1,.55)}}><Stock file="chef-b.mp4" start={42} local={f} darken={.77} scale={1.04}/></AbsoluteFill>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(2,4,8,.05) 0%,rgba(2,4,8,.13) 48%,rgba(2,4,8,.9) 100%)'}}/>
@@ -34,7 +34,7 @@ const Craft:React.FC=()=>{
  </AbsoluteFill>;
 };
 
-const Anywhere:React.FC=()=>{const f=useCurrentFrame();return <AbsoluteFill style={{overflow:'hidden',background:'#1D1917',opacity:hold(f,119,10,13)}}>
+const Anywhere:React.FC=()=>{const f=useCurrentFrame();return <AbsoluteFill style={{overflow:'hidden',background:'#1D1917',opacity:hold(f,119,7,13)}}>
  <Stock file="customer.mp4" local={f} darken={.77} scale={1.08} shift={-18}/>
  <AbsoluteFill style={{background:'linear-gradient(90deg,rgba(3,9,16,.67),rgba(3,9,16,.18)),linear-gradient(0deg,rgba(3,9,16,.9),transparent 68%)'}}/>
  <div style={{position:'absolute',left:76,right:52,top:1080,color:'#FFFDF9'}}>
@@ -74,8 +74,8 @@ const Domain:React.FC=()=>{const f=useCurrentFrame();const move=I(f,0,77,160,-18
 
 // Illustrative customer interaction, intentionally not shown inside the EzSites application.
 const Enquiry:React.FC=()=>{const f=useCurrentFrame();const t=I(f,23,84,0,1),slide=I(f,19,70,230,0);const sentence='Hello! I’d love to visit this weekend.';const typed=sentence.slice(0,Math.round(I(f,63,119,0,sentence.length)));return <AbsoluteFill style={{overflow:'hidden',background:'#091B2A',opacity:hold(f,166,10,12)}}>
- <Stock file="customer.mp4" local={f} darken={.25} blur={11} scale={1.35}/>
- <AbsoluteFill style={{background:'linear-gradient(135deg,rgba(4,12,21,.86),rgba(9,37,54,.67)),radial-gradient(ellipse at 15% 60%,rgba(18,155,232,.22),transparent 65%)'}}/>
+ <Stock file="customer.mp4" local={f} darken={.66} blur={2} scale={1.12} shift={110}/>
+ <AbsoluteFill style={{background:'linear-gradient(120deg,rgba(4,12,21,.80),rgba(4,12,21,.37) 49%,rgba(9,37,54,.77) 100%),radial-gradient(ellipse at 15% 60%,rgba(18,155,232,.16),transparent 65%)'}}/>
  <div style={{position:'absolute',left:75,top:252,right:60,color:C.cream}}>
   <Title text="A way to" f={f} from={9} size={139}/>
   <Title text="reach out." f={f} from={24} size={148} italic/>
@@ -105,11 +105,11 @@ const Reply:React.FC=()=>{const f=useCurrentFrame();const line='hello@yourbusine
 const Brand:React.FC=()=>{const f=useCurrentFrame();return <AbsoluteFill style={{overflow:'hidden',background:'#F9FBFD',opacity:I(f,0,15,0,1)}}>
  <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 55% 26%,#E8F7FF,transparent 66%)'}}/>
  <div style={{position:'absolute',left:-230,top:320,width:900,height:900,borderRadius:'50%',border:'1px solid rgba(18,155,232,.15)',transform:`scale(${I(f,0,94,.48,1.16)})`,opacity:I(f,0,35,0,1)}}/>
- <div style={{position:'absolute',left:78,right:78,top:474,textAlign:'center',color:C.ink}}>
+ <div style={{position:'absolute',left:78,right:78,top:608,textAlign:'center',color:C.ink}}>
   <div style={{fontFamily:sans,fontSize:27,fontWeight:700,letterSpacing:5,color:C.blue,opacity:I(f,12,30,0,1)}}>WEBSITE · DOMAIN · EMAIL</div>
   <div style={{fontFamily:serif,fontSize:108,fontWeight:600,letterSpacing:-3,lineHeight:1,marginTop:87,opacity:I(f,15,39,0,1),transform:`translateY(${I(f,15,39,60,0)}px)`}}>Get your<br/><i>business online.</i></div>
   <div style={{height:1,background:'#D3DEE9',marginTop:85,marginBottom:61}}/>
-  <div style={{width:690,height:174,margin:'auto',opacity:I(f,39,63,0,1),transform:`translateY(${I(f,39,63,30,0)}px)`}}>
+  <div style={{width:750,height:200,margin:'auto',opacity:I(f,39,63,0,1),transform:`translateY(${I(f,39,63,30,0)}px)`}}>
    <Img src={staticFile('ezsites-logo.png')} style={{width:'100%',height:'100%',objectFit:'contain'}}/>
   </div>
   <div style={{fontFamily:sans,color:'#52677F',fontSize:26,letterSpacing:1.2,marginTop:63,opacity:I(f,51,77,0,1)}}>Your business deserves to be found.</div>
@@ -126,7 +126,7 @@ export const BeyondDoors:React.FC=()=>{
   <Sequence from={498} durationInFrames={166} premountFor={FPS}><Enquiry/></Sequence>
   <Sequence from={651} durationInFrames={127} premountFor={FPS}><Reply/></Sequence>
   <Sequence from={766} durationInFrames={134} premountFor={FPS}><Brand/></Sequence>
-  <Audio src={staticFile('music.wav')} volume={(fr)=>fr<766?.34:.28}/>
+  <Audio src={staticFile('music.wav')} volume={(fr)=>{const windows=[[10,110],[117,210],[224,308],[383,456],[512,590],[662,759],[789,876]]; let gain=1;for(const [start,end] of windows){const amount=I(fr,start-8,start+9,0,1,Easing.linear)*I(fr,end-9,end+9,1,0,Easing.linear);gain=Math.min(gain,1-.48*amount)}return (fr<766?.36:.30)*gain}}/>
   <Audio src={staticFile('sfx.wav')} volume={.92}/>
   <Voices/>
  </AbsoluteFill>
