@@ -1,0 +1,32 @@
+[
+  {
+    "id": "01",
+    "text": "A great business deserves to be found.",
+    "voice": "af_sarah",
+    "speed": 1.08
+  },
+  {
+    "id": "02",
+    "text": "Give it a website people can explore.",
+    "voice": "af_sarah",
+    "speed": 1.08
+  },
+  {
+    "id": "03",
+    "text": "A domain that feels like yours.",
+    "voice": "af_sarah",
+    "speed": 1.08
+  },
+  {
+    "id": "04",
+    "text": "An email that means business.",
+    "voice": "af_sarah",
+    "speed": 1.08
+  },
+  {
+    "id": "05",
+    "text": "Get your business online.",
+    "voice": "af_sarah",
+    "speed": 1.04
+  }
+]

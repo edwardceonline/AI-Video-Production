@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EzSites — One sign, three places</title>
+<style>html,body{margin:0;background:#F3F2EE;overflow:hidden;width:100%;height:100%}canvas{display:block;width:100vw;height:100vh}</style>
+</head><body><canvas id="film"></canvas><script>
+'use strict';
+/** EzSites story: original 20s Swiss Motion Graphics.
+ * Follows pinned Lemo DIRECTOR, TECHNIQUE & swiss-motion STYLE; never the demo.
+ * Main blue signal square persists from local shop sign to website, domain,
+ * business email and final official branded CTA. Deterministic render(t).
+ */
+const canvas=document.getElementById('film'),g=canvas.getContext('2d',{alpha:false});
+const logo=new Image();logo.src='./assets/ezsites-logo-full.png';
+const W=720,H=1280,CREAM='#F3F2EE',PAPER='#FFFFFF',INK='#15213A',BLUE='#0469F5',MIST='#DDE2EB',SILVER='#B3BBC8',PALE='#DBE8FE';
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const smoother=x=>{x=clamp(x);return x*x*(3-2*x)};
+const at=(t,a,b)=>smoother((t-a)/(b-a));
+const linear=(t,a,b)=>clamp((t-a)/(b-a));
+function box(x,y,w,h,col){g.fillStyle=col;g.fillRect(x,y,w,h)}
+function outline(x,y,w,h,col=INK,sw=2){g.lineWidth=sw;g.strokeStyle=col;g.strokeRect(x,y,w,h)}
+function line(x,y,x2,y2,col=INK,sw=2){g.strokeStyle=col;g.lineWidth=sw;g.beginPath();g.moveTo(x,y);g.lineTo(x2,y2);g.stroke()}
+function dot(x,y,r,col=BLUE){g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.fillStyle=col;g.fill()}
+function fillPoly(points,col){g.beginPath();points.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.closePath();g.fillStyle=col;g.fill()}
+function round(x,y,w,h,r,col){g.beginPath();g.roundRect(x,y,w,h,r);g.fillStyle=col;g.fill()}
+function label(s,x,y,size=20,col=INK,weight=600){g.fillStyle=col;g.font=weight+' '+size+'px Arial,sans-serif';g.textBaseline='alphabetic';g.textAlign='left';g.fillText(s,x,y)}
+function fitted(s,x,y,maxSize,maxWidth,col=INK,weight=800){let z=maxSize;g.font=weight+' '+z+'px Arial,sans-serif';while(g.measureText(s).width>maxWidth&&z>10){z-=1;g.font=weight+' '+z+'px Arial,sans-serif'}label(s,x,y,z,col,weight);return z}
+function reveal(s,x,y,size,width,col,t,a,b,weight=800){
+ const p=at(t,a,b);
+ if(!p)return;
+ g.save();g.beginPath();g.rect(x-2,y-size*1.23,width+12,size*1.48);g.clip();
+ let sy=y+(1-p)*size*1.15;fitted(s,x,sy,size,width,col,weight);g.restore();
+}
+function ground(t,chapter){
+box(0,0,W,H,CREAM);
+g.save();g.lineWidth=.7;g.strokeStyle='#E2E3E1';
+let px=15+14*at(t,0,4),py=10+8*at(t,4,8);
+for(let x=26;x<W;x+=68)line(x+px,0,x+px,H,'#E1E3E4',.8);
+for(let y=15;y<H;y+=77)line(0,y+py,W,y+py,'#E1E3E4',.8);
+g.restore();
+box(57,58,48,7,BLUE);
+label('EZSITES  /  GET YOUR BUSINESS ONLINE',118,70,15,INK,700);
+line(57,98,664,98,INK,2);
+line(57,1182,664,1182,MIST,2);
+label('0'+chapter+'  /  ONE BUSINESS. ONE ONLINE PRESENCE.',57,1219,16,INK,600);
+}
+function stampedText(t,no,title,title2,a){
+ground(t,no);
+reveal(title,57,246,74,606,INK,t,a,a+.55);
+reveal(title2,57,341,81,604,BLUE,t,a+.16,a+.74);
+}
+function storefront(t){
+let push=1+.09*at(t,.9,2.5),drift=10*at(t,1.5,3.1);
+g.save();g.translate(360,778);g.scale(push,push);g.translate(-360,-778);
+box(156,966+drift,414,17,'#D5D8DC');
+box(185,605+drift,350,359,PAPER);outline(185,605+drift,350,359,INK,4);
+box(166,578+drift,389,65,INK);
+for(let i=0;i<7;i++)box(166+i*56,631+drift,56,41,(i%2)?WHITE():BLUE);
+function WHITE(){return PAPER}
+box(236,714+drift,105,191,PALE);outline(236,714+drift,105,191,INK,3);
+box(375,714+drift,107,191,PALE);outline(375,714+drift,107,191,INK,3);
+line(288,714+drift,288,905+drift,INK,2);line(428,714+drift,428,905+drift,INK,2);
+box(278,766+drift,12,46,BLUE);box(417,766+drift,12,46,BLUE);
+box(259,889+drift,48,15,INK);box(401,889+drift,48,15,INK);
+const fly=at(t,3.35,3.91);
+let sx=276+fly*46,sy=667+drift-fly*102;
+box(sx,sy,178,58,BLUE);
+label('OPEN',sx+45,sy+40,28,PAPER,900);
+g.restore();
+dot(568,560,5,BLUE);line(568,560,568,672,BLUE,2);dot(568,672,5,INK);
+}
+function page(t){
+stampedText(t,2,'TAKE IT','ONLINE.',4.34);
+let p=at(t,4.14,5.10);
+let y=415+(1-p)*540,x=67;
+g.save();
+g.translate((1-p)*50,0);
+box(x+10,y+12,576,638,'#CBD3DC');
+box(x,y,576,638,PAPER);outline(x,y,576,638,INK,3);
+box(x,y,576,58,INK);
+dot(x+24,y+29,5,PAPER);dot(x+45,y+29,5,PAPER);dot(x+66,y+29,5,BLUE);
+round(x+167,y+14,310,31,4,PAPER);
+label('yourbrand.example',x+180,y+36,17,INK,500);
+box(x+16,y+77,544,263,'#EEF0EF');
+g.save();g.beginPath();g.rect(x+16,y+77,544,263);g.clip();
+for(let i=0;i<10;i++)line(x+14+i*68,y+85,x-53+i*68,y+343,'#DBE2E7',1.5);
+// Edited-in-code fictional café artwork, not product UI.
+dot(x+407,y+216,107,BLUE);dot(x+409,y+212,84,PAPER);
+box(x+377,y+166,65,114,INK);box(x+370,y+160,79,17,INK);
+round(x+378,y+271,92,18,4,SILVER);
+round(x+442,y+184,39,70,19,INK);round(x+449,y+191,24,56,13,'#EEF0EF');
+g.restore();
+label('THE CORNER',x+34,y+161,38,INK,800);
+label('CAFÉ',x+34,y+213,63,INK,800);
+label('YOUR NEXT',x+33,y+399,30,INK,800);
+label('CHAPTER.',x+33,y+439,46,BLUE,900);
+line(x+35,y+468,x+540,y+468,MIST,2);
+label('Coffee • Community • Every day',x+34,y+516,18,INK,500);
+round(x+33,y+541,219,54,4,BLUE);
+label('GET IN TOUCH',x+52,y+576,21,PAPER,700);
+g.restore();
+label('ILLUSTRATIVE BUSINESS WEBSITE',89,1079,12,SILVER,600);
+}
+function domain(t){
+stampedText(t,3,'MAKE IT','YOURS.',8.34);
+const p=at(t,8.15,8.95);
+box(64,460,590,440,PAPER);
+outline(64,460,590,440,INK,3);
+box(64,460,590,58,INK);
+label('ADDRESS',86,498,18,PAPER,700);
+dot(612,488,9,BLUE);
+box(89,571,540*p,114,BLUE);
+if(p>.25)fitted('yourbrand.example',107,642,51,506,PAPER,800);
+line(98,730,622,730,MIST,2);
+label('A NAME PEOPLE',102,783,38,INK,800);
+label('REMEMBER.',102,833,62,BLUE,800);
+// Printed signal travels from the browser URL into a single custom-name token.
+let xx=97+523*at(t,8.75,9.75);
+line(97,930,xx,930,BLUE,6);dot(xx,930,10,BLUE);
+for(let i=0;i<6;i++){let step=at(t,9.15+i*.20,9.75+i*.20);if(step)box(102+i*89,987,63*step,25,i===0?BLUE:INK)}
+}
+function envelope(t){
+stampedText(t,4,'AND A','BUSINESS EMAIL.',12.34);
+const p=at(t,12.25,13.15);
+let x=111,y=512+(1-p)*420,w=503,h=343;
+box(x+9,y+9,w,h,'#C9D5E5');
+box(x,y,w,h,PAPER);outline(x,y,w,h,INK,4);
+fillPoly([[x+3,y+3],[x+w/2,y+195],[x+w-3,y+3]],PALE);
+line(x+2,y+2,x+w/2,y+195,BLUE,4);line(x+w-2,y+2,x+w/2,y+195,BLUE,4);
+line(x+4,y+h-4,x+203,y+163,INK,3);line(x+w-4,y+h-4,x+w-203,y+163,INK,3);
+box(113,y+278,496,56,BLUE);
+label('hello@yourbrand.example',134,y+318,26,PAPER,600);
+label('ONE IDENTITY.',87,951,50,INK,800);
+label('MORE WAYS TO CONNECT.',88,1000,27,BLUE,700);
+const c=at(t,13.05,14.95);
+line(92,1070,92+527*c,1070,BLUE,5);
+for(let i=0;i<3;i++)dot(92+i*263*c,1070,8,i===2?INK:BLUE);
+}
+function endcard(t){
+box(0,0,W,H,BLUE);
+for(let x=49;x<W;x+=76)line(x,0,x,H,'#2D85F6',1);
+for(let y=57;y<H;y+=79)line(0,y,W,y,'#2D85F6',1);
+let p=at(t,16.02,16.65);
+round(60,168+(1-p)*120,600,239,14,PAPER);
+if(logo.complete&&logo.naturalWidth){
+let k=Math.min(535/logo.naturalWidth,189/logo.naturalHeight);
+let w=logo.naturalWidth*k,h=logo.naturalHeight*k;
+g.drawImage(logo,360-w/2,287+(1-p)*120-h/2,w,h);
+}
+line(59,449,59+602*at(t,16.26,16.82),449,PAPER,4);
+reveal('GET YOUR',57,600,89,607,PAPER,t,16.37,16.75);
+reveal('BUSINESS',57,733,117,609,PAPER,t,16.46,16.89);
+reveal('ONLINE.',57,862,123,609,PAPER,t,16.55,16.94);
+let q=at(t,16.85,17.30);
+box(57,975,601*q,87,PAPER);
+if(q>.95)label('START WITH EZSITES',82,1030,38,BLUE,800);
+label('WEBSITE   /   DOMAIN   /   BUSINESS EMAIL',60,1167,18,PAPER,600);
+line(58,1190,661,1190,PAPER,2);
+label('GET YOUR BUSINESS ONLINE.',59,1225,17,PAPER,500);
+}
+const voice=[
+{a:.30,b:3.75,s:'A great business deserves to be found.'},
+{a:4.30,b:7.85,s:'Give it a website people can explore.'},
+{a:8.30,b:11.78,s:"A domain that feels like yours."},
+{a:12.30,b:15.81,s:'And email that means business.'},
+{a:16.27,b:19.94,s:'Get your business online.'}
+];
+function subtitle(t){
+// At 16–20s the full spoken tagline is the giant hero headline, so suppress
+// a redundant subtitle card and preserve the brand/footer safe area.
+if(t>=16)return;
+const v=voice.find(x=>t>=x.a&&t<=x.b);
+if(!v)return;
+const light=t>=16;
+box(57,1090,607,66,light?PAPER:'#FDFDFD');
+box(57,1090,8,66,light?INK:BLUE);
+fitted(v.s,78,1134,26,570,light?BLUE:INK,600);
+}
+function animateCut(t,start,end,oldFn,newFn){
+ // Swiss-motion knife transition: one clear beat-synced boundary instead of
+ // independent column shutters, which fragmented words and visual hierarchy.
+ oldFn(t);
+ const p=at(t,start,end);
+ if(p<=0)return;
+ g.save();g.beginPath();g.rect(0,0,W*p,H);g.clip();newFn(t);g.restore();
+ if(p<1)box(W*p-7,0,7,H,BLUE);
+}
+window.DUR=20;
+window.EV=[
+{t:.25,type:'clack'},{t:.50,type:'pen'},{t:1.00,type:'clack'},
+{t:3.50,type:'paper'},{t:3.75,type:'whoosh'},
+{t:4.00,type:'pen'},{t:5.00,type:'clack'},{t:6.00,type:'impact'},{t:7.50,type:'whoosh'},
+{t:8.50,type:'pen'},{t:9.00,type:'clack'},{t:9.25,type:'type'},{t:9.50,type:'type'},{t:9.75,type:'type'},
+{t:11.50,type:'paper'},{t:12.0,type:'whoosh'},{t:12.50,type:'paper'},
+{t:13.0,type:'clack'},{t:14.0,type:'pen'},{t:15.50,type:'whoosh'},{t:16.00,type:'impact'},{t:17.25,type:'clack'}];
+window.render=t=>{
+ t=clamp(t,0,20);canvas.width=1080;canvas.height=1920;g.setTransform(1.5,0,0,1.5,0,0);
+ const a=x=>{stampedText(x,1,'GOOD BUSINESSES','DESERVE TO BE FOUND.',.28);storefront(x)};
+ if(t<3.76)a(t);
+ else if(t<4.28)animateCut(t,3.76,4.28,a,page);
+ else if(t<7.66)page(t);
+ else if(t<8.27)animateCut(t,7.66,8.27,page,domain);
+ else if(t<11.66)domain(t);
+ else if(t<12.27)animateCut(t,11.66,12.27,domain,envelope);
+ else if(t<15.67)envelope(t);
+ else if(t<16.28)animateCut(t,15.67,16.28,envelope,endcard);
+ else endcard(t);
+ subtitle(t);
+};
+window.TEXTS=t=>{
+let content=null;
+if(t>=1.04&&t<3.76)content='DESERVE TO BE FOUND.';
+else if(t>=4.99&&t<7.76)content='ONLINE.';
+else if(t>=9.09&&t<11.75)content='YOURS.';
+else if(t>=13.09&&t<15.79)content='BUSINESS EMAIL.';
+else if(t>=16.95&&t<=20)content='GET YOUR BUSINESS ONLINE.';
+return content?[{id:'hero-'+Math.floor(t/4),text:content,x0:50*1.5,y0:130*1.5,x1:664*1.5,y1:900*1.5}]:[];
+};
+window.READY=false;logo.decode().then(()=>{window.READY=true;window.render(0)}).catch(e=>{console.error('Required brand logo missing',e);throw e});
+</script></body></html>
