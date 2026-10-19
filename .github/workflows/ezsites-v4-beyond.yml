@@ -1,0 +1,71 @@
+name: EzSites V4 Beyond Your Doors commercial
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-beyond-v4]
+    paths:
+      - 'ezsites-beyond-v4/**'
+      - '.github/workflows/ezsites-v4-beyond.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install video and narration dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python3 -m pip install --break-system-packages edge-tts numpy pillow
+      - name: Install Remotion and Chromium
+        working-directory: ezsites-beyond-v4
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Capture real website
+        working-directory: ezsites-beyond-v4
+        run: |
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          node scripts/capture.mjs
+      - name: Source authentic free-to-use footage
+        working-directory: ezsites-beyond-v4
+        run: bash scripts/download-broll.sh
+      - name: Compose original music and English narration
+        working-directory: ezsites-beyond-v4
+        run: |
+          python3 scripts/generate_score.py
+          python3 scripts/generate_voice.py
+      - name: Render 21 image frames for creative QA
+        working-directory: ezsites-beyond-v4
+        run: npm run stills
+      - name: Render final 1080x1920 H.264 30FPS
+        working-directory: ezsites-beyond-v4
+        run: npm run render
+      - name: Verify MP4 output and sound
+        working-directory: ezsites-beyond-v4
+        run: |
+          test -s output/EzSites-Beyond-Your-Doors.mp4
+          ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_type,width,height,r_frame_rate -of default=noprint_wrappers=1 output/EzSites-Beyond-Your-Doors.mp4
+          python3 - <<'PY'
+          import json,subprocess
+          p='output/EzSites-Beyond-Your-Doors.mp4'
+          j=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration:stream=codec_type,width,height','-of','json',p]))
+          assert 29.8<float(j['format']['duration'])<30.5, j
+          assert any(s.get('codec_type')=='audio' for s in j['streams'])
+          assert any(s.get('width')==1080 and s.get('height')==1920 for s in j['streams'])
+          PY
+          ffmpeg -hide_banner -i output/EzSites-Beyond-Your-Doors.mp4 -filter_complex 'ebur128=peak=true' -f null - 2> output/loudness.txt || true
+      - name: Deliver MP4, keyframes, audio QA
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: EzSites-Beyond-V4-Commercial
+          path: |
+            ezsites-beyond-v4/output/EzSites-Beyond-Your-Doors.mp4
+            ezsites-beyond-v4/output/stills/*.png
+            ezsites-beyond-v4/output/loudness.txt
+          if-no-files-found: warn
+          retention-days: 30
