@@ -48,5 +48,32 @@ for slug,alias in ASSETS:
     except UnicodeDecodeError:
         pass
     results[alias]={"slug":slug,"file":root.name,"license":"CC0","url":f"https://polyhaven.com/a/{slug}","creator":"See Poly Haven asset page"}
+# PBR surface: real weathered clay brick (CC0) rather than repeating generated canvas noise.
+brick=json.loads(get("https://api.polyhaven.com/files/brick_wall_001"))
+surface=OUT/"surfaces";surface.mkdir(parents=True,exist_ok=True)
+def texture_map(kind):
+    candidates=[]
+    for key in brick:
+        label=key.lower()
+        if kind=="diff" and ("diff" in label or "color" in label or "albedo" in label):candidates.append(key)
+        if kind=="normal" and ("nor_gl" in label or "normal gl" in label):candidates.append(key)
+    if not candidates:return None
+    for key in candidates:
+        variants=brick[key]
+        if not isinstance(variants,dict):continue
+        entry=variants.get("1k") or variants.get("2k")
+        if not isinstance(entry,dict):continue
+        for ext in ("jpg","png"):
+            meta=entry.get(ext)
+            if isinstance(meta,dict) and meta.get("url"):
+                output=surface/("brick_"+kind+"."+ext)
+                output.write_bytes(get(meta["url"]))
+                print("surface",key,output.name,output.stat().st_size,flush=True)
+                return "surfaces/"+output.name
+    return None
+d=texture_map("diff")
+n=texture_map("normal")
+if not d:raise RuntimeError("Poly Haven brick_wall_001 missing 1k/2k base color map")
+results["brick_surface"]={"slug":"brick_wall_001","diff":d,"normal":n,"license":"CC0","url":"https://polyhaven.com/a/brick_wall_001"}
 (OUT/"manifest.json").write_text(json.dumps(results,indent=2))
 print("Wrote",OUT/"manifest.json")
