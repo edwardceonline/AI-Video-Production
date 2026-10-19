@@ -6,9 +6,9 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 
 const R=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'});
 R.setSize(720,1280,false);R.setPixelRatio(1);
-R.outputColorSpace=T.SRGBColorSpace;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.35;
+R.outputColorSpace=T.SRGBColorSpace;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
 R.shadowMap.enabled=true;R.shadowMap.type=T.PCFSoftShadowMap;document.body.appendChild(R.domElement);
-const S=new T.Scene();S.background=new T.Color('#bad1de');S.fog=new T.Fog('#bad1de',24,85);
+const S=new T.Scene();S.background=new T.Color('#bdcbd0');S.fog=new T.Fog('#bdcbd0',30,100);
 const C=new T.PerspectiveCamera(30,720/1280,.1,150);C.up.set(0,0,1);
 const mat=(col,roughness=.78,metalness=0)=>new T.MeshStandardMaterial({color:col,roughness,metalness});
 const M={brick:mat('#b87658'),brick2:mat('#a76552'),brick3:mat('#cc9270'),
@@ -17,6 +17,33 @@ wood:mat('#78533b'),glass:new T.MeshPhysicalMaterial({color:'#638e9d',metalness:
 blue:mat('#1872ec'),stone:mat('#bfb6a4'),road:mat('#4c5a60'),lamp:mat('#ffd7a0'),
 green:mat('#39714c'),green2:mat('#658a53'),green3:mat('#8eac65'),
 black:mat('#1c2c31'),white:mat('#fff5e3'),pot:mat('#9f6545'),coffee:mat('#c89b67')};
+// Hand-authored PBR material microdetail: repeatable brick courses, mottled roof felt and worn stone.
+function proceduralMaterial(kind){
+ const cn=document.createElement('canvas');cn.width=512;cn.height=512;const c=cn.getContext('2d');
+ let seed=417;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+ const base=kind==='brick'?'#b77b62':kind==='roof'?'#3b4750':'#b9afa0';
+ c.fillStyle=base;c.fillRect(0,0,512,512);
+ if(kind==='brick'){
+   for(let row=0;row<18;row++)for(let col=-1;col<10;col++){
+     const x=col*59+(row%2)*29,y=row*30;
+     const d=(rnd()-.5)*22;const v=Math.round(158+d);
+     c.fillStyle='rgb('+Math.round(v*1.12)+','+Math.round(v*.67)+','+Math.round(v*.53)+')';
+     c.fillRect(x+2,y+2,56,27);
+     c.fillStyle='rgba(230,197,170,.22)';c.fillRect(x+2,y+2,55,1);
+   }
+ }else{
+   for(let i=0;i<14000;i++){
+    const a=.025+rnd()*.11;c.fillStyle=(rnd()>.52?'rgba(255,245,221,':'rgba(24,28,25,')+a.toFixed(3)+')';
+    c.fillRect(rnd()*512,rnd()*512,1+rnd()*3,1+rnd()*3);
+   }
+   if(kind==='roof')for(let z=0;z<12;z++){c.fillStyle='rgba(16,26,29,.19)';c.fillRect(0,z*46,512,2)}
+ }
+ const tex=new T.CanvasTexture(cn);tex.colorSpace=T.SRGBColorSpace;
+ tex.wrapS=T.RepeatWrapping;tex.wrapT=T.RepeatWrapping;
+ tex.repeat.set(kind==='brick'?3:2,kind==='brick'?2:2);
+ return new T.MeshStandardMaterial({map:tex,color:'#ffffff',roughness:kind==='roof'?.94:.87});
+}
+M.brick=proceduralMaterial('brick');M.brick2=proceduralMaterial('brick');M.roof=proceduralMaterial('roof');M.stone=proceduralMaterial('stone');
 const cube=new T.BoxGeometry(1,1,1);
 function box(x,y,z,w,d,h,m,shadow=true){const o=new T.Mesh(cube,m);o.position.set(x,y,z);o.scale.set(w,d,h);o.castShadow=shadow;o.receiveShadow=true;S.add(o);return o}
 function ball(x,y,z,r,m){const o=new T.Mesh(new T.IcosahedronGeometry(r,1),m);o.position.set(x,y,z);o.castShadow=true;S.add(o);return o}
@@ -101,8 +128,8 @@ function person(x,y){const g=new T.Group();S.add(g);g.position.set(x,y,0);
  return g;
 }
 const people=[person(-3.7,-5.32),person(4.55,-5.28)];
-S.add(new T.HemisphereLight('#f5edda','#617181',2.5));
-const sun=new T.DirectionalLight('#ffe0b0',3.2);sun.position.set(-10,-13,23);sun.castShadow=true;
+S.add(new T.HemisphereLight('#f8e9d0','#768a91',1.6));
+const sun=new T.DirectionalLight('#fff0ce',2.5);sun.position.set(-10,-13,23);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-20;sun.shadow.camera.right=20;sun.shadow.camera.top=20;sun.shadow.camera.bottom=-20;sun.shadow.bias=-.0007;S.add(sun);
 const P=new EffectComposer(R);P.addPass(new RenderPass(S,C));
 // Tilt-shift lens: sharp band tracks the shop, with blurred distant / foreground surfaces.
@@ -112,9 +139,9 @@ fragmentShader:'varying vec2 vUv;uniform sampler2D tDiffuse;uniform float focusY
 P.addPass(lens);P.addPass(new OutputPass());
 window.DUR=30;const ease=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
 window.render=t=>{let p=ease(t/4);
- C.position.set(13+2*p,-23-5*p,17+6*p);
- C.lookAt(0,-1.6,2.15);C.updateProjectionMatrix();
+ C.position.set(10.5+2*p,-22-5*p,11.5+7*p);
+ C.lookAt(0,-2.8,1.72);C.updateProjectionMatrix();
  for(let i=0;i<people.length;i++)people[i].position.x+=0; // stable deterministic frame
- lens.uniforms.focusY.value=.55-.035*p;P.render();
+ lens.uniforms.focusY.value=.56-.025*p;P.render();
 };
 window.READY=true;window.render(0.2);
