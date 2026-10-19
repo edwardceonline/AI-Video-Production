@@ -58,12 +58,12 @@ const Discovery:React.FC=()=>{const f=useCurrentFrame();const camera=I(f,10,72,.
  </AbsoluteFill>};
 
 const Domain:React.FC=()=>{const f=useCurrentFrame();const move=I(f,0,77,160,-180);const logo='yourbusiness.com';const chars=Math.round(I(f,25,75,0,logo.length));return <AbsoluteFill style={{overflow:'hidden',background:'#F5F2EC',opacity:hold(f,138,12,11)}}>
- <div style={{position:'absolute',left:624,top:112,width:550,height:1160,transform:`perspective(1500px) rotateY(${I(f,3,110,-14,-5)}deg) rotateZ(-7deg) scale(1.12)`,boxShadow:'-30px 50px 125px rgba(9,16,22,.25)',borderRadius:27,overflow:'hidden'}}>
+ <div style={{position:'absolute',left:920,top:88,width:550,height:1160,transform:`perspective(1500px) rotateY(${I(f,3,110,-14,-5)}deg) rotateZ(-7deg) scale(1.00)`,boxShadow:'-30px 50px 125px rgba(9,16,22,.25)',borderRadius:27,overflow:'hidden'}}>
   <TrueWebsite f={f} mini scroll={I(f,0,111,120,400)}/>
  </div>
  <div style={{position:'absolute',left:76,top:345,right:90}}>
   <div style={{fontFamily:sans,color:'#7B776E',fontWeight:700,fontSize:26,letterSpacing:4.5,opacity:I(f,15,31,0,1)}}>A NAME THAT'S YOURS.</div>
-  <div style={{fontFamily:serif,color:'#172B3C',fontSize:132,fontWeight:600,lineHeight:.93,marginTop:53,letterSpacing:-5,transform:`translateX(${I(f,10,60,-80,0)}px)`,opacity:I(f,10,33,0,1)}}>Be<br/><i>remembered.</i></div>
+  <div style={{fontFamily:serif,color:'#172B3C',fontSize:124,fontWeight:600,lineHeight:.93,marginTop:53,letterSpacing:-5,transform:`translateX(${I(f,10,60,-80,0)}px)`,opacity:I(f,10,33,0,1)}}>Be<br/><i>remembered.</i></div>
  </div>
  <div style={{position:'absolute',left:76,bottom:350,width:929,height:2,background:'#C6C8C2'}}/>
  <div style={{position:'absolute',left:76,bottom:379,fontFamily:sans,fontSize:57,letterSpacing:-2.4,color:'#0A1733',fontWeight:600,whiteSpace:'nowrap'}}>
