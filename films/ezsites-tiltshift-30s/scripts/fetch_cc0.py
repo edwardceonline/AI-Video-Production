@@ -30,13 +30,23 @@ for slug,alias in ASSETS:
     if not gltf or "url" not in gltf:raise RuntimeError(f"Model URL missing for {slug}: {choice}")
     folder=OUT/alias;folder.mkdir(parents=True,exist_ok=True)
     def write(name,meta):
-        url=meta["url"];f=folder/Path(name).name
+        url=meta["url"];relative=Path(name)
+        if relative.is_absolute() or '..' in relative.parts:raise RuntimeError("Invalid asset path "+name)
+        f=folder/relative;f.parent.mkdir(parents=True,exist_ok=True)
         f.write_bytes(get(url))
         print("asset",slug,f.name,len(f.read_bytes()),flush=True)
         return f
     root=write(Path(gltf["url"].split("?")[0]).name,gltf)
     for name,ref in gltf.get("include",{}).items():
         if isinstance(ref,dict) and ref.get("url"):write(name,ref)
+    # Missing binary or texture references are an asset-fetch failure, not a rendering fallback.
+    try:
+        refs=json.loads(root.read_text())
+        uris=[x["uri"] for group in ("buffers","images") for x in refs.get(group,[]) if x.get("uri") and not x["uri"].startswith("data:")]
+        for uri in uris:
+            if not (folder/uri).is_file():raise RuntimeError("glTF missing referenced dependency: "+uri)
+    except UnicodeDecodeError:
+        pass
     results[alias]={"slug":slug,"file":root.name,"license":"CC0","url":f"https://polyhaven.com/a/{slug}","creator":"See Poly Haven asset page"}
 (OUT/"manifest.json").write_text(json.dumps(results,indent=2))
 print("Wrote",OUT/"manifest.json")
