@@ -1,0 +1,42 @@
+name: EzSites 30s Approved VO Production
+on:
+  push:
+    branches: [feature/ezsites-isometric-30s]
+    paths:
+      - films/ezsites-tiltshift-30s/voice-lines.json
+      - .github/workflows/ezsites-30s-voice.yml
+  workflow_dispatch:
+concurrency:
+  group: ezsites-30s-voice-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  create_voice:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      LEMO_SHA: b5e8ef93930b6d828f352055a689320f138237b1
+      LEMO_LIB: /tmp/lemo-opuscar
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install TTS dependencies
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak-ng python3-venv
+      - name: Install original pinned Lemo Kokoro
+        run: |
+          git init "$LEMO_LIB"
+          git -C "$LEMO_LIB" remote add origin https://github.com/lemomo-ai/lemo-opuscar.git
+          git -C "$LEMO_LIB" fetch --depth=1 origin "$LEMO_SHA"
+          git -C "$LEMO_LIB" checkout --detach FETCH_HEAD
+          cd "$LEMO_LIB"
+          sh plugin/skills/lemo-opuscar/scripts/setup.sh deps voice
+      - name: Synthesize approved 30s English lines
+        run: |
+          mkdir -p films/ezsites-tiltshift-30s/out/voice
+          "$LEMO_LIB/.venv/bin/python" "$LEMO_LIB/core/tts/tts.py" films/ezsites-tiltshift-30s/voice-lines.json films/ezsites-tiltshift-30s/out/voice
+          "$LEMO_LIB/.venv/bin/python" "$LEMO_LIB/core/tts/asr_check.py" films/ezsites-tiltshift-30s/voice-lines.json films/ezsites-tiltshift-30s/out/voice --lang en
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-30s-kokoro-approved-english-voice
+          path: films/ezsites-tiltshift-30s/out/voice/
+          retention-days: 14

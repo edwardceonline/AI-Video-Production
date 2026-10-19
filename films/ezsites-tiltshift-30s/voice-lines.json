@@ -1,0 +1,44 @@
+[
+  {
+    "id": "01",
+    "text": "Your doors are open for business.",
+    "voice": "af_sarah",
+    "speed": 1.08
+  },
+  {
+    "id": "02",
+    "text": "Now open a door online.",
+    "voice": "af_sarah",
+    "speed": 1.08
+  },
+  {
+    "id": "03",
+    "text": "Tell us about your business.",
+    "voice": "af_sarah",
+    "speed": 1.1
+  },
+  {
+    "id": "04",
+    "text": "Preview it. Publish when you're ready.",
+    "voice": "af_sarah",
+    "speed": 1.12
+  },
+  {
+    "id": "05",
+    "text": "Give it a domain that's yours.",
+    "voice": "af_sarah",
+    "speed": 1.1
+  },
+  {
+    "id": "06",
+    "text": "And keep conversations going with business email.",
+    "voice": "af_sarah",
+    "speed": 1.22
+  },
+  {
+    "id": "07",
+    "text": "Easy Sites. Get your business online.",
+    "voice": "af_sarah",
+    "speed": 1.09
+  }
+]

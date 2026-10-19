@@ -1,0 +1,13 @@
+{
+  "name": "ezsites-tiltshift-look-proof",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "proof": "node scripts/render-proof.mjs"
+  },
+  "dependencies": {
+    "three": "0.178.0",
+    "playwright": "1.55.0"
+  }
+}
