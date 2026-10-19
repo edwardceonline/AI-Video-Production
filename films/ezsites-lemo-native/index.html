@@ -175,13 +175,13 @@ box(57,1090,8,66,light?INK:BLUE);
 fitted(v.s,78,1134,26,570,light?BLUE:INK,600);
 }
 function animateCut(t,start,end,oldFn,newFn){
-oldFn(t);
-const cols=10,colW=W/cols;
-for(let j=0;j<cols;j++){
- let u=at(t,start+j*.026,end-(9-j)*.02);
- if(u<=0)continue;
- g.save();g.beginPath();g.rect(j*colW,-5,colW+1,H*u+6);g.clip();newFn(t);g.restore();
-}
+ // Swiss-motion knife transition: one clear beat-synced boundary instead of
+ // independent column shutters, which fragmented words and visual hierarchy.
+ oldFn(t);
+ const p=at(t,start,end);
+ if(p<=0)return;
+ g.save();g.beginPath();g.rect(0,0,W*p,H);g.clip();newFn(t);g.restore();
+ if(p<1)box(W*p-7,0,7,H,BLUE);
 }
 window.DUR=20;
 window.EV=[
