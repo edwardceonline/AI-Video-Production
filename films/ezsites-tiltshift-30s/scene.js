@@ -1,8 +1,5 @@
 import * as T from 'three';
-import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
-import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
-import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
-import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {makePost} from './lemo-post.js';
 
 const R=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'});
 R.setSize(720,1280,false);R.setPixelRatio(1);
@@ -57,10 +54,34 @@ function inkTexture(txt,kind='sign'){
  const tex=new T.CanvasTexture(cn);tex.colorSpace=T.SRGBColorSpace;
  return new T.MeshBasicMaterial({map:tex,transparent:false,side:T.DoubleSide});
 }
+// Leaf cards are real organic meshes with anisotropic variation, instanced to keep 24 fps viable.
 function tree(x,y,height=2.8){
- box(x,y,.3,.63,.64,.65,M.pot);rod(x,y,height/2,.12,height,M.wood);
- for(let i=0;i<24;i++){const angle=i*2.4,r=.30+.16*(i%4),z=height+.2+.43*Math.sin(i*2.2);
-  ball(x+r*Math.cos(angle),y+r*Math.sin(angle),z,.34+.09*(i%3),[M.green,M.green2,M.green3][i%3]);}
+ box(x,y,.29,.60,.60,.59,M.pot);
+ const branchMat=new T.MeshStandardMaterial({color:'#605041',roughness:.99});
+ const trunk=new T.Mesh(new T.CylinderGeometry(.074,.17,height*.67,9),branchMat);
+ trunk.rotation.x=Math.PI/2;trunk.position.set(x,y,height*.40);trunk.castShadow=true;S.add(trunk);
+ for(let j=0;j<12;j++){
+  const ang=j*2.39996,z=height*.42+.065*j;
+  const len=(.66+.28*Math.sin(j*3.1))*height*.30;
+  const v=new T.Vector3(Math.cos(ang)*len,Math.sin(ang)*len,len*.38);
+  const stick=new T.Mesh(new T.CylinderGeometry(.018,.042,v.length(),6),branchMat);
+  stick.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),v.clone().normalize());
+  stick.position.set(x+v.x*.5,y+v.y*.5,z+v.z*.5);
+  stick.castShadow=true;S.add(stick);
+ }
+ const leafGeom=new T.IcosahedronGeometry(1,1);
+ const leafMat=new T.MeshStandardMaterial({color:'#66865a',roughness:.87,side:T.DoubleSide});
+ const leaves=new T.InstancedMesh(leafGeom,leafMat,240);
+ leaves.castShadow=true;leaves.receiveShadow=true;
+ const dum=new T.Object3D(),rng=n=>((Math.sin(n*91.733+13.5)*43758.5453)%1+1)%1;
+ for(let j=0;j<240;j++){
+  const a=j*2.3999632297, zz=(rng(j+127)-.5)*1.4, rr=(.30+.62*Math.sqrt(rng(j+88)))*Math.sqrt(Math.max(.10,1-(zz/1.3)**2));
+  dum.position.set(x+Math.cos(a)*rr,y+Math.sin(a)*rr,height*.92+zz*.66);
+  dum.rotation.set(a*.3,.4+a,.4*Math.cos(a));
+  dum.scale.set(.13+.12*rng(j+12),.20+.14*rng(j+15),.052+.045*rng(j+5));
+  dum.updateMatrix();leaves.setMatrixAt(j,dum.matrix);
+ }
+ leaves.instanceMatrix.needsUpdate=true;S.add(leaves);
 }
 function table(x,y){
  box(x,y,.75,.75,.81,.10,M.wood);rod(x,y,.39,.09,.72,M.ink);
@@ -131,17 +152,18 @@ const people=[person(-3.7,-5.32),person(4.55,-5.28)];
 S.add(new T.HemisphereLight('#f8e9d0','#768a91',1.6));
 const sun=new T.DirectionalLight('#fff0ce',2.5);sun.position.set(-10,-13,23);sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-20;sun.shadow.camera.right=20;sun.shadow.camera.top=20;sun.shadow.camera.bottom=-20;sun.shadow.bias=-.0007;S.add(sun);
-const P=new EffectComposer(R);P.addPass(new RenderPass(S,C));
-// Tilt-shift lens: sharp band tracks the shop, with blurred distant / foreground surfaces.
-const lens=new ShaderPass({uniforms:{tDiffuse:{value:null},focusY:{value:.56},blur:{value:5.8},resolution:{value:new T.Vector2(720,1280)}},
-vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-fragmentShader:'varying vec2 vUv;uniform sampler2D tDiffuse;uniform float focusY,blur;uniform vec2 resolution;void main(){float b=clamp((abs(vUv.y-focusY)-.15)*3.2,0.,1.);vec2 d=b*blur/resolution;vec4 c=texture2D(tDiffuse,vUv)*.24;c+=.13*(texture2D(tDiffuse,vUv+d)+texture2D(tDiffuse,vUv-d));c+=.12*(texture2D(tDiffuse,vUv+vec2(d.x,-d.y))+texture2D(tDiffuse,vUv+vec2(-d.x,d.y)));c+=.08*(texture2D(tDiffuse,vUv+vec2(d.x,0.))+texture2D(tDiffuse,vUv-vec2(d.x,0.)));c+=.05*(texture2D(tDiffuse,vUv+vec2(0.,d.y))+texture2D(tDiffuse,vUv-vec2(0.,d.y)));gl_FragColor=c;}'});
-P.addPass(lens);P.addPass(new OutputPass());
+// Native Lemo Tilt-Shift DOF chain: MSAA depth buffer → physical CoC+sharp band
+// → gather → subtle bloom → warm grade. Shader sample count optimized for CI.
+const {composer:P,dof,grade}=makePost(R,S,C,720,1280,{ssaa:1,msaa:0,ao:false});
+dof.band.y=.56;dof.band.w=.15;dof.band.amp=19;dof.band.mix=.70;
+dof.focus=22;dof.aper=16;dof.maxCoc=13;
+grade.uniforms.sat.value=1.12;grade.uniforms.contrast.value=.13;
+grade.uniforms.amt.value=.15;grade.uniforms.warm.value=.15;
 window.DUR=30;const ease=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
 window.render=t=>{let p=ease(t/4);
- C.position.set(10.5+2*p,-22-5*p,11.5+7*p);
- C.lookAt(0,-2.8,1.72);C.updateProjectionMatrix();
+ C.position.set(9.5+2.5*p,-21.5-6*p,12.8+6*p);
+ C.lookAt(0,-2.9,2.1);C.updateProjectionMatrix();
  for(let i=0;i<people.length;i++)people[i].position.x+=0; // stable deterministic frame
- lens.uniforms.focusY.value=.56-.025*p;P.render();
+ dof.band.y=.56-.025*p;dof.focus=24+5*p;P.render();
 };
 window.READY=true;window.render(0.2);
