@@ -1,5 +1,6 @@
 import * as T from 'three';
 import {makePost} from './lemo-post.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 
 const R=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true,powerPreference:'high-performance'});
 R.setSize(720,1280,false);R.setPixelRatio(1);
@@ -166,4 +167,31 @@ window.render=t=>{let p=ease(t/4);
  for(let i=0;i<people.length;i++)people[i].position.x+=0; // stable deterministic frame
  dof.band.y=.56-.025*p;dof.focus=24+5*p;P.render();
 };
-window.READY=true;window.render(0.2);
+// Photogrammetry-scale CC0 meshes from Poly Haven. Require successful prefetch;
+// no silent primitive-geometry fallback when quality is the whole review gate.
+window.READY=false;
+const gltfLoader=new GLTFLoader();
+async function addSourcedProp(alias,x,y,height,rot=0) {
+ const manifest=await (await fetch('/assets/manifest.json')).json();
+ const asset=manifest[alias];
+ if(!asset||asset.license!=='CC0')throw new Error('missing licensed source for '+alias);
+ const gltf=await gltfLoader.loadAsync('/assets/'+alias+'/'+asset.file);
+ const root=gltf.scene;
+ root.rotation.x=Math.PI/2;root.updateMatrixWorld(true);
+ const bbox=new T.Box3().setFromObject(root);
+ const span=bbox.max.z-bbox.min.z;
+ if(!(span>.0001))throw new Error('invalid glTF prop bounds for '+alias);
+ root.scale.multiplyScalar(height/span);root.updateMatrixWorld(true);
+ const b=new T.Box3().setFromObject(root);
+ const center=b.getCenter(new T.Vector3());
+ root.position.set(x-center.x,y-center.y,-b.min.z+.08);
+ root.rotation.z=rot;
+ root.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+ S.add(root);
+}
+Promise.all([
+ addSourcedProp('coffee_cart',4.35,-4.20,1.75,-.30),
+ addSourcedProp('potted_plant',-4.15,-3.45,.78,.20),
+ addSourcedProp('potted_plant',3.75,-2.75,.68,-.42)
+]).then(()=>{window.READY=true;window.render(0.2);})
+  .catch(err=>{window.ASSET_ERROR=String(err);console.error(err);});
