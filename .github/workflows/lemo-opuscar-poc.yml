@@ -1,0 +1,67 @@
+name: EzSites Native Lemo-Opuscar POC
+
+on:
+  push:
+    branches:
+      - experiment/lemo-opuscar-native
+    paths:
+      - ".github/workflows/lemo-opuscar-poc.yml"
+      - "films/ezsites-lemo-native/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/lemo-opuscar-poc.yml"
+      - "films/ezsites-lemo-native/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    name: Render 15s native Lemo film
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      LEMO_SHA: b5e8ef93930b6d828f352055a689320f138237b1
+      LEMO_LIB: /tmp/lemo-opuscar
+    steps:
+      - name: Checkout film source
+        uses: actions/checkout@v4
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: System media tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng python3-venv fontconfig
+      - name: Obtain pinned upstream Lemo-Opuscar
+        run: |
+          git init "$LEMO_LIB"
+          git -C "$LEMO_LIB" remote add origin https://github.com/lemomo-ai/lemo-opuscar.git
+          git -C "$LEMO_LIB" fetch --depth=1 origin "$LEMO_SHA"
+          git -C "$LEMO_LIB" -c advice.detachedHead=false checkout --detach FETCH_HEAD
+          test "$(git -C "$LEMO_LIB" rev-parse HEAD)" = "$LEMO_SHA"
+          cd "$LEMO_LIB"
+          sh plugin/skills/lemo-opuscar/scripts/setup.sh deps
+      - name: Render film with original Lemo tools
+        run: bash films/ezsites-lemo-native/build.sh
+      - name: Check result exists
+        run: |
+          test -s films/ezsites-lemo-native/out/ezsites-lemo-native.mp4
+          test -s films/ezsites-lemo-native/out/poster.jpg
+          test -s films/ezsites-lemo-native/out/ezsites-lemo-native.srt
+      - name: Upload finished film and proof frames
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-lemo-native-15s
+          path: |
+            films/ezsites-lemo-native/out/ezsites-lemo-native.mp4
+            films/ezsites-lemo-native/out/ezsites-lemo-native.srt
+            films/ezsites-lemo-native/out/poster.jpg
+            films/ezsites-lemo-native/out/stills/*.jpg
+          if-no-files-found: error
+          retention-days: 14
