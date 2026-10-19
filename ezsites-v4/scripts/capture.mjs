@@ -1,0 +1,15 @@
+import {chromium} from 'playwright';
+import {mkdirSync} from 'node:fs';
+mkdirSync('public',{recursive:true});
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const url='https://kurotsuki.sites.ezsites.app/';
+const ctx=await browser.newContext({viewport:{width:540,height:960},deviceScaleFactor:2,isMobile:true,hasTouch:true,reducedMotion:'reduce'});
+const page=await ctx.newPage();
+const r=await page.goto(url,{waitUntil:'domcontentloaded',timeout:55000});
+if(r?.status()!==200)throw new Error(`Expected public Kurotsuki site status 200; got ${r?.status()}`);
+await page.waitForTimeout(4000);
+const title=await page.title();
+if(!title.toLowerCase().includes('kurotsuki'))throw new Error('Wrong website');
+await page.screenshot({path:'public/site-full.png',fullPage:true,animations:'disabled'});
+console.log('Captured published website',url,title);
+await ctx.close();await browser.close();
