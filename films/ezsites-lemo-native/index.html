@@ -148,7 +148,7 @@ g.drawImage(logo,360-w/2,287+(1-p)*120-h/2,w,h);
 line(59,449,59+602*at(t,16.26,16.82),449,PAPER,4);
 reveal('GET YOUR',57,600,89,607,PAPER,t,16.37,16.75);
 reveal('BUSINESS',57,733,117,609,PAPER,t,16.46,16.89);
-reveal('ONLINE.',57,862,123,609,PAPER,t,16.55,16.99);
+reveal('ONLINE.',57,862,123,609,PAPER,t,16.55,16.94);
 let q=at(t,16.85,17.30);
 box(57,975,601*q,87,PAPER);
 if(q>.95)label('START WITH EZSITES',82,1030,38,BLUE,800);
@@ -184,10 +184,10 @@ window.DUR=20;
 window.EV=[
 {t:.25,type:'clack'},{t:.50,type:'pen'},{t:1.00,type:'clack'},
 {t:3.50,type:'paper'},{t:3.75,type:'whoosh'},
-{t:4.00,type:'pen'},{t:5.00,type:'clack'},{t:6.00,type:'impact'},{t:7.75,type:'whoosh'},
+{t:4.00,type:'pen'},{t:5.00,type:'clack'},{t:6.00,type:'impact'},{t:7.50,type:'whoosh'},
 {t:8.50,type:'pen'},{t:9.00,type:'clack'},{t:9.25,type:'type'},{t:9.50,type:'type'},{t:9.75,type:'type'},
-{t:11.75,type:'paper'},{t:12.0,type:'whoosh'},{t:12.50,type:'paper'},
-{t:13.0,type:'clack'},{t:14.0,type:'pen'},{t:15.75,type:'whoosh'},{t:16.00,type:'impact'},{t:17.25,type:'clack'}];
+{t:11.50,type:'paper'},{t:12.0,type:'whoosh'},{t:12.50,type:'paper'},
+{t:13.0,type:'clack'},{t:14.0,type:'pen'},{t:15.50,type:'whoosh'},{t:16.00,type:'impact'},{t:17.25,type:'clack'}];
 window.render=t=>{
  t=clamp(t,0,20);canvas.width=1080;canvas.height=1920;g.setTransform(1.5,0,0,1.5,0,0);
  const a=x=>{stampedText(x,1,'GOOD BUSINESSES','DESERVE TO BE FOUND.',.28);storefront(x)};
@@ -208,7 +208,7 @@ if(t>=1.04&&t<3.76)content='DESERVE TO BE FOUND.';
 else if(t>=4.99&&t<7.76)content='ONLINE.';
 else if(t>=9.09&&t<11.75)content='YOURS.';
 else if(t>=13.09&&t<15.79)content='BUSINESS EMAIL.';
-else if(t>=16.99&&t<=20)content='GET YOUR BUSINESS ONLINE.';
+else if(t>=16.95&&t<=20)content='GET YOUR BUSINESS ONLINE.';
 return content?[{id:'hero-'+Math.floor(t/4),text:content,x0:50*1.5,y0:130*1.5,x1:664*1.5,y1:900*1.5}]:[];
 };
 window.READY=false;logo.decode().then(()=>{window.READY=true;window.render(0)}).catch(e=>{console.error('Required brand logo missing',e);throw e});

@@ -9,8 +9,8 @@ User's approved goal: real downloadable EzSites ad featuring **Get Your Business
 One subject / one goal / one turn: **a small storefront wants to be discoverable → its sign turns into an online presence → website, domain, and mail are all part of the same brand**. End on official EzSites mark.
 
 ## 2. Benchmarks selected *before* production, independent of Lemo demo
-- **Swiss modernist kinetic typographic title design**: learn the precisely aligned grid, silence/re-entry timing, high contrast, disciplined type; do not copy any historical title sequence, proprietary brand, words, or shots.
-- **Commercial UI typography / editorial product reveal**: learn confident hierarchy, legible mobile-first action and an expressive match cut from a physical sign into a digital address; do not borrow application UI, brand palette, original art, soundtrack or asset.
+- **Catch Me If You Can (2002), animated opening titles by Kuntzel & Deygas:** learn a single graphic signal travelling through changing editorial spaces and elegant camera-follow pacing. Do **not** copy its characters, iconic silhouettes, title graphics, exact shots, palette, typography or music.
+- **Google Material Design 'container transform' motion demonstrations:** learn how one surface becomes the next without a disconnected cut, with strong anticipation and precise landing. Do **not** use Google's actual UI assets, designs, layouts, animations, logos or sound.
 Chosen system: Swiss Motion Graphics. The small flat business drawing is composed as **printed geometric signage**, not an independent isometric engine/style. All solids have 2D material/print logic. Accent comes from the verified EzSites blue; official logo untouched.
 
 ## 3. Three candidate structures
