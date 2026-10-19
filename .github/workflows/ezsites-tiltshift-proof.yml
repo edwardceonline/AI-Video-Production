@@ -27,6 +27,8 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
+      - name: Download CC0 PBR props with source verification
+        run: python3 scripts/fetch_cc0.py
       - name: Render 3 source styleframes and 3s camera proof
         run: npm run proof
       - name: Inspect video metadata
