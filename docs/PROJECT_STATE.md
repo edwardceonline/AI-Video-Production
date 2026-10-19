@@ -51,3 +51,9 @@
 - Review and proposed correction: `films/ezsites-isometric-30s/ART_REVIEW.md`. Internally tried adding café details and removing labels but still visually too primitive, so **do not proceed with the flat-isometric source** without re-approval.
 - **Proposed, not yet approved:** keep approved 30s storytelling but change the PRIMARY upstream Lemo style from flat `iso-infographic` to cinematic `tilt-shift` to make a detailed miniature café, city ambience and believable website/product compositions. User approval is required because style invariants differ.
 - An AI-generated cinematic storyboard is **visual direction only**; actual scene code must separately reproduce quality. Any generated logo/UI text must be redone/verified against actual user-owned EzSites assets.
+
+### Tilt-Shift direction approved (2026-10-19)
+- User explicitly said **OK** to replacing primary Isometric Infographic with **Tilt-Shift Miniature**, preserving the 30-second EzSites storyboard and brand truth.
+- New canonical revised film treatment: `films/ezsites-tiltshift-30s/TREATMENT.md` (approved change of style).
+- A local VTK procedural 3D camera-framing experiment was rendered (49 frames, ~2s, silent). **It does NOT use Three.js or the native tilt-shift engine, is visually below commercial quality, and is not a styleframe approval or completed ad.** Failure note: earlier render's black frames caused by FXAA in this headless setup; disabled for test. Do NOT infer that the full pipeline works.
+- Next task: implement the 3D storefront in Three.js with actual shop material detail, photographic lighting and tilt-shift DOF on Actions; render 3 source-derived styleframes and 3–5s camera proof; visually inspect before any 30s production. Remove all chapter/concept/story decorative labels. Preserve a validated EzSites logo when doing endcard.
