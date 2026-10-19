@@ -1,1 +1,38 @@
-The requested file reference is not currently visible. Use files.search or files.list to rediscover the file, then retry with a returned ref_id or file_id.
+name: EzSites V4 skill integration smoke test
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-v4-production-pipeline]
+    paths:
+      - 'scripts/bootstrap-skills.sh'
+      - 'scripts/analyze-reference.py'
+      - 'scripts/qa-render.py'
+      - '.agents/skills/ezsites-commercial/**'
+      - '.github/workflows/ezsites-v4-skill-check.yml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bootstrap exact pinned skill sources
+        run: bash scripts/bootstrap-skills.sh
+      - name: Validate linked skill instructions
+        run: |
+          set -euo pipefail
+          for name in motion-from-reference device-3d-stage remotion-marketing-video video-audio-stack video-shotcraft product-launch-video remotion-best-practices remotion-create remotion-markup remotion-render remotion-studio ezsites-commercial; do
+            test -s ".agents/skills/$name/SKILL.md"
+            printf '%s: OK\n' "$name"
+          done
+      - name: Check reference analyzer on generated non-copyright demo clip
+        run: |
+          mkdir -p /tmp/reference-test
+          ffmpeg -hide_banner -loglevel error -f lavfi -i 'testsrc2=size=320x180:rate=30:duration=2' -c:v libx264 -pix_fmt yuv420p /tmp/reference-test/synthetic.mp4
+          python3 scripts/analyze-reference.py /tmp/reference-test/synthetic.mp4 --output /tmp/reference-test/result.json
+          python3 - <<'PY'
+          import json
+          data=json.load(open('/tmp/reference-test/result.json'))
+          assert data[0]['duration_seconds']>1.9
+          assert data[0]['video']['width']==320
+          print('Reference analyzer: OK')
+          PY
