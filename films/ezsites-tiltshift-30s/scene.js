@@ -189,7 +189,23 @@ async function addSourcedProp(alias,x,y,height,rot=0) {
  root.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
  S.add(root);
 }
+async function applyBrickPBR(){
+ const manifest=await (await fetch('/assets/manifest.json')).json();
+ const entry=manifest.brick_surface;
+ if(!entry||entry.license!=='CC0')throw new Error('Missing authentic licensed brick surface');
+ const loader=new T.TextureLoader();
+ const diff=await loader.loadAsync('/assets/'+entry.diff);
+ diff.wrapS=diff.wrapT=T.RepeatWrapping;diff.repeat.set(3,2);
+ diff.colorSpace=T.SRGBColorSpace;diff.anisotropy=8;
+ for(const m of [M.brick,M.brick2]){m.map=diff;m.color.set('#ffffff');m.needsUpdate=true;}
+ if(entry.normal){
+   const nor=await loader.loadAsync('/assets/'+entry.normal);
+   nor.wrapS=nor.wrapT=T.RepeatWrapping;nor.repeat.set(3,2);nor.anisotropy=8;
+   for(const m of [M.brick,M.brick2]){m.normalMap=nor;m.normalScale.set(.45,.45);m.needsUpdate=true;}
+ }
+}
 Promise.all([
+ applyBrickPBR(),
  addSourcedProp('coffee_cart',2.88,-4.55,1.04,-.23),
  addSourcedProp('potted_plant',-3.65,-3.35,1.10,.20),
  addSourcedProp('potted_plant',3.55,-3.05,.98,-.42)
