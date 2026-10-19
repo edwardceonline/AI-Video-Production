@@ -79,7 +79,6 @@ const DesktopExplore:React.FC=()=>{
     <Img src={staticFile('web-mobile-long.png')} style={{width:1120,height:'auto',position:'absolute',top:0,left:0,transform:`translateY(${-scroll}px)`}} />
    </div>
    <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(3,7,12,.50) 0%,transparent 17%,transparent 59%,rgba(3,7,12,.50) 86%,#05080d 100%)',pointerEvents:'none'}}/>
-   <div style={{position:'absolute',left:73,right:73,bottom:135,fontFamily:serif,color:'#FAF6EF',fontSize:110,lineHeight:.95,letterSpacing:-3.3,textShadow:'0 8px 40px #000c',opacity:I(f,95,118,0,1)}}>Your story.<br/><i style={{color:'#E3BC69'}}>Online.</i></div>
  </AbsoluteFill>;
 };
 
@@ -88,7 +87,7 @@ const Phone:React.FC<{frame:number;scroll?:number}>=({frame,scroll=0})=>{
  return <div style={{width:742,height:1492,position:'relative',transform:`perspective(1850px) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`,transformStyle:'preserve-3d',filter:'drop-shadow(25px 40px 68px rgba(0,0,0,.52))'}}>
    <div style={{position:'absolute',inset:0,background:'linear-gradient(125deg,#A5A7A7,#222B33 13%,#060A0D 64%,#71716F)',border:'7px solid #696A69',borderRadius:93,boxShadow:'inset 0 2px 9px rgba(255,255,255,.33),inset 0 -8px 18px #030506'}}/>
    <div style={{position:'absolute',left:19,top:21,width:704,height:1450,borderRadius:75,overflow:'hidden',background:'#030508'}}>
-     <div style={{height:71,background:'#040608',position:'absolute',left:0,right:0,top:0,zIndex:2,display:'flex',alignItems:'center',justifyContent:'center',color:'#9D9E9A',fontFamily:sans,fontSize:25,letterSpacing:1.4}}>kurotsuki.sites.ezsites.app</div>
+     <div style={{height:71,background:'#040608',position:'absolute',left:0,right:0,top:0,zIndex:2,display:'flex',alignItems:'flex-end',paddingBottom:9,justifyContent:'center',color:'#C5C8C4',fontFamily:sans,fontSize:20,letterSpacing:.45}}>kurotsuki.sites.ezsites.app</div>
      <div style={{position:'absolute',top:70,left:0,width:704,height:1380,overflow:'hidden'}}>
        <Img src={staticFile('web-mobile-long.png')} style={{width:704,height:'auto',transform:`translateY(${-scroll}px)`,position:'absolute',left:0,top:0}}/>
      </div>
@@ -103,7 +102,6 @@ const MobileScene:React.FC=()=>{
  return <AbsoluteFill style={{overflow:'hidden',background:'radial-gradient(circle at 60% 35%,#23303A 0%,#0B1320 52%,#05080F 100%)'}}>
    <div style={{position:'absolute',top:205,left:90,fontFamily:serif,color:C.cream,fontSize:112,lineHeight:.96,letterSpacing:-3,opacity:I(f,0,23,0,1)}}>Made for<br/><i style={{color:'#DCC08A'}}>every screen.</i></div>
    <div style={{position:'absolute',top:I(f,0,75,1160,485),left:I(f,0,75,580,194),transform:`scale(${I(f,0,75,.78,.91)})`,transformOrigin:'top left'}}><Phone frame={f} scroll={phoneScroll}/></div>
-   <div style={{position:'absolute',bottom:142,left:84,right:84,fontFamily:sans,fontSize:30,color:'#D1D7E0',opacity:I(f,96,124,0,1)}}>The business you built. Now within reach.</div>
    <Grains opacity={.14}/>
  </AbsoluteFill>;
 };
