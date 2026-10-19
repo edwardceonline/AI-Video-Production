@@ -1,5 +1,8 @@
-Lemo-Opuscar core renderer: https://github.com/lemomo-ai/lemo-opuscar (MIT).
-Original motion-art code, procedural music, procedural SFX and narration script: AI Video Production project.
-eSpeak NG narration placeholder: https://github.com/espeak-ng/espeak-ng ; commercial suitability and voice use must be reviewed before publishing.
-Fonts: runner's installed generic sans-serif fallback (no bundled proprietary font).
-No stock images, third-party demo film source, demo score or demo assets are included.
+Official EzSites full logo and app icon from Games-Viet-GbR/Website-Assistant apps/mobile-manager/assets (user-controlled product, copied for this official EzSites ad). Original Git blob checksums are pinned in scripts/preflight.py.
+Lemo-Opuscar native core renderer / film guides: https://github.com/lemomo-ai/lemo-opuscar — MIT.
+Kokoro-82M model and voice weights: https://huggingface.co/hexgrad/Kokoro-82M — Apache-2.0 (user should confirm the exact upstream voice/model artifact before commercial distribution).
+kokoro-onnx Python implementation: https://github.com/thewh1teagle/kokoro-onnx — check installed package notices.
+faster-whisper ASR verification: https://github.com/SYSTRAN/faster-whisper — check installed package notices; does not become a film asset.
+Remotion: https://www.remotion.dev/docs/license/pricing — special dual licensing based on entity size.
+Original motion design code, score, foley and narration script authored for this film; no stock footage or upstream demos copied.
+Font: system sans-serif fallback; must be reviewed/replaced with a verified licensed font for final branded distribution.

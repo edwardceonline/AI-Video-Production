@@ -7,6 +7,7 @@ LEMO_LIB="$(cd "$LEMO_LIB" && pwd)"
 test -f "$LEMO_LIB/core/render/video.mjs"
 mkdir -p "$FILM/out/stills"
 cd "$LEMO_LIB"
+python3 "$FILM/scripts/preflight.py"
 node core/render/events.mjs "$FILM" --out "$FILM/events.json"
 # Voice is produced by Lemo-Opuscar's actual Kokoro TTS and checked by Whisper.
 "$LEMO_LIB/.venv/bin/python" core/tts/tts.py "$FILM/lines.json" "$FILM/out/voice"
@@ -15,7 +16,7 @@ node core/render/events.mjs "$FILM" --out "$FILM/events.json"
 node core/render/still.mjs "$FILM" 1.8 4.8 8.6 12.7 14.3 --size 1080x1920 --out "$FILM/out/stills"
 node core/render/video.mjs "$FILM" --size 1080x1920 --fps 24 --workers 2 --out "$FILM/out/raw.mp4"
 LEMO_COLOR=bt709 sh core/render/mux.sh "$FILM/out/raw.mp4" "$FILM/out/mix.wav" "$FILM/out/ezsites-lemo-native.mp4" 24 0
-ffmpeg -hide_banner -loglevel error -y -ss 13.7 -i "$FILM/out/ezsites-lemo-native.mp4" -frames:v 1 -q:v 2 "$FILM/out/poster.jpg"
+ffmpeg -hide_banner -loglevel error -y -ss 14.65 -i "$FILM/out/ezsites-lemo-native.mp4" -frames:v 1 -q:v 2 "$FILM/out/poster.jpg"
 python3 - "$FILM/out/ezsites-lemo-native.mp4" <<'PY'
 import json,subprocess,sys
 src=sys.argv[1]

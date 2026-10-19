@@ -79,3 +79,50 @@ jobs:
             films/ezsites-lemo-native/out/stills/*.jpg
           if-no-files-found: error
           retention-days: 14
+
+  hybrid:
+    name: Remotion compositing bridge
+    needs: render
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Download native Lemo film artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ezsites-lemo-native-15s
+          path: films/ezsites-lemo-native/remotion/public
+      - name: Render hybrid composition
+        run: |
+          set -euo pipefail
+          cd films/ezsites-lemo-native/remotion
+          mv public/ezsites-lemo-native.mp4 public/ezsites-native.mp4
+          npm install --no-audit --no-fund
+          mkdir -p out
+          npx remotion render src/index.ts EzSitesHybrid out/ezsites-hybrid.mp4 --codec h264 --concurrency 2
+      - name: Inspect Remotion output
+        run: |
+          python3 - <<'PY'
+          import json,subprocess,pathlib
+          p=pathlib.Path("films/ezsites-lemo-native/remotion/out/ezsites-hybrid.mp4")
+          assert p.is_file() and p.stat().st_size>50000
+          info=json.loads(subprocess.check_output(["ffprobe","-v","error","-show_entries","stream=codec_type,width,height,r_frame_rate:format=duration","-of","json",str(p)]))
+          v=next(x for x in info['streams'] if x['codec_type']=='video')
+          assert (v['width'],v['height'],v['r_frame_rate'])==(1080,1920,'24/1')
+          assert any(x['codec_type']=='audio' for x in info['streams']),"Remotion lost voice and music"
+          assert 14.95<float(info['format']['duration'])<15.08
+          print("Remotion native-clip integration PASS",p)
+          PY
+      - name: Upload Remotion hybrid MP4
+        uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-remotion-hybrid-15s
+          path: films/ezsites-lemo-native/remotion/out/ezsites-hybrid.mp4
+          if-no-files-found: error
+          retention-days: 14
+

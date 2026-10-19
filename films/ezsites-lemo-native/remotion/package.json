@@ -1,0 +1,15 @@
+{
+  "name": "ezsites-lemo-remotion-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "remotion render src/index.ts EzSitesHybrid out/ezsites-hybrid.mp4 --codec h264 --concurrency 2"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.523",
+    "remotion": "4.0.523",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  }
+}
