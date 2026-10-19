@@ -97,7 +97,7 @@ label('Coffee • Community • Every day',x+34,y+516,18,INK,500);
 round(x+33,y+541,219,54,4,BLUE);
 label('GET IN TOUCH',x+52,y+576,21,PAPER,700);
 g.restore();
-label('ILLUSTRATIVE BUSINESS WEBSITE',89,1094,15,SILVER,600);
+label('ILLUSTRATIVE BUSINESS WEBSITE',89,1079,12,SILVER,600);
 }
 function domain(t){
 stampedText(t,3,'MAKE IT','YOURS.',8.34);
@@ -164,6 +164,9 @@ const voice=[
 {a:16.27,b:19.94,s:'Get your business online.'}
 ];
 function subtitle(t){
+// At 16–20s the full spoken tagline is the giant hero headline, so suppress
+// a redundant subtitle card and preserve the brand/footer safe area.
+if(t>=16)return;
 const v=voice.find(x=>t>=x.a&&t<=x.b);
 if(!v)return;
 const light=t>=16;
