@@ -46,6 +46,16 @@ jobs:
           test "$(git -C "$LEMO_LIB" rev-parse HEAD)" = "$LEMO_SHA"
           cd "$LEMO_LIB"
           sh plugin/skills/lemo-opuscar/scripts/setup.sh deps
+      - name: Pin FFmpeg 7 for consistent loudnorm decoding
+        run: |
+          python3 -m venv /tmp/lemo-ffmpeg-venv
+          /tmp/lemo-ffmpeg-venv/bin/pip install -q imageio-ffmpeg==0.6.0
+          BIN=$(/tmp/lemo-ffmpeg-venv/bin/python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')
+          "$BIN" -version | head -1
+          "$BIN" -hide_banner -encoders | grep -q libx264
+          mkdir -p /tmp/lemo-ffmpeg-bin
+          ln -s "$BIN" /tmp/lemo-ffmpeg-bin/ffmpeg
+          echo /tmp/lemo-ffmpeg-bin >> "$GITHUB_PATH"
       - name: Render film with original Lemo tools
         run: bash films/ezsites-lemo-native/build.sh
       - name: Check result exists
