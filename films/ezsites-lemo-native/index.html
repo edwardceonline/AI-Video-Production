@@ -118,7 +118,7 @@ line(97,930,xx,930,BLUE,6);dot(xx,930,10,BLUE);
 for(let i=0;i<6;i++){let step=at(t,9.15+i*.20,9.75+i*.20);if(step)box(102+i*89,987,63*step,25,i===0?BLUE:INK)}
 }
 function envelope(t){
-stampedText(t,4,'AND A','PROFESSIONAL EMAIL.',12.34);
+stampedText(t,4,'AND A','BUSINESS EMAIL.',12.34);
 const p=at(t,12.25,13.15);
 let x=111,y=512+(1-p)*420,w=503,h=343;
 box(x+9,y+9,w,h,'#C9D5E5');
@@ -207,7 +207,7 @@ let content=null;
 if(t>=1.04&&t<3.7)content='DESERVE TO BE FOUND.';
 else if(t>=4.99&&t<7.76)content='ONLINE.';
 else if(t>=9.09&&t<11.75)content='YOURS.';
-else if(t>=13.09&&t<15.79)content='PROFESSIONAL EMAIL.';
+else if(t>=13.09&&t<15.79)content='BUSINESS EMAIL.';
 else if(t>=17.02&&t<=20)content='GET YOUR BUSINESS ONLINE.';
 return content?[{id:'hero-'+Math.floor(t/4),text:content,x0:50*1.5,y0:130*1.5,x1:664*1.5,y1:900*1.5}]:[];
 };
