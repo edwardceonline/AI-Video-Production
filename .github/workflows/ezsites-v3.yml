@@ -1,0 +1,58 @@
+name: EzSites V3 Kurotsuki commercial
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-kurotsuki-v3]
+    paths:
+      - 'ezsites-v3/**'
+      - '.github/workflows/ezsites-v3.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Remotion, Chromium and capture tooling
+        working-directory: ezsites-v3
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture real published websites + authentic logo
+        working-directory: ezsites-v3
+        run: |
+          mkdir -p public
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          node scripts/capture.mjs
+      - name: Generate original soundtrack and draft voice
+        working-directory: ezsites-v3
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq espeak-ng ffmpeg
+          python3 -m pip install --break-system-packages edge-tts
+          python3 scripts/generate_score.py
+          python3 scripts/generate_voice.py
+      - name: Render creative QA frames
+        working-directory: ezsites-v3
+        run: npm run stills
+      - name: Render 25-second Full HD video
+        working-directory: ezsites-v3
+        run: npm run render
+      - name: Validate result
+        working-directory: ezsites-v3
+        run: |
+          test -s output/EzSites-Kurotsuki-V3.mp4
+          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 output/EzSites-Kurotsuki-V3.mp4
+      - name: Upload video & frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EzSites-Kurotsuki-V3
+          path: |
+            ezsites-v3/output/EzSites-Kurotsuki-V3.mp4
+            ezsites-v3/output/stills/*.png
+          if-no-files-found: warn
+          retention-days: 14
