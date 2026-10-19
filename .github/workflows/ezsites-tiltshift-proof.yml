@@ -1,0 +1,39 @@
+name: EzSites Tilt-Shift 3D Look Proof
+on:
+  push:
+    branches:
+      - feature/ezsites-isometric-30s
+    paths:
+      - films/ezsites-tiltshift-30s/**
+      - .github/workflows/ezsites-tiltshift-proof.yml
+  workflow_dispatch:
+jobs:
+  proof:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: films/ezsites-tiltshift-30s
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install 3D proof dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Render 3 source styleframes and 3s camera proof
+        run: npm run proof
+      - name: Inspect video metadata
+        run: |
+          ffprobe -v error -show_entries format=duration -of default=nw=1 out/tiltshift-look-proof-3s.mp4
+          test -s out/style_0.5.png
+          test -s out/style_1.8.png
+          test -s out/style_3.7.png
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ezsites-tiltshift-3d-visual-proof
+          path: films/ezsites-tiltshift-30s/out/
+          retention-days: 14
