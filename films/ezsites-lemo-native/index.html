@@ -191,8 +191,8 @@ window.EV=[
 window.render=t=>{
  t=clamp(t,0,20);canvas.width=1080;canvas.height=1920;g.setTransform(1.5,0,0,1.5,0,0);
  const a=x=>{stampedText(x,1,'GOOD BUSINESSES','DESERVE TO BE FOUND.',.28);storefront(x)};
- if(t<3.65)a(t);
- else if(t<4.28)animateCut(t,3.65,4.28,a,page);
+ if(t<3.76)a(t);
+ else if(t<4.28)animateCut(t,3.76,4.28,a,page);
  else if(t<7.66)page(t);
  else if(t<8.27)animateCut(t,7.66,8.27,page,domain);
  else if(t<11.66)domain(t);
@@ -204,11 +204,11 @@ window.render=t=>{
 };
 window.TEXTS=t=>{
 let content=null;
-if(t>=1.04&&t<3.7)content='DESERVE TO BE FOUND.';
+if(t>=1.04&&t<3.76)content='DESERVE TO BE FOUND.';
 else if(t>=4.99&&t<7.76)content='ONLINE.';
 else if(t>=9.09&&t<11.75)content='YOURS.';
 else if(t>=13.09&&t<15.79)content='BUSINESS EMAIL.';
-else if(t>=17.02&&t<=20)content='GET YOUR BUSINESS ONLINE.';
+else if(t>=16.99&&t<=20)content='GET YOUR BUSINESS ONLINE.';
 return content?[{id:'hero-'+Math.floor(t/4),text:content,x0:50*1.5,y0:130*1.5,x1:664*1.5,y1:900*1.5}]:[];
 };
 window.READY=false;logo.decode().then(()=>{window.READY=true;window.render(0)}).catch(e=>{console.error('Required brand logo missing',e);throw e});
