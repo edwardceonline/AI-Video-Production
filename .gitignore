@@ -1,0 +1,5 @@
+.cache/video-skill-sources/
+node_modules/
+.env
+.env.*
+**/public/private-preview/

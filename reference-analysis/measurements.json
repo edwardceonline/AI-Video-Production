@@ -1,0 +1,530 @@
+[
+  {
+    "filename": "Bring-your-ideas-SnapYT.App.mp4",
+    "duration_seconds": 46.324,
+    "video": {
+      "width": 640,
+      "height": 360,
+      "fps": 25.0
+    },
+    "has_audio": true,
+    "method": "FFmpeg scene selection threshold 0.28 at 320px; estimated only",
+    "candidate_cuts_seconds": [
+      4.4,
+      5.96,
+      8.48,
+      12.92,
+      15.12,
+      18.2,
+      21.44,
+      22.0,
+      22.6,
+      23.92,
+      24.56,
+      25.48,
+      27.24,
+      29.0,
+      30.52,
+      39.0,
+      40.76
+    ],
+    "candidate_shots": [
+      {
+        "from": 0.0,
+        "to": 4.4,
+        "seconds": 4.4
+      },
+      {
+        "from": 4.4,
+        "to": 5.96,
+        "seconds": 1.56
+      },
+      {
+        "from": 5.96,
+        "to": 8.48,
+        "seconds": 2.52
+      },
+      {
+        "from": 8.48,
+        "to": 12.92,
+        "seconds": 4.44
+      },
+      {
+        "from": 12.92,
+        "to": 15.12,
+        "seconds": 2.2
+      },
+      {
+        "from": 15.12,
+        "to": 18.2,
+        "seconds": 3.08
+      },
+      {
+        "from": 18.2,
+        "to": 21.44,
+        "seconds": 3.24
+      },
+      {
+        "from": 21.44,
+        "to": 22.0,
+        "seconds": 0.56
+      },
+      {
+        "from": 22.0,
+        "to": 22.6,
+        "seconds": 0.6
+      },
+      {
+        "from": 22.6,
+        "to": 23.92,
+        "seconds": 1.32
+      },
+      {
+        "from": 23.92,
+        "to": 24.56,
+        "seconds": 0.64
+      },
+      {
+        "from": 24.56,
+        "to": 25.48,
+        "seconds": 0.92
+      },
+      {
+        "from": 25.48,
+        "to": 27.24,
+        "seconds": 1.76
+      },
+      {
+        "from": 27.24,
+        "to": 29.0,
+        "seconds": 1.76
+      },
+      {
+        "from": 29.0,
+        "to": 30.52,
+        "seconds": 1.52
+      },
+      {
+        "from": 30.52,
+        "to": 39.0,
+        "seconds": 8.48
+      },
+      {
+        "from": 39.0,
+        "to": 40.76,
+        "seconds": 1.76
+      },
+      {
+        "from": 40.76,
+        "to": 46.324,
+        "seconds": 5.564
+      }
+    ],
+    "note": "Human motion designer must validate cut, typography, camera, and matched geometry against reference. Do not copy original assets."
+  },
+  {
+    "filename": "10-Best-App-SnapYT.App.mp4",
+    "duration_seconds": 342.285,
+    "video": {
+      "width": 640,
+      "height": 360,
+      "fps": 30.0
+    },
+    "has_audio": true,
+    "method": "FFmpeg scene selection threshold 0.28 at 320px; estimated only",
+    "candidate_cuts_seconds": [
+      6.833,
+      13.8,
+      15.7,
+      27.667,
+      27.967,
+      29.9,
+      30.433,
+      37.667,
+      44.133,
+      46.967,
+      52.333,
+      55.533,
+      96.7,
+      99.3,
+      101.467,
+      105.3,
+      120.933,
+      127.5,
+      150.7,
+      151.567,
+      152.0,
+      152.667,
+      152.867,
+      153.267,
+      153.367,
+      160.2,
+      165.933,
+      167.9,
+      170.1,
+      172.633,
+      173.133,
+      174.4,
+      176.733,
+      177.6,
+      181.433,
+      182.633,
+      182.8,
+      182.967,
+      193.233,
+      193.367,
+      195.5,
+      197.5,
+      199.167,
+      201.1,
+      201.633,
+      204.433,
+      206.1,
+      208.433,
+      218.833,
+      222.733,
+      226.6,
+      230.5,
+      245.9,
+      273.0,
+      278.0,
+      290.3,
+      294.067,
+      297.033,
+      299.3,
+      305.3,
+      307.0,
+      314.367,
+      316.633,
+      319.833
+    ],
+    "candidate_shots": [
+      {
+        "from": 0.0,
+        "to": 6.833,
+        "seconds": 6.833
+      },
+      {
+        "from": 6.833,
+        "to": 13.8,
+        "seconds": 6.967
+      },
+      {
+        "from": 13.8,
+        "to": 15.7,
+        "seconds": 1.9
+      },
+      {
+        "from": 15.7,
+        "to": 27.667,
+        "seconds": 11.967
+      },
+      {
+        "from": 27.667,
+        "to": 27.967,
+        "seconds": 0.3
+      },
+      {
+        "from": 27.967,
+        "to": 29.9,
+        "seconds": 1.933
+      },
+      {
+        "from": 29.9,
+        "to": 30.433,
+        "seconds": 0.533
+      },
+      {
+        "from": 30.433,
+        "to": 37.667,
+        "seconds": 7.234
+      },
+      {
+        "from": 37.667,
+        "to": 44.133,
+        "seconds": 6.466
+      },
+      {
+        "from": 44.133,
+        "to": 46.967,
+        "seconds": 2.834
+      },
+      {
+        "from": 46.967,
+        "to": 52.333,
+        "seconds": 5.366
+      },
+      {
+        "from": 52.333,
+        "to": 55.533,
+        "seconds": 3.2
+      },
+      {
+        "from": 55.533,
+        "to": 96.7,
+        "seconds": 41.167
+      },
+      {
+        "from": 96.7,
+        "to": 99.3,
+        "seconds": 2.6
+      },
+      {
+        "from": 99.3,
+        "to": 101.467,
+        "seconds": 2.167
+      },
+      {
+        "from": 101.467,
+        "to": 105.3,
+        "seconds": 3.833
+      },
+      {
+        "from": 105.3,
+        "to": 120.933,
+        "seconds": 15.633
+      },
+      {
+        "from": 120.933,
+        "to": 127.5,
+        "seconds": 6.567
+      },
+      {
+        "from": 127.5,
+        "to": 150.7,
+        "seconds": 23.2
+      },
+      {
+        "from": 150.7,
+        "to": 151.567,
+        "seconds": 0.867
+      },
+      {
+        "from": 151.567,
+        "to": 152.0,
+        "seconds": 0.433
+      },
+      {
+        "from": 152.0,
+        "to": 152.667,
+        "seconds": 0.667
+      },
+      {
+        "from": 152.667,
+        "to": 152.867,
+        "seconds": 0.2
+      },
+      {
+        "from": 152.867,
+        "to": 153.267,
+        "seconds": 0.4
+      },
+      {
+        "from": 153.267,
+        "to": 153.367,
+        "seconds": 0.1
+      },
+      {
+        "from": 153.367,
+        "to": 160.2,
+        "seconds": 6.833
+      },
+      {
+        "from": 160.2,
+        "to": 165.933,
+        "seconds": 5.733
+      },
+      {
+        "from": 165.933,
+        "to": 167.9,
+        "seconds": 1.967
+      },
+      {
+        "from": 167.9,
+        "to": 170.1,
+        "seconds": 2.2
+      },
+      {
+        "from": 170.1,
+        "to": 172.633,
+        "seconds": 2.533
+      },
+      {
+        "from": 172.633,
+        "to": 173.133,
+        "seconds": 0.5
+      },
+      {
+        "from": 173.133,
+        "to": 174.4,
+        "seconds": 1.267
+      },
+      {
+        "from": 174.4,
+        "to": 176.733,
+        "seconds": 2.333
+      },
+      {
+        "from": 176.733,
+        "to": 177.6,
+        "seconds": 0.867
+      },
+      {
+        "from": 177.6,
+        "to": 181.433,
+        "seconds": 3.833
+      },
+      {
+        "from": 181.433,
+        "to": 182.633,
+        "seconds": 1.2
+      },
+      {
+        "from": 182.633,
+        "to": 182.8,
+        "seconds": 0.167
+      },
+      {
+        "from": 182.8,
+        "to": 182.967,
+        "seconds": 0.167
+      },
+      {
+        "from": 182.967,
+        "to": 193.233,
+        "seconds": 10.266
+      },
+      {
+        "from": 193.233,
+        "to": 193.367,
+        "seconds": 0.134
+      },
+      {
+        "from": 193.367,
+        "to": 195.5,
+        "seconds": 2.133
+      },
+      {
+        "from": 195.5,
+        "to": 197.5,
+        "seconds": 2.0
+      },
+      {
+        "from": 197.5,
+        "to": 199.167,
+        "seconds": 1.667
+      },
+      {
+        "from": 199.167,
+        "to": 201.1,
+        "seconds": 1.933
+      },
+      {
+        "from": 201.1,
+        "to": 201.633,
+        "seconds": 0.533
+      },
+      {
+        "from": 201.633,
+        "to": 204.433,
+        "seconds": 2.8
+      },
+      {
+        "from": 204.433,
+        "to": 206.1,
+        "seconds": 1.667
+      },
+      {
+        "from": 206.1,
+        "to": 208.433,
+        "seconds": 2.333
+      },
+      {
+        "from": 208.433,
+        "to": 218.833,
+        "seconds": 10.4
+      },
+      {
+        "from": 218.833,
+        "to": 222.733,
+        "seconds": 3.9
+      },
+      {
+        "from": 222.733,
+        "to": 226.6,
+        "seconds": 3.867
+      },
+      {
+        "from": 226.6,
+        "to": 230.5,
+        "seconds": 3.9
+      },
+      {
+        "from": 230.5,
+        "to": 245.9,
+        "seconds": 15.4
+      },
+      {
+        "from": 245.9,
+        "to": 273.0,
+        "seconds": 27.1
+      },
+      {
+        "from": 273.0,
+        "to": 278.0,
+        "seconds": 5.0
+      },
+      {
+        "from": 278.0,
+        "to": 290.3,
+        "seconds": 12.3
+      },
+      {
+        "from": 290.3,
+        "to": 294.067,
+        "seconds": 3.767
+      },
+      {
+        "from": 294.067,
+        "to": 297.033,
+        "seconds": 2.966
+      },
+      {
+        "from": 297.033,
+        "to": 299.3,
+        "seconds": 2.267
+      },
+      {
+        "from": 299.3,
+        "to": 305.3,
+        "seconds": 6.0
+      },
+      {
+        "from": 305.3,
+        "to": 307.0,
+        "seconds": 1.7
+      },
+      {
+        "from": 307.0,
+        "to": 314.367,
+        "seconds": 7.367
+      },
+      {
+        "from": 314.367,
+        "to": 316.633,
+        "seconds": 2.266
+      },
+      {
+        "from": 316.633,
+        "to": 319.833,
+        "seconds": 3.2
+      },
+      {
+        "from": 319.833,
+        "to": 342.285,
+        "seconds": 22.452
+      }
+    ],
+    "note": "Human motion designer must validate cut, typography, camera, and matched geometry against reference. Do not copy original assets."
+  }
+]
