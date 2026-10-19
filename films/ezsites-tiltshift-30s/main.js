@@ -9,25 +9,25 @@ import * as THREE from 'three';
 import { makePost } from '/lemo/styles/tilt-shift/demo/post.js';
 const params=new URLSearchParams(location.search);
 const W=+(params.get('w')||540),H=+(params.get('h')||960);
-const scene=new THREE.Scene();scene.background=new THREE.Color('#b9cfda');scene.fog=new THREE.FogExp2('#bfd2d8',0.014);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#b1c6cb');scene.fog=new THREE.FogExp2('#b4c2bb',0.008);
 const camera=new THREE.PerspectiveCamera(29,W/H,0.1,250);
 const renderer=new THREE.WebGLRenderer({antialias:false,preserveDrawingBuffer:true,powerPreference:'high-performance'});
-renderer.setPixelRatio(1);renderer.setSize(W,H);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.36;
+renderer.setPixelRatio(1);renderer.setSize(W,H);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.81;
 renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 document.getElementById('stage').appendChild(renderer.domElement);
 const post=makePost(renderer,scene,camera,W,H,{ssaa:+(params.get('ssaa')||1),msaa:0,ao:false});
-post.bloom.strength=.12;post.bloom.threshold=1.12;post.bloom.radius=.25;
-post.grade.uniforms.sat.value=1.21;post.grade.uniforms.contrast.value=.13;
-post.grade.uniforms.warm.value=.42;post.grade.uniforms.amt.value=.22;
+post.bloom.strength=.08;post.bloom.threshold=1.12;post.bloom.radius=.25;
+post.grade.uniforms.sat.value=1.40;post.grade.uniforms.contrast.value=.29;
+post.grade.uniforms.warm.value=.28;post.grade.uniforms.amt.value=.10;
 const rand=(()=>{let v=972318;return()=>{v^=v<<13;v^=v>>>17;v^=v<<5;return ((v>>>0)%1048576)/1048576;}})();
 const smooth=x=>{x=Math.min(1,Math.max(0,x));return x*x*(3-2*x)};
 const mix=(a,b,t)=>a+(b-a)*t;
 const C=(col)=>new THREE.Color(col);
 const mat=(c,rough=.75,metal=0,extra={})=>new THREE.MeshStandardMaterial({color:c,roughness:rough,metalness:metal,...extra});
 const mats={
-  stucco:mat('#e6c1a5',.97),trim:mat('#f3e5d3',.8),dark:mat('#282628',.62),iron:mat('#222b30',.35,.56),bronze:mat('#987451',.28,.54),
-  wood:mat('#a36e41',.72),green:mat('#315d4d',.84),white:mat('#faf7e9',.64),glass:new THREE.MeshPhysicalMaterial({color:'#9ad0d6',roughness:.14,metalness:.1,transparent:true,opacity:.47,clearcoat:1,side:THREE.DoubleSide}),
-  blackGlass:new THREE.MeshPhysicalMaterial({color:'#62888c',roughness:.12,metalness:.12,transparent:true,opacity:.56,depthWrite:false,side:THREE.DoubleSide}),asphalt:mat('#424950',.99),curb:mat('#cabdb0',1),stone:mat('#b7aca1',1),dirt:mat('#62442d',1),warm:mat('#e9bb6b',.32,0,{emissive:'#d99551',emissiveIntensity:.5}),
+  stucco:mat('#ca9375',.9),trim:mat('#f3e5d3',.8),dark:mat('#282628',.62),iron:mat('#222b30',.35,.56),bronze:mat('#987451',.28,.54),
+  wood:mat('#a36e41',.72),green:mat('#264b3c',.75),white:mat('#faf7e9',.64),glass:new THREE.MeshPhysicalMaterial({color:'#9ad0d6',roughness:.14,metalness:.1,transparent:true,opacity:.47,clearcoat:1,side:THREE.DoubleSide}),
+  blackGlass:new THREE.MeshPhysicalMaterial({color:'#2e6470',roughness:.12,metalness:.12,transparent:true,opacity:.26,depthWrite:false,side:THREE.DoubleSide}),asphalt:mat('#424950',.99),curb:mat('#cabdb0',1),stone:mat('#b7aca1',1),dirt:mat('#62442d',1),warm:mat('#e9bb6b',.32,0,{emissive:'#d99551',emissiveIntensity:.5}),
   latte:mat('#ae6731',.94),milk:mat('#f4e5ca',.76),blue:mat('#1477ea',.22,.1,{emissive:'#0654b8',emissiveIntensity:.7}),
   foliage:[mat('#27503c'),mat('#3d754d'),mat('#487d4e'),mat('#618d4d'),mat('#779958'),mat('#2b6247')]
 };
@@ -40,7 +40,7 @@ function plane(parent,x,y,z,w,h,m){const o=new THREE.Mesh(new THREE.PlaneGeometr
 function tube(parent,points,r,m){const c=new THREE.CatmullRomCurve3(points.map(v=>new THREE.Vector3(...v)));const o=new THREE.Mesh(new THREE.TubeGeometry(c,Math.max(10,points.length*10),r,7,false),m);o.castShadow=true;parent.add(o);return o;}
 function tx(w,h,paint,opts={}){let canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;let ctx=canvas.getContext('2d');paint(ctx,w,h);let t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;t.wrapS=t.wrapT=THREE.RepeatWrapping;if(opts.repeat)t.repeat.set(...opts.repeat);return t;}
 const texStucco=tx(768,768,(g,w,h)=>{
- g.fillStyle='#dbc0a8';g.fillRect(0,0,w,h);
+ g.fillStyle='#cc8f72';g.fillRect(0,0,w,h);
  for(let i=0;i<19000;i++){const a=rand()*.19;g.fillStyle=rand()>.6?`rgba(88,67,55,${a})`:`rgba(255,246,224,${a})`;g.fillRect(rand()*w,rand()*h,1+rand()*3,1+rand()*3)}
  for(let r=0;r<24;r++){let y=r*32;g.fillStyle='rgba(81,63,52,.15)';g.fillRect(0,y,w,1.3);for(let j=0;j<7;j++){let x=((j+(r%2)*.5)*110)%w;g.fillRect(x,y,1,32)}}
 });mats.stucco.map=texStucco;mats.stucco.needsUpdate=true;
@@ -101,14 +101,14 @@ for(let j=0;j<28;j++){let x=-7.85+j*.57;box(store,x,11.45,3.6,.06,.13,.28,mat(j%
 const canopy=new THREE.Group();store.add(canopy);
 for(let i=0;i<15;i++){
   let x=-7.5+i*(15/15),x2=x+1;
-  let col=i%2?mat('#f7eedc',.95):mat('#bb7848',.9);
-  let o=box(canopy,(x+x2)/2,6.34,4.73,1.0,.1,2.95,col);o.rotation.x=-.11;
-  const hem=box(canopy,(x+x2)/2,6.08,6.21,1,.31,.09,col);hem.rotation.x=.05;
+  let col=i%2?mat('#f1e6cc',.87):mat('#3d6c57',.88);
+  let o=box(canopy,(x+x2)/2,5.74,4.73,1.0,.1,2.95,col);o.rotation.x=-.11;
+  const hem=box(canopy,(x+x2)/2,5.48,6.21,1,.31,.09,col);hem.rotation.x=.05;
 }
-box(store,0,6.45,4.98,15.3,.16,.1,mats.dark);
-for(let i=-6;i<=6;i+=3)box(store,i,5.9,4.12,.09,.66,.15,mats.bronze);
-board(store,0,7.0,3.7,10.4,1.27,.18,[
- {text:'OAK  &  BEAN',size:91,y:75,weight:700},{text:'C  O  F  F  E  E',size:34,y:150,weight:400}],{bg:'#252d29'});
+box(store,0,5.85,4.98,15.3,.16,.1,mats.dark);
+for(let i=-6;i<=6;i+=3)box(store,i,5.3,4.12,.09,.66,.15,mats.bronze);
+board(store,0,6.74,4.18,10.4,1.06,.18,[
+ {text:'OAK & BEAN',size:102,y:60,weight:700},{text:'C O F F E E',size:37,y:128,weight:400}],{bg:'#252d29'});
 // icon graphic resembling a coffee leaf but not any protected cafe logo
 for(let z of [4.09,4.3]){} // reserved dimensional frame
 // warm wall lamps
@@ -183,33 +183,33 @@ const routeMat=new THREE.MeshBasicMaterial({color:'#43b4ff',transparent:true,opa
 const route=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(routePoints.map(p=>new THREE.Vector3(...p))),100,.08,10,false),routeMat);route.material.depthTest=false;route.renderOrder=110;root.add(route);
 const routeHead=new THREE.Mesh(new THREE.SphereGeometry(.19,20,14),new THREE.MeshBasicMaterial({color:'#caefff'}));root.add(routeHead);
 // studio light: shadowed sunlight, airy ambient fill
-scene.add(new THREE.HemisphereLight('#eef6ff','#80664d',2.8));
-const sun=new THREE.DirectionalLight('#ffefd6',3.5);sun.position.set(-28,55,38);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+scene.add(new THREE.HemisphereLight('#e0eaff','#655343',1.05));
+const sun=new THREE.DirectionalLight('#ffe1b4',2.15);sun.position.set(-28,55,38);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
 sun.shadow.camera.left=-38;sun.shadow.camera.right=38;sun.shadow.camera.top=38;sun.shadow.camera.bottom=-38;sun.shadow.camera.near=1;sun.shadow.camera.far=135;sun.shadow.bias=-.0007;sun.shadow.normalBias=.023;scene.add(sun);
-const rim=new THREE.DirectionalLight('#bad8f5',1.7);rim.position.set(24,22,-28);scene.add(rim);
+const rim=new THREE.DirectionalLight('#bad8f5',.52);rim.position.set(24,22,-28);scene.add(rim);
 const up=new THREE.Vector3(0,1,0);
 function render(t){t=Math.max(0,Math.min(5,t));
  // Time-lapse stutter ONLY on world actors. Camera stays smooth (upstream style).
  let st=Math.floor(t*8)/8;root.rotation.y=0;
- const c=smooth((t-.3)/4.4),wide=smooth((t-2.75)/2.1);
+ const move=smooth(t/2.75),wide=smooth((t-2.85)/1.95);
  // high oblique 50°; camera follows sign then reveals blue path across the neighborhood
- const target=new THREE.Vector3(mix(-2,1.8,wide),mix(6.1,4.0,wide),mix(1,3.5,wide));
- const offset=new THREE.Vector3(mix(20,30,wide),mix(27,41,wide),mix(27,42,wide));
+ const target=new THREE.Vector3(mix(mix(-3.7,-2.1,move),3.7,wide),mix(mix(3.6,4.0,move),2.5,wide),mix(mix(3.6,2.6,move),5.1,wide));
+ const offset=new THREE.Vector3(mix(mix(16.2,14.6,move),22.0,wide),mix(mix(27.5,28.5,move),38,wide),mix(mix(25.0,24.5,move),33,wide));
  camera.position.copy(target).add(offset);camera.lookAt(target);
- const focusObj=new THREE.Vector3(mix(-2,5,wide),mix(7.1,1.4,wide),mix(3.6,6,wide));
+ const focusObj=new THREE.Vector3(mix(-2,5,wide),mix(6.75,1.4,wide),mix(4.15,6,wide));
  const projected=focusObj.clone().project(camera);
  post.dof.focus=camera.position.distanceTo(focusObj);
- post.dof.aper=50;post.dof.maxCoc=22;
+ post.dof.aper=35;post.dof.maxCoc=15;
  post.dof.band.y=THREE.MathUtils.clamp((projected.y+1)/2,.17,.8);
- post.dof.band.w=mix(.13,.08,wide);
- post.dof.band.amp=mix(17,24,wide);post.dof.band.mix=.73;post.dof.band.tilt=.02;
- post.grade.uniforms.expo.value=1.0;
+ post.dof.band.w=mix(.22,.14,wide);
+ post.dof.band.amp=mix(10,15,wide);post.dof.band.mix=.40;post.dof.band.tilt=.02;
+ post.grade.uniforms.expo.value=.92;
  // Blue identity trace is choreographed on musical subdivisions; begins after 3.15 sec.
  const grow=smooth((t-3.18)/1.6);route.visible=grow>.005;
  route.scale.set(1,1,1); // progressive reveal via an accurate tube rebuild only on preview cues
  route.geometry.setDrawRange(0,Math.max(0,Math.floor((route.geometry.index?route.geometry.index.count:route.geometry.attributes.position.count)*grow)));
  let seg=routePoints[Math.min(routePoints.length-1,Math.floor(grow*(routePoints.length-1)))];routeHead.position.set(...seg);routeHead.visible=route.visible;
- const gl=post.grade.uniforms;gl.sat.value=1.22;post.composer.render();
+ const gl=post.grade.uniforms;gl.sat.value=1.38;post.composer.render();
 }
 window.DUR=5;window.render=render;window.READY=true;window.VIDEO_BRIEF={style:'tilt-shift',kind:'source-code 5s lens/cafe proof; NOT finished 30s film',logo:'not displayed in this initial environmental proof'};
 render(1.5);
