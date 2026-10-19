@@ -60,9 +60,10 @@ const SiteScreen:React.FC<{type:'desktop'|'mobile';f:number;from?:number;scale?:
 const SiteReveal:React.FC=()=>{
  const f=useCurrentFrame();
  return <AbsoluteFill style={{overflow:'hidden',background:'radial-gradient(ellipse at 60% 40%, #28302B, #090E12 75%)'}}>
+  <Video src={staticFile('chef-a.mp4')} muted trimBefore={24} premountFor={FPS} objectFit="cover" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:.22,filter:'blur(28px) brightness(.43) saturate(.60)',transform:'scale(1.15)'}}/>
   <div style={{position:'absolute',top:-240,left:-300,width:1300,height:1250,background:'radial-gradient(ellipse,#6D4B20 0%,transparent 65%)',opacity:.26,filter:'blur(60px)'}}/>
   <div style={{position:'absolute',top:350,left:20,fontFamily:serif,color:C.cream,fontSize:118,lineHeight:.99,letterSpacing:-4,opacity:I(f,0,28,0,1)}}>A place<br/><i style={{color:C.gold}}>to be found.</i></div>
-  <div style={{position:'absolute',left:I(f,0,70,1020,-45),top:I(f,0,70,980,640),transform:`rotateY(${I(f,0,70,-18,-5)}deg) rotateZ(${I(f,0,70,7,0)}deg) scale(.62)`,transformOrigin:'center center',perspective:2000}}><SiteScreen type="desktop" f={f}/></div>
+  <div style={{position:'absolute',left:I(f,0,70,1020,-69),top:I(f,0,70,1010,642),transform:`rotateY(${I(f,0,70,-18,-2)}deg) rotateZ(${I(f,0,70,7,0)}deg) scale(.75)`,transformOrigin:'center center',perspective:2000}}><SiteScreen type="desktop" f={f}/></div>
   <div style={{position:'absolute',left:80,right:80,bottom:166,fontFamily:sans,fontSize:29,lineHeight:1.4,color:'#C6C9C8',opacity:I(f,40,66,0,1)}}>One beautiful destination.<br/>Built around your business.</div>
   <Grains opacity={.16}/>
  </AbsoluteFill>;
@@ -70,19 +71,15 @@ const SiteReveal:React.FC=()=>{
 
 const DesktopExplore:React.FC=()=>{
  const f=useCurrentFrame();
- const dolly=I(f,0,145,.96,1.17);
- const sTop=I(f,40,138,-5,-1140);
- return <AbsoluteFill style={{overflow:'hidden',background:'#090C12'}}>
-   <div style={{position:'absolute',top:0,left:0,width:'100%',height:'100%',background:'radial-gradient(circle at 80% 15%,#3B3221, #080a0e 70%)'}}/>
-   <div style={{position:'absolute',top:140,left:-490,transform:`translate3d(${I(f,0,145,30,-10)}px,${sTop}px,0) scale(${dolly})`,transformOrigin:'top center',filter:'drop-shadow(0px 20px 75px #000)'}}>
-     <div style={{width:1800,height:2790,overflow:'hidden',background:'#050506',borderRadius:28,border:'2px solid rgba(240,215,160,.14)'}}>
-       <Img src={staticFile('web-desktop-long.png')} style={{width:'100%',height:'auto'}}/>
-     </div>
+ const scroll=I(f,28,165,80,1810);
+ const zoom=I(f,0,155,1.00,1.065);
+ return <AbsoluteFill style={{overflow:'hidden',background:'#030508'}}>
+   {/* True published MOBILE page, animated as a full-bleed film shot. */}
+   <div style={{position:'absolute',top:-20,left:-20,width:1120,height:2250,overflow:'hidden',transform:`scale(${zoom})`,transformOrigin:'center 45%'}}>
+    <Img src={staticFile('web-mobile-long.png')} style={{width:1120,height:'auto',position:'absolute',top:0,left:0,transform:`translateY(${-scroll}px)`}} />
    </div>
-   <div style={{position:'absolute',left:0,right:0,top:0,height:180,background:'linear-gradient(#070a11 0%,rgba(7,10,17,0) 100%)'}}/>
-   <div style={{position:'absolute',left:0,right:0,bottom:0,height:350,background:'linear-gradient(0deg,#080b10 0%,rgba(8,11,16,0) 100%)'}}/>
-   <div style={{position:'absolute',top:145,left:90,background:'#10191Ccc',border:'1px solid #C7B0726b',padding:'16px 26px',fontSize:23,fontFamily:sans,color:'#E6DECD',borderRadius:999,opacity:I(f,18,35,0,1)*I(f,110,142,1,0)}}>kurotsuki.sites.ezsites.app <Chevron/></div>
-   <div style={{position:'absolute',bottom:176,left:82,right:80,opacity:I(f,80,103,0,1),color:'#FAF6EF',fontFamily:serif,fontSize:99,lineHeight:.9,letterSpacing:-2.2}}>Your story.<br/><i style={{color:'#E8C377'}}>Online.</i></div>
+   <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(3,7,12,.50) 0%,transparent 17%,transparent 59%,rgba(3,7,12,.50) 86%,#05080d 100%)',pointerEvents:'none'}}/>
+   <div style={{position:'absolute',left:73,right:73,bottom:135,fontFamily:serif,color:'#FAF6EF',fontSize:110,lineHeight:.95,letterSpacing:-3.3,textShadow:'0 8px 40px #000c',opacity:I(f,95,118,0,1)}}>Your story.<br/><i style={{color:'#E3BC69'}}>Online.</i></div>
  </AbsoluteFill>;
 };
 
@@ -105,7 +102,7 @@ const MobileScene:React.FC=()=>{
  const phoneScroll=I(f,78,165,0,1020);
  return <AbsoluteFill style={{overflow:'hidden',background:'radial-gradient(circle at 60% 35%,#23303A 0%,#0B1320 52%,#05080F 100%)'}}>
    <div style={{position:'absolute',top:205,left:90,fontFamily:serif,color:C.cream,fontSize:112,lineHeight:.96,letterSpacing:-3,opacity:I(f,0,23,0,1)}}>Made for<br/><i style={{color:'#DCC08A'}}>every screen.</i></div>
-   <div style={{position:'absolute',top:I(f,0,75,1180,515),left:I(f,0,75,640,185),transform:`scale(${I(f,0,75,.7,.78)})`,transformOrigin:'top left'}}><Phone frame={f} scroll={phoneScroll}/></div>
+   <div style={{position:'absolute',top:I(f,0,75,1160,485),left:I(f,0,75,580,194),transform:`scale(${I(f,0,75,.78,.91)})`,transformOrigin:'top left'}}><Phone frame={f} scroll={phoneScroll}/></div>
    <div style={{position:'absolute',bottom:142,left:84,right:84,fontFamily:sans,fontSize:30,color:'#D1D7E0',opacity:I(f,96,124,0,1)}}>The business you built. Now within reach.</div>
    <Grains opacity={.14}/>
  </AbsoluteFill>;
@@ -133,8 +130,8 @@ const EndCard:React.FC=()=>{
    <div style={{position:'absolute',left:140,right:140,top:460,textAlign:'center'}}>
      <div style={{fontFamily:serif,fontSize:98,letterSpacing:-2.7,lineHeight:1.1,opacity:I(f,12,40,0,1),transform:`translateY(${I(f,12,41,55,0)}px)`}}>The next chapter<br/><i style={{color:'#188FD7'}}>starts online.</i></div>
    </div>
-   <div style={{position:'absolute',top:905,left:156,right:156,background:'white',borderRadius:30,padding:'48px 35px',opacity:I(f,28,50,0,1),transform:`translateY(${I(f,28,58,55,0)}px)`,boxShadow:'0 20px 110px rgba(22,53,90,.085)'}}>
-      <Img src={staticFile('ezsites-logo.png')} style={{width:'100%',height:192,objectFit:'contain'}}/>
+   <div style={{position:'absolute',top:910,left:115,right:115,opacity:I(f,28,50,0,1),transform:`translateY(${I(f,28,58,55,0)}px)`}}>
+      <Img src={staticFile('ezsites-logo-cropped.png')} style={{width:'100%',height:230,objectFit:'contain'}}/>
    </div>
    <div style={{position:'absolute',bottom:490,left:80,right:80,fontFamily:sans,fontSize:29,textAlign:'center',color:'#65728B',letterSpacing:2,opacity:I(f,54,75,0,1)}}>BRING YOUR BUSINESS ONLINE.</div>
    <div style={{position:'absolute',bottom:180,left:80,right:80,display:'flex',alignItems:'center',justifyContent:'center',opacity:I(f,53,78,0,1)}}><div style={{fontFamily:sans,fontSize:27,color:'#167EC8',fontWeight:700,borderBottom:'2px solid #129BE8',paddingBottom:13,letterSpacing:1.1}}>Get started with EzSites &nbsp; ↗</div></div>
