@@ -62,12 +62,12 @@ const End:React.FC=()=>{const f=useCurrentFrame();const t=f-663;return <Absolute
  <div style={{font:'500 77px Georgia',letterSpacing:-2.5,color:'#fff',marginTop:24,textAlign:'center'}}>Bring your business<br/>online.</div><div style={{font:'700 25px Arial',letterSpacing:5,color:'#71C9FA',marginTop:35}}>GET STARTED WITH EZSITES</div></div>
  </AbsoluteFill>};
 export const Commercial:React.FC=()=>{const f=useCurrentFrame();return <AbsoluteFill style={{background:INK}}>
- <Sequence from={0} durationInFrames={128}><Intro/></Sequence>
- <Sequence from={123} durationInFrames={87}><Interlude/></Sequence>
- <Sequence from={205} durationInFrames={260}><Product/></Sequence>
- <Sequence from={460} durationInFrames={110}><Domain/></Sequence>
- <Sequence from={560} durationInFrames={107}><Link/></Sequence>
- <Sequence from={663} durationInFrames={87}><End/></Sequence>
+ <Fade opacity={v(f,116,128,1,0)}><Intro/></Fade>
+ <Fade opacity={v(f,121,128,0,1)*v(f,197,210,1,0)}><Interlude/></Fade>
+ <Fade opacity={v(f,202,214,0,1)*v(f,451,464,1,0)}><Product/></Fade>
+ <Fade opacity={v(f,458,467,0,1)*v(f,551,568,1,0)}><Domain/></Fade>
+ <Fade opacity={v(f,557,569,0,1)*v(f,654,670,1,0)}><Link/></Fade>
+ <Fade opacity={v(f,661,676,0,1)}><End/></Fade>
  <CutMask f={f} start={117} dur={13} color="#0B0D0C"/>
  <CutMask f={f} start={199} dur={13} color="#0C1115"/>
  <CutMask f={f} start={452} dur={15} color="#ECEDE9"/>
