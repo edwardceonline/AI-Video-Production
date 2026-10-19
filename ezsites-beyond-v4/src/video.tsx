@@ -60,14 +60,26 @@ const Discovery:React.FC<{f:number}>=({f})=><AbsoluteFill style={{opacity:both(f
 
 // Real EzSites-hosted customer demo, not recreated fake UI.
 const Web:React.FC<{f:number}>=({f})=>{
- const leave=tw(f,400,435,1,.88);
- return <AbsoluteFill style={{overflow:'hidden',opacity:both(f,263,458,16),background:'#071018'}}>
-  <div style={{position:'absolute',inset:0,transform:`scale(${tw(f,268,315,1.12,1)*leave})`,transformOrigin:'50% 33%'}}><RealSite f={f}/></div>
-  <AbsoluteFill style={{background:'linear-gradient(0deg,rgba(4,9,15,.94),rgba(4,9,15,.3) 26%,transparent 48%)'}}/>
-  <div style={{position:'absolute',left:70,right:67,bottom:148,transform:`translateY(${tw(f,298,331,110,0)}px)`,opacity:on(f,296,326)}}>
-   <Eyebrow style={{color:'#E8C98F',marginBottom:21}}>A place to discover you.</Eyebrow>
-   <FilmText size={81}>Open for the world<br/>to find.</FilmText>
+ const arrive=tw(f,270,309,1.18,1);
+ const tilt=tw(f,269,375,-12,2);
+ const drift=tw(f,285,400,45,-30);
+ const screenScroll=tw(f,350,404,0,-185);
+ return <AbsoluteFill style={{opacity:both(f,263,458,16),overflow:'hidden',background:'#0B1824'}}>
+ <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 60% 41%,rgba(194,150,90,.29),transparent 49%),radial-gradient(ellipse at 12% 92%,rgba(18,155,232,.20),transparent 56%)'}}/>
+ <div style={{position:'absolute',left:70,top:87,opacity:on(f,287,316)}}><Eyebrow style={{color:'#DCB875'}}>YOUR BUSINESS, ONLINE.</Eyebrow></div>
+ <div style={{position:'absolute',left:135,top:194,width:810,height:1370,transform:`perspective(1680px) rotateY(${tilt}deg) rotateX(1deg) translateY(${drift}px) scale(${arrive})`,transformOrigin:'50% 50%',opacity:on(f,269,289)}}>
+  <div style={{position:'absolute',inset:-15,borderRadius:79,background:'linear-gradient(118deg,#5B626B,#151C29 18%,#7D8590 53%,#1B222B)',boxShadow:'0 48px 115px rgba(0,0,0,.73),0 0 85px rgba(216,176,103,.18)'}}/>
+  <div style={{position:'absolute',inset:0,border:'12px solid #080B11',borderRadius:66,overflow:'hidden',background:'#070908'}}>
+   <Img src={staticFile('kurotsuki-mobile.png')} style={{position:'absolute',width:'100%',height:'auto',top:0,left:0,transform:`translateY(${screenScroll}px)`,filter:'brightness(1.17) contrast(1.07)'}}/>
+   <div style={{position:'absolute',left:260,right:260,top:0,height:42,background:'#05070B',borderRadius:'0 0 32px 32px',boxShadow:'0 4px 15px rgba(0,0,0,.7)'}}/>
+   <div style={{position:'absolute',right:0,top:0,height:'100%',width:100,background:'linear-gradient(90deg,transparent,rgba(255,255,255,.045))',pointerEvents:'none'}}/>
   </div>
+ </div>
+ <div style={{position:'absolute',right:160,top:1210,width:105,height:105,borderRadius:'50%',border:'3px solid rgba(255,255,255,.88)',background:'rgba(20,155,232,.16)',transform:`scale(${tw(f,353,387,0,1.55)})`,opacity:on(f,350,365)*off(f,380,393),boxShadow:'0 0 30px rgba(18,155,232,.28)'}}/>
+ <div style={{position:'absolute',left:72,right:65,bottom:135,textAlign:'center',opacity:on(f,303,333),transform:`translateY(${tw(f,302,332,65,0)}px)`}}>
+  <FilmText size={73}>Be there when they look.</FilmText>
+  <div style={{font:'600 24px Arial',marginTop:20,color:'#9EC7D9',letterSpacing:3}}>A REAL WEBSITE. A REAL PRESENCE.</div>
+ </div>
  </AbsoluteFill>;
 };
 
@@ -82,7 +94,7 @@ const Identity:React.FC<{f:number}>=({f})=>{
   <div style={{fontFamily:serif,fontWeight:600,fontSize:108,lineHeight:1.02,color:'#101A25',letterSpacing:-4,transform:`translateY(${tw(f,426,460,85,0)}px)`,opacity:on(f,423,455)}}>A name<br/>they remember.</div>
  </div>
  <div style={{position:'absolute',top:930,left:67,right:67,padding:'43px 0',borderTop:'2px solid #C4CAC7',borderBottom:'2px solid #C4CAC7',overflow:'hidden'}}>
-  <div style={{font:'600 38px Arial',letterSpacing:-1.0,color:'#142B3D',whiteSpace:'nowrap',transform:`translateX(${tw(f,438,482,850,0)}px)`}}>kurotsuki<span style={{color:BLUE}}>.sites.ezsites.app</span></div>
+  <div style={{font:'600 75px Georgia',letterSpacing:-2.5,color:'#142B3D',transform:`translateX(${tw(f,438,482,850,0)}px)`}}>kurotsuki</div><div style={{font:'600 40px Arial',letterSpacing:-.8,color:BLUE,marginTop:10,transform:`translateX(${tw(f,450,487,800,0)}px)`}}>.sites.ezsites.app</div>
  </div>
  <div style={{position:'absolute',left:69,bottom:195,font:'500 26px Arial',letterSpacing:1.7,color:'#4C6170',opacity:on(f,457,479)}}>YOUR PRESENCE. YOUR IDENTITY.</div>
  </AbsoluteFill>;
@@ -99,7 +111,7 @@ const Contact:React.FC<{f:number}>=({f})=>{
    <div style={{display:'flex',alignItems:'center',gap:17,marginBottom:26}}><span style={{width:12,height:12,borderRadius:20,background:BLUE}}/><span style={{font:'700 22px Arial',letterSpacing:3,color:'#4D6578'}}>CUSTOMER INQUIRY</span></div>
    <div style={{font:'500 45px Georgia',color:'#101D2B',lineHeight:1.27,minHeight:118}}>{type.slice(0,typed)}{typed<type.length?<span style={{color:BLUE}}>|</span>:null}</div>
    <div style={{height:2,background:'#D0D9D9',marginTop:28}}/>
-   <div style={{font:'500 22px Arial',color:'#7A8F9D',marginTop:21}}>Illustrative customer message</div>
+
   </div>
  </AbsoluteFill>
 };
@@ -109,6 +121,8 @@ const EmailStory:React.FC<{f:number}>=({f})=>{
  const s=on(f,665,694); const reply='We would love to welcome you.';
  const typed=Math.round(tw(f,724,764,0,reply.length));
  return <AbsoluteFill style={{overflow:'hidden',opacity:both(f,644,792,12),background:'#071B2B'}}>
+  <div style={{position:'absolute',inset:0,opacity:.24,filter:'grayscale(.3) blur(2px)'}}><Customer f={f} forContact/></div>
+  <AbsoluteFill style={{background:'linear-gradient(90deg,rgba(6,25,45,.92),rgba(6,25,45,.40))'}}/>
   <AbsoluteFill style={{background:'radial-gradient(ellipse at 87% 6%,rgba(24,123,194,.34),transparent 46%),radial-gradient(ellipse at 4% 90%,rgba(193,155,104,.13),transparent 48%)'}}/>
   <div style={{position:'absolute',top:275,left:70,right:70,transform:`translateY(${tw(f,657,701,80,0)}px)`,opacity:s}}>
    <Eyebrow style={{color:'#7DBFDE',marginBottom:37}}>And keep it going.</Eyebrow>
@@ -117,7 +131,7 @@ const EmailStory:React.FC<{f:number}>=({f})=>{
   <div style={{position:'absolute',left:70,top:878,right:70,borderTop:'1px solid #3E6172',borderBottom:'1px solid #3E6172',padding:'47px 0 45px',opacity:on(f,694,721)}}>
     <div style={{display:'flex',alignItems:'center',gap:13,marginBottom:44}}><div style={{width:12,height:12,borderRadius:16,background:'#7EC9ED'}}/><div style={{font:'600 29px Arial',letterSpacing:1,color:'#D7E4E7'}}>hello<span style={{color:'#7BCBF3'}}>@yourbusiness.com</span></div></div>
     <div style={{fontFamily:serif,fontSize:55,lineHeight:1.15,color:'#F0F1E9',minHeight:140}}>{reply.slice(0,typed)}<span style={{color:BLUE}}>{typed<reply.length?'▌':''}</span></div>
-    <div style={{font:'500 23px Arial',marginTop:25,color:'#7397AC'}}>Illustrative business-email example</div>
+
   </div>
   <div style={{position:'absolute',left:70,bottom:190,font:'600 24px Arial',letterSpacing:4.4,color:'#7FC7EC',opacity:on(f,729,755)}}>WEBSITE. DOMAIN. BUSINESS EMAIL.</div>
  </AbsoluteFill>;
@@ -142,13 +156,13 @@ const Finale:React.FC<{f:number}>=({f})=>{
 export const Beyond:React.FC=()=>{
  const f=useCurrentFrame();
  return <AbsoluteFill style={{overflow:'hidden',background:NIGHT}}>
-  <Opening f={f}/>
-  <Discovery f={f}/>
-  <Web f={f}/>
-  <Identity f={f}/>
-  <Contact f={f}/>
-  <EmailStory f={f}/>
-  <Finale f={f}/>
+  {f<141?<Opening f={f}/>:null}
+  {f>=115&&f<288?<Discovery f={f}/>:null}
+  {f>=258&&f<461?<Web f={f}/>:null}
+  {f>=408&&f<529?<Identity f={f}/>:null}
+  {f>=508&&f<669?<Contact f={f}/>:null}
+  {f>=638&&f<799?<EmailStory f={f}/>:null}
+  {f>=756?<Finale f={f}/>:null}
   <Audio src={staticFile('score.wav')} volume={.68}/>
   {[[16,'vo-0.mp3'],[139,'vo-1.mp3'],[265,'vo-2.mp3'],[402,'vo-3.mp3'],[508,'vo-4.mp3'],[619,'vo-5.mp3'],[786,'vo-6.mp3']].map(([start,file],i)=><Sequence key={i} from={Number(start)} durationInFrames={Math.min(900-Number(start),132)}><Audio src={staticFile(String(file))} volume={1.0}/></Sequence>)}
  </AbsoluteFill>;
