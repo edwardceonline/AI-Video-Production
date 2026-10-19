@@ -36,3 +36,11 @@
 3. If user asks for a film, select styles using the matrix, read the selected full upstream `STYLE.md`, propose story and wait for approval.
 4. Never infer old app capabilities or artifact availability from this snapshot.
 5. Update this file after new commitments, render or product decisions.
+
+
+## New film — EzSites 30s Isometric (2026-10-19, user-approved storyboard)
+- User approved the new 30s 9:16 English **BEYOND YOUR FRONT DOOR** treatment and explicitly allowed **stylized advertising UI** and **logo artwork derived faithfully from the original**. Must retain recognizable EzSites appearance, no false buttons/features.
+- New topic branch: `feature/ezsites-isometric-30s` from Draft PR #3 branch; target PR remains draft and **does not change the verified 20s Swiss-motion film**.
+- 3 real source-rendered styleframes (2.4s storefront; 14.1s Preview/Publish; 25.2s connected overview) and 5-second 4–9s silent proof at 24fps prepared, reviewed and corrected two layout issues. User visual approval of these **art proofs still pending**; not a full ad.
+- Storyboard/voice/audio/claim boundaries: `films/ezsites-isometric-30s/TREATMENT.md`. Exact drawing source: `films/ezsites-isometric-30s/index.html`; reproduction: `scripts/render_preproduction.py`.
+- **Unfinished:** the film's end card has a *temporary stand-in* NOT a valid EzSites logo. MUST replace using genuine source asset before production render. Full 30s animation, Kokoro/Whisper, 120BPM score, FFmpeg mastering, CI render and QC are **not yet completed**. Do not represent 5s proof as completed final.

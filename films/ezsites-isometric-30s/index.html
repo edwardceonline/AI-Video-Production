@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/><title>EzSites / Beyond Your Front Door / Lemo Isometric Treatment</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#F5F1E8}canvas{width:100vw;height:100vh;display:block}</style></head><body><canvas id="film"></canvas><script>
+/* Beyond Your Front Door — actual production drawing code. Source-driven style frames.
+ Native Lemo Isometric Infographic grammar: locked true projection, 3-tone solids,
+ depth-sorted stations, leading route, pins/halos, log zoom. No 3D perspective.
+ The app UI is an intentionally stylized product illustration, NOT a screenshot. */
+const W=720,H=1280, TAU=Math.PI*2, C30=Math.cos(Math.PI/6),cv=document.querySelector('#film'),g=cv.getContext('2d',{alpha:false});
+const PAL={paper:'#F6F3EA',paper2:'#EEEDE8',ink:'#192D43',muted:'#7B8A97',line:'#CFD8D8',blue:'#1C76EF',blue2:'#65A5FF',blueDark:'#0F478D',mint:'#36C8A0',lemon:'#F2C763',red:'#EE876F',white:'#FFFFFF',soft:'#E5F1FC',plinth:'#DFE8E4',plant:'#2C987A',plant2:'#65BC98',wood:'#E2A66F',glass:'#C4E3EF'};
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), sm=x=>{x=clamp(x);return x*x*(3-2*x)}, ease=(t,a,b)=>sm((t-a)/(b-a));
+const mix=(a,b,p)=>a+(b-a)*p;function hexMix(hex,white,p){let a=parseInt(hex.slice(1),16),b=parseInt(white.slice(1),16);let c=[16,8,0].map(k=>Math.round(mix((a>>k)&255,(b>>k)&255,p)));return '#'+c.map(k=>k.toString(16).padStart(2,'0')).join('')};
+let CAM={x:0,y:0,k:40,cy:760};function project(x,y,z=0){return [360+(x-y-CAM.x+CAM.y)*C30*CAM.k,CAM.cy+((x+y-CAM.x-CAM.y)*.5-z)*CAM.k]}
+const poly=(pts,color,stroke='',width=1)=>{g.beginPath();pts.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.closePath();g.fillStyle=color;g.fill();if(stroke){g.lineWidth=width;g.strokeStyle=stroke;g.stroke()}};
+const seg=(p,q,color=PAL.ink,w=2)=>{g.strokeStyle=color;g.lineWidth=w;g.lineCap='round';g.beginPath();g.moveTo(...p);g.lineTo(...q);g.stroke()};
+const rect=(x,y,w,h,color)=>{g.fillStyle=color;g.fillRect(x,y,w,h)};
+const rnd=(x,y,w,h,r,color,outline)=>{g.beginPath();g.roundRect(x,y,w,h,r);g.fillStyle=color;g.fill();if(outline){g.strokeStyle=outline;g.lineWidth=1.8;g.stroke()}};
+const circle=(x,y,r,color)=>{g.beginPath();g.arc(x,y,r,0,TAU);g.fillStyle=color;g.fill()};
+const text=(s,x,y,size=25,color=PAL.ink,weight=600,align='left')=>{g.font=`${weight} ${size}px Arial, Helvetica, sans-serif`;g.fillStyle=color;g.textAlign=align;g.textBaseline='alphabetic';g.fillText(s,x,y)};
+const letter=(s,x,y,maxSize,maxWidth=610,color=PAL.ink,weight=850)=>{let sz=maxSize;g.font=`${weight} ${sz}px Arial, sans-serif`;while(g.measureText(s).width>maxWidth&&sz>10){sz-=1;g.font=`${weight} ${sz}px Arial,sans-serif`;}text(s,x,y,sz,color,weight);return sz};
+function camera(t){const stops=[{t:0,x:-2.1,y:.6,k:80,cy:735},{t:2.2,x:-2.0,y:.6,k:79,cy:747},{t:4,x:-2.1,y:.7,k:77,cy:750},{t:7.6,x:0.3,y:.6,k:47,cy:744},{t:8.7,x:2.1,y:-2.0,k:76,cy:750},{t:11.7,x:2.3,y:-2.1,k:72,cy:750},{t:15.0,x:2.3,y:-2.1,k:72,cy:750},{t:16.7,x:4.3,y:1.2,k:80,cy:760},{t:19.8,x:4.3,y:1.2,k:80,cy:760},{t:21.0,x:1.3,y:5.1,k:82,cy:753},{t:23.4,x:1.3,y:5.1,k:82,cy:753},{t:25.2,x:0.7,y:1.4,k:31,cy:746},{t:26.0,x:0.7,y:1.4,k:30,cy:757},{t:30,x:0.7,y:1.4,k:30,cy:757}];
+  let i=0;while(i<stops.length-2&&t>stops[i+1].t)i++;
+  const a=stops[i],b=stops[i+1];let p=ease(t,a.t,b.t);return {x:mix(a.x,b.x,p),y:mix(a.y,b.y,p),k:Math.exp(mix(Math.log(a.k),Math.log(b.k),p)),cy:mix(a.cy,b.cy,p)};
+}
+function isoBox(x,y,z,w,d,h,color,outline=''){const A=[project(x,y,z),project(x+w,y,z),project(x+w,y+d,z),project(x,y+d,z)],B=[project(x,y,z+h),project(x+w,y,z+h),project(x+w,y+d,z+h),project(x,y+d,z+h)];const dark=hexMix(color,'#07182A',.27),mid=hexMix(color,'#193243',.12),top=hexMix(color,'#FFFFFF',.20);poly([A[1],A[2],B[2],B[1]],dark);poly([A[2],A[3],B[3],B[2]],mid);poly(B,top,outline,1.5);return {base:A,top:B};}
+function worldLine(a,b,p=1,color=PAL.blue,width=6){let m=[mix(a[0],b[0],p),mix(a[1],b[1],p),mix(a[2]||.05,b[2]||.05,p)];seg(project(...a),project(...m),color,width)}
+function pin(x,y,z,word,small='',dx=65,dy=-74){let p=project(x,y,z);seg(p,[p[0]+dx*.3,p[1]+dy*.6],PAL.ink,1.5);seg([p[0]+dx*.3,p[1]+dy*.6],[p[0]+dx,p[1]+dy*.6],PAL.ink,1.5);circle(...p,5,PAL.blue);let xx=p[0]+dx+(dx>0?6:-178),yy=p[1]+dy*.6-15; rnd(xx-8,yy-19,179,54,8,PAL.paper);text(word,xx,yy,17,PAL.ink,800);if(small)text(small,xx,yy+19,11,PAL.muted,650)}
+function base(t){rect(0,0,W,H,PAL.paper);for(let y=170;y<1130;y+=53)for(let x=55;x<680;x+=55)circle(x+((y/53%2)|0)*26,y,1.1,'#DDE4DF');
+  rect(54,70,6,33,PAL.blue);text('EZSITES  /  THE BUSINESS ONLINE',75,91,15,PAL.ink,800);
+  seg([54,122],[666,122],PAL.line,1.3);
+  seg([54,1159],[666,1159],PAL.line,1.3);
+  text('A BUSINESS STORY · 30 SEC',54,1188,13,PAL.muted,750);
+  text('CONCEPT FILM',665,1188,13,PAL.muted,700,'right');}
+function platform(){const z=-.20,pts=[[-9,-8],[10,-8],[10,10],[-9,10]].map(([x,y])=>project(x,y,z));const b=pts.map(([x,y])=>[x,y+15*CAM.k/45]);poly([pts[1],pts[2],b[2],b[1]],'#B5D1CF');poly([pts[2],pts[3],b[3],b[2]],'#8DB7B1');poly(pts,PAL.plinth);}
+function pathSegments(t){let p=clamp((t-4)/4);const ar=[[-1.2,1.15,.1],[.45,-.55,.1],[1.7,-1.0,.1],[2.2,-1.9,.1],[3.0,-.75,.1],[4.25,.9,.1],[3.1,2.2,.1],[1.65,4.4,.1]],end=7*p;
+for(let i=0;i<ar.length-1;i++){const pp=clamp(end-i);if(pp>0)worldLine(ar[i],ar[i+1],pp,PAL.blue,8*CAM.k/70)}
+if(t>=24.0){worldLine([1.7,4.4,.1],[-2.1,1.3,.1],ease(t,24,25.3),PAL.mint,7*CAM.k/70)}
+}
+function tree(x,y,h=2.1){isoBox(x-.11,y-.11,0,.22,.22,h*.48,PAL.wood);isoBox(x-.53,y-.50,h*.37,1.12,1.0,h*.9,PAL.plant)}
+function shop(t){const z=0;
+isoBox(-4.45,-1.0,z,4.1,3.8,2.7,'#E7E1D4');
+isoBox(-4.6,-1.15,2.67,4.45,4.1,.36,'#3A81DE');
+// Brand-blue awning projects from the storefront but remains a valid 3-face solid.
+isoBox(-4.54,2.37,1.93,4.25,.66,.34,PAL.blue);
+for(let i=0;i<5;i++)isoBox(-4.5+i*.83,2.96,1.74,.47,.15,.22,i%2?PAL.white:PAL.blue);
+// Storefront door/window attached to the visible wall y=2.81.
+isoBox(-2.7,2.81,.03,1.27,.1,1.83,'#A4C6CF');
+isoBox(-4.15,2.81,.82,1.15,.12,.96,'#B6DCE6');
+let sign=isoBox(-3.46,2.83,2.14,2.1,.2,.60,PAL.blue);const p=project(-2.65,3.05,2.58);text('OPEN',p[0]-25,p[1],Math.max(10,CAM.k*.29),PAL.white,900);
+isoBox(-2.5,3.65,-.08,.56,.55,.15,PAL.wood);
+if(t>1.1){tree(-6.1,1.9,1.65);tree(-.2,-1.7,1.5)}
+// Tiny business owner in iso print language, deliberately no photoreal person.
+let ch=project(-2.0,4.1,1.65);circle(ch[0],ch[1],.24*CAM.k,PAL.wood);isoBox(-2.23,3.83,0,.47,.49,1.35,PAL.ink);
+}
+function webStation(){isoBox(1.35,-3.05,0,3.4,2.7,.52,'#C8E3F4');isoBox(1.78,-2.65,.5,2.55,1.64,2.9,PAL.blue);isoBox(2.03,-2.47,1.15,2.1,.12,1.79,PAL.white);isoBox(2.22,-2.48,2.25,1.38,.14,.38,PAL.mint);isoBox(2.20,-2.48,1.63,.83,.13,.20,'#AECFEB');isoBox(3.12,-2.48,1.63,.78,.13,.20,'#AECFEB');}
+function domainStation(){isoBox(4.08,.7,0,3.3,2.0,.48,'#C7E9DF');isoBox(4.42,1.04,.48,2.38,.54,2.0,PAL.mint);isoBox(4.3,.88,2.36,2.67,.79,.31,PAL.white);}
+function emailStation(){isoBox(.41,4.5,0,3.3,2.4,.48,'#FFF0CF');isoBox(.86,4.85,.48,2.5,1.56,1.94,PAL.wood);isoBox(.91,4.82,1.10,2.42,.16,.93,PAL.white);isoBox(1.42,4.68,2.14,1.41,.26,.30,PAL.blue);}
+function roads(t){platform();pathSegments(t);const data=[{key:-2,fn:()=>tree(-6.3,-2.9,1.95)},{key:-.4,fn:()=>shop(t)},{key:-.1,fn:()=>tree(-1.3,-3.2,1.45)},{key:0,fn:webStation},{key:4.5,fn:domainStation},{key:5.5,fn:emailStation}];data.sort((a,b)=>a.key-b.key).forEach(it=>it.fn())}
+function productUI(t){const isPreview=t>=12;const p=ease(t,8,8.65);const wob=Math.sin(t*1.5)*4; const cx=360,cy=780;
+// An anchored editorial zoom box, not a screen capture and not an invented app screenshot.
+const ww=470*p,hh=725*p;if(!p)return;
+g.save();g.translate(cx,709+wob);g.scale(p*.69,p*.69);g.translate(-cx,-802); rnd(117,432,487,778,32,PAL.ink);rnd(132,450,458,741,24,PAL.white);rnd(284,460,145,13,8,PAL.ink);
+rect(132,493,458,79,PAL.blue);text('ezSites',171,545,39,PAL.white,800);
+if(!isPreview){
+text('TELL US ABOUT',171,637,27,PAL.ink,900);text('YOUR BUSINESS',171,675,27,PAL.ink,900);
+rnd(161,708,395,184,13,'#F0F6FC','#DFE9F2');text('A neighbourhood coffee shop',183,752,23,PAL.ink,650);text('Fresh coffee, pastries,',183,791,21,PAL.muted,500);text('and a cosy place to meet.',183,825,21,PAL.muted,500);
+rect(161,915,395,89,PAL.blue);text('CREATE MY PREVIEW',196,970,25,PAL.white,800);
+text('Brand visuals adapted for this ad',182,1072,16,PAL.muted,500);
+}else{
+text('YOUR WEBSITE PREVIEW',165,626,26,PAL.ink,900);rnd(164,650,390,276,12,'#E5EFF6');rect(164,649,390,88,'#3E82C6');text('LITTLE OAK',189,705,30,PAL.white,900);circle(470,821,71,'#C9975B');circle(470,821,53,PAL.white);text('CAFE',183,789,28,PAL.ink,850);text('Your favourite neighbourhood',183,840,17,PAL.ink,520);text('coffee, made with care.',183,870,17,PAL.ink,520);
+rnd(162,948,395,73,11,PAL.blue);text('PUBLISH WEBSITE',198,994,23,PAL.white,800);text('REVIEWED PREVIEW',181,1091,17,PAL.muted,620);
+}
+g.restore();
+// Footnote on video margin distinguishes branded edit from literal app recording.
+text('STYLIZED PRODUCT VISUAL · NOT AN APP SCREENSHOT',60,1145,11,PAL.muted,700);
+}
+function routeBadge(x,y,icon,word){const p=project(x,y,3.35),ww=260;let xx=clamp(p[0]-ww/2,58,W-ww-58),yy=clamp(p[1]-70,355,1000);rnd(xx,yy,ww,70,10,PAL.white,'#D0D8DB');rect(xx+13,yy+15,39,39,PAL.blue);text(icon,xx+32,yy+43,23,PAL.white,800,'center');text(word,xx+64,yy+44,21,PAL.ink,800)}
+function titles(t){let no,label1,label2,small;
+if(t<4){no='01';label1='OPEN FOR';label2='BUSINESS.';small='YOUR BUSINESS HAS A PLACE IN THE WORLD.'}
+else if(t<8){no='02';label1='NOW OPEN';label2='ONLINE.';small='THE OPPORTUNITY EXPANDS BEYOND YOUR FRONT DOOR.'}
+else if(t<12){no='03';label1='YOUR';label2='WEBSITE.';small='DESCRIBE YOUR BUSINESS. START WITH AI.'}
+else if(t<16){no='04';label1='PREVIEW.';label2='PUBLISH.';small='REVIEW BEFORE SHARING YOUR WEBSITE.'}
+else if(t<20){no='05';label1='YOUR OWN';label2='DOMAIN.';small='A NAME CUSTOMERS CAN REMEMBER.'}
+else if(t<24){no='06';label1='BUSINESS';label2='EMAIL.';small='ONE MORE WAY TO CONNECT PROFESSIONALLY.'}
+else if(t<26){no='07';label1='ALL';label2='CONNECTED.';small='ONE COHERENT ONLINE BUSINESS PRESENCE.'}
+else{no='08';label1='GET YOUR';label2='BUSINESS ONLINE.';small='WEBSITE / DOMAIN / BUSINESS EMAIL.'}
+text(`CHAPTER ${no} / 08`,55,200,20,PAL.blue,850);
+letter(label1,56,281,67,595,PAL.ink,850);letter(label2,56,367,77,606,PAL.blue,900);
+text(small,56,1129,16,PAL.ink,650);
+}
+function caption(t){const s=t<4?'You opened your doors for business.':t<8?'Now open a door online.':t<12?'Tell EzSites about your business.':t<16?"Preview it. Publish when you're ready.":t<20?"Give it a domain that's yours.":t<24?'And keep conversations going with business email.':t<26?'':"EzSites. Get your business online.";
+if(!s)return;const ww=628;rnd(46,1008,ww,67,13,PAL.white,'#C9D7DC');rect(46,1008,9,67,PAL.blue);let sz=22;g.font=`600 ${sz}px Arial`;while(g.measureText(s).width>ww-40&&sz>14){sz-=1;g.font=`600 ${sz}px Arial`};text(s,68,1050,sz,PAL.ink,650)
+}
+function face(t){CAM=camera(t);base(t);
+if(t>=26){ // User-owned EzSites logo asset is required for final composite. Brand proof will never guess the icon.
+  rect(0,415,W,550,PAL.blue);text('EZSITES',360,614,95,PAL.white,900,'center');
+  text('GET YOUR BUSINESS ONLINE',360,703,31,PAL.white,750,'center');
+  text('OFFICIAL LOGO WILL BE COMPOSITED FROM VERIFIED APP ASSET',360,857,13,PAL.white,600,'center');
+}else{
+ g.save();g.beginPath();g.rect(0,365,W,640);g.clip(); roads(t);
+ if(t>=8&&t<16){g.restore();g.save();g.beginPath();g.rect(0,384,W,616);g.clip();productUI(t);}else{
+ if(t>=16&&t<20)routeBadge(5.3,1.1,'@','littleoak.example');
+ if(t>=20&&t<24)routeBadge(2.2,5.8,'✉','hello@littleoak.example');
+ /* End overview uses an unobstructed map; its 2×2 legend sits outside world. */
+ }
+ g.restore();
+}
+titles(t);caption(t);
+if(t>=24&&t<26){
+  rnd(52,1002,612,95,11,PAL.white,'#C9D8D9');
+  const entries=[['STOREFRONT',PAL.wood,74,1035],['WEBSITE',PAL.blue,366,1035],['DOMAIN',PAL.mint,74,1078],['EMAIL',PAL.lemon,366,1078]];
+  for(const [name,col,x,y] of entries){rect(x,y-17,25,25,col);text(name,x+35,y+2,19,PAL.ink,800)}
+}
+}
+window.DUR=30;window.READY=true;window.render=(t)=>{const v=clamp(t,0,29.999);cv.width=1080;cv.height=1920;g.setTransform(1.5,0,0,1.5,0,0);face(v)};
+window.TEXTS=(t)=>[{id:'chapter-'+Math.floor(t/4),text:'EZSITES',x0:45,y0:150,x1:1050,y1:900}];
+window.render(Number(new URLSearchParams(location.search).get('t'))||2.5);
+</script></body></html>
