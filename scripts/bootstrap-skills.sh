@@ -5,7 +5,8 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CACHE="$ROOT/.cache/video-skill-sources"
 mkdir -p "$CACHE" "$ROOT/.agents/skills"
 fetch_at_commit() {
-  local name="$1" remote="$2" sha="$3" dest="$CACHE/$name"
+  local name="$1" remote="$2" sha="$3"
+  local dest="$CACHE/$name"
   if [[ -d "$dest/.git" && "$(git -C "$dest" rev-parse HEAD)" == "$sha" ]]; then
     echo "Using pinned skill source $name: $sha"; return
   fi
@@ -25,7 +26,8 @@ fetch_at_commit product-launch-video https://github.com/EveryInc/product-launch-
 fetch_at_commit remotion-skills https://github.com/remotion-dev/skills.git 1441a11e95db35443bd76bb318386c0d3ca00053
 
 link_skill() {
-  local name="$1" relative_target="$2" dest="$ROOT/.agents/skills/$name"
+  local name="$1" relative_target="$2"
+  local dest="$ROOT/.agents/skills/$name"
   [[ -d "$ROOT/$relative_target" ]] || { echo "Missing source: $relative_target" >&2; exit 1; }
   if [[ -e "$dest" && ! -L "$dest" ]]; then
     echo "Refusing to replace existing skill directory: $dest" >&2; return 1
