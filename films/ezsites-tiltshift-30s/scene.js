@@ -162,8 +162,8 @@ grade.uniforms.sat.value=1.12;grade.uniforms.contrast.value=.13;
 grade.uniforms.amt.value=.15;grade.uniforms.warm.value=.15;
 window.DUR=30;const ease=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
 window.render=t=>{let p=ease(t/4);
- C.position.set(9.5+2.5*p,-21.5-6*p,12.8+6*p);
- C.lookAt(0,-2.9,2.1);C.updateProjectionMatrix();
+ C.position.set(5.4+2.4*p,-21-4.2*p,10.2+7.0*p);
+ C.lookAt(0,-2.9,1.90);C.updateProjectionMatrix();
  for(let i=0;i<people.length;i++)people[i].position.x+=0; // stable deterministic frame
  dof.band.y=.56-.025*p;dof.focus=24+5*p;P.render();
 };
@@ -190,8 +190,8 @@ async function addSourcedProp(alias,x,y,height,rot=0) {
  S.add(root);
 }
 Promise.all([
- addSourcedProp('coffee_cart',4.35,-4.20,1.75,-.30),
- addSourcedProp('potted_plant',-4.15,-3.45,.78,.20),
- addSourcedProp('potted_plant',3.75,-2.75,.68,-.42)
+ addSourcedProp('coffee_cart',2.88,-4.55,1.04,-.23),
+ addSourcedProp('potted_plant',-3.65,-3.35,1.10,.20),
+ addSourcedProp('potted_plant',3.55,-3.05,.98,-.42)
 ]).then(()=>{window.READY=true;window.render(0.2);})
   .catch(err=>{window.ASSET_ERROR=String(err);console.error(err);});
