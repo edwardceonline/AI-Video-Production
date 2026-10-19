@@ -1,0 +1,82 @@
+name: EzSites V4 | Beyond Your Doors
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/ezsites-beyond-doors-v4]
+    paths:
+      - 'ezsites-v4/**'
+      - '.github/workflows/ezsites-v4-commercial.yml'
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Remotion and capture tools
+        working-directory: ezsites-v4
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Obtain licensed motion photography
+        working-directory: ezsites-v4
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public output/stills
+          fetch_stock () {
+            local target="$1"; shift
+            local success=0
+            for id in "$@"; do
+              for fmt in hd_1080_1920_25fps hd_720_1280_25fps hd_1080_1920_30fps hd_720_1280_30fps hd_1920_1080_25fps hd_1920_1080_30fps sd_540_960_25fps sd_540_960_30fps; do
+                url="https://videos.pexels.com/video-files/$id/${id}-${fmt}.mp4"
+                echo "Trying Pexels media ID=$id format=$fmt"
+                if curl -fLsS --connect-timeout 12 --max-time 85 "$url" -o "$target.tmp" && test "$(stat -c %s "$target.tmp")" -gt 240000; then
+                  mv "$target.tmp" "$target"; success=1; break 2
+                fi
+              done
+            done
+            test "$success" -eq 1 || { echo "No licensed source for $target"; exit 1; }
+            stat -c '%n size=%s' "$target"
+          }
+          fetch_stock public/chef-a.mp4 8908410 8908334
+          fetch_stock public/customer.mp4 6279142 5075206 5075221
+          fetch_stock public/laptop.mp4 5989753 6406028 5527102
+      - name: Capture the public Kurotsuki website and original EzSites logo
+        working-directory: ezsites-v4
+        run: |
+          cp ../ezsites-commercial/public/EzSites_full_logo_with_text.png public/ezsites-logo.png
+          node scripts/capture.mjs
+          python3 -m pip install --quiet Pillow
+          python3 scripts/crop_site.py
+      - name: Generate original soundtrack, SFX, and English preview narration
+        working-directory: ezsites-v4
+        run: |
+          python3 -m pip install --quiet numpy edge-tts
+          python3 scripts/generate_audio.py
+      - name: Render aesthetic review frames
+        working-directory: ezsites-v4
+        run: npm run stills
+      - name: Render complete Full HD MP4
+        working-directory: ezsites-v4
+        run: npm run render
+      - name: Validate technical video and sound output
+        working-directory: ezsites-v4
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          test -s output/EzSites_Beyond_Your_Doors_V4.mp4
+          python3 ../scripts/qa-render.py output/EzSites_Beyond_Your_Doors_V4.mp4 || ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 output/EzSites_Beyond_Your_Doors_V4.mp4
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate -of default=noprint_wrappers=1 output/EzSites_Beyond_Your_Doors_V4.mp4
+      - name: Upload film and review frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ezsites-v4-beyond-your-doors-preview
+          path: |
+            ezsites-v4/output/EzSites_Beyond_Your_Doors_V4.mp4
+            ezsites-v4/output/stills/*.png
+          retention-days: 14
+          if-no-files-found: warn
