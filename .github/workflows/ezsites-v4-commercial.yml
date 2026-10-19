@@ -52,6 +52,7 @@ jobs:
           node scripts/capture.mjs
           python3 -m pip install --quiet Pillow
           python3 scripts/crop_site.py
+          python3 scripts/clean_logo.py
       - name: Generate original soundtrack, SFX, and English preview narration
         working-directory: ezsites-v4
         run: |
